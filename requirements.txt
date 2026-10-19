@@ -1,0 +1,7 @@
+# SwitchScope Dependencies
+# 安裝指令：pip install -r requirements.txt
+
+pandas>=2.0.0
+numpy>=1.24.0
+pyod>=2.0.0
+catboost>=1.2.0
