@@ -90,11 +90,19 @@ class SwitchScopeHandler(BaseHTTPRequestHandler):
                             files.append({"name": fname, "content": f.read()})
             self._send_json({"success": True, "files": files})
 
+        elif path == "/api/ollama/status":
+            self._send_json(llm_gateway.check_status())
+
         elif path == "/api/health":
+            ollama_stat = llm_gateway.check_status()
             self._send_json({
                 "status": "online",
                 "engine": "SwitchScope ML/LLM Dual-Tier Core",
-                "ml_models": ["ECOD (PyOD)", "CatBoostClassifier"]
+                "ml_models": ["ECOD (PyOD)", "CatBoostClassifier"],
+                "ollama": {
+                    "online": ollama_stat.get("online", False),
+                    "default_model": ollama_stat.get("default_model", "qwen3.5")
+                }
             })
         else:
             self.send_error(404, "Not Found")
@@ -170,7 +178,7 @@ class SwitchScopeHandler(BaseHTTPRequestHandler):
 
         elif path == "/api/chat":
             prompt = req_json.get("prompt", "")
-            model = req_json.get("model", "qwen2.5-coder:7b")
+            model = req_json.get("model", "qwen3.5")
 
             if not prompt.strip():
                 self._send_json({"success": False, "error": "Prompt cannot be empty"}, status=400)

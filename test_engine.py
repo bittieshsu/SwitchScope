@@ -191,10 +191,28 @@ def run_multi_chassis_fleet_test():
     print("[OK] Master Fleet Remediation Macro synthesized correctly!")
     print("[OK] All Multi-Chassis Fleet assertions passed 100%!")
 
+def run_ollama_gateway_test():
+    from core.llm_gateway import LLMGateway
+    print("\n=== OLLAMA & QWEN3.5 LOCAL LLM GATEWAY TEST ===")
+    gateway = LLMGateway()
+    assert gateway.default_model == "qwen3.5", f"Default model must be qwen3.5, got {gateway.default_model}"
+
+    status = gateway.check_status()
+    print(f"Ollama Online: {status.get('online')} | Default Model: {status.get('default_model')}")
+    assert "qwen3.5" in status.get("recommended_laptop_models", [])
+
+    # Test query fallback handling
+    res = gateway.query_ollama("請用白話文解釋交換機發生了什麼事？", model="qwen3.5")
+    assert res["success"] is True
+    print(f"Query Source: {res.get('source')} | Model: {res.get('model_used')}")
+    assert len(res.get("response", "")) > 50
+    print("[OK] Ollama Qwen3.5 integration & fallback assertions passed 100%!")
+
 if __name__ == '__main__':
     run_test()
     run_routing_test()
     run_timeline_quiesced_test()
     run_cdp_topology_test()
     run_multi_chassis_fleet_test()
+    run_ollama_gateway_test()
 
