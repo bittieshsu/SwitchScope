@@ -191,20 +191,28 @@ SwitchScope/
   ├── requirements.lock        # 密碼學 SHA-256 雜湊鎖定檔 (--require-hashes 專用)
   ├── server.py                # 本機輕量 API 伺服器 (支援批次上傳與資料夾掃描)
   ├── test_engine.py           # 自動化迴歸測試套件 (涵蓋 L2/L3/CDP拓撲/時序感知/多機聯動/供應鏈安全)
-  ├── launcher.ps1             # 具備供應鏈安全守門防護之啟動器 (支援零相依安全模式)
+  ├── launcher.ps1             # Windows PowerShell 智慧環境檢查與安全啟動器
   ├── 啟動服務.bat              # Windows 雙擊極速啟動 (自動開啟瀏覽器)
+  ├── 啟動服務.command          # macOS Finder 雙擊極速啟動 (自動開啟 Safari/Chrome) (NEW)
+  ├── launcher.sh              # Linux / macOS 終端通用啟動腳本 (NEW)
   ├── LICENSE                  # MIT 開源授權條款
   └── README.md                # 專案詳細說明文件
 ```
 
 ---
 
-## 🚀 快速開始
+## 🚀 跨平台快速開始 (Cross-Platform Quick Start)
 
-1. 雙擊執行目錄中的 **`啟動服務.bat`**。
-2. 預設瀏覽器會自動開啟控制台：`http://localhost:8920/`。
-3. 點擊頂部的 **`📋 載入多重故障實戰範例`**。
-4. 點擊 **`🚀 開始 ML 智慧診斷`**，秒速體驗 ECOD 與 CatBoost 的威力！
+免去打包 `.exe` 容易被企業防毒 (EDR/Defender) 誤殺的困擾，採用純開源腳本雙擊即用：
+
+* 🪟 **Windows 使用者**：
+  * 直接雙擊目錄中的 **`啟動服務.bat`**。
+* 🍎 **macOS 使用者**：
+  * 在 Finder 中直接雙擊 **`啟動服務.command`**（自動喚醒 Terminal 並開啟 Safari/Chrome）。
+* 🐧 **Linux 使用者**：
+  * 終端機執行：`./launcher.sh` 或 `python3 server.py`。
+
+啟動後，瀏覽器會自動開啟控制台：`http://localhost:8920/`，即可立刻展開故障排查！
 
 ---
 
