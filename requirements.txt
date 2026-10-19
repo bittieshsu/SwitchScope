@@ -1,7 +1,22 @@
-# SwitchScope Dependencies
-# 安裝指令：pip install -r requirements.txt
+# ==============================================================================
+# SwitchScope Dependencies (Security Hardened)
+# ==============================================================================
+# 🛡️ 供應鏈安全強化說明 (Supply Chain Security Notice):
+# 1. 為防範 PyPI 惡意投毒、Typosquatting 偽裝包與依賴漂移，請一律使用精準版本號。
+# 2. 最高安全性安裝 (推薦)：請使用 requirements.lock 配合 SHA-256 雜湊核對，
+#    並加上 --only-binary :all: 徹底禁止安裝期執行第三方 setup.py 腳本：
+#    pip install --require-hashes --only-binary :all: -r requirements.lock
+# 3. 隔離斷網機房 (Air-Gapped)：SwitchScope 支援【零相依純 Python 模式】，
+#    完全不安裝第三方 pip 套件亦可直接運作！
+# ==============================================================================
 
-pandas>=2.0.0
-numpy>=1.24.0
-pyod>=2.0.0
-catboost>=1.2.0
+numpy==1.26.4
+pandas==2.2.2
+pyod==3.6.7
+catboost==1.2.10
+scipy==1.13.1
+scikit-learn==1.5.0
+joblib==1.6.0
+python-dateutil==2.9.0.post0
+pytz==2024.1
+six==1.16.0

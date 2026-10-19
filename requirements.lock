@@ -1,0 +1,53 @@
+# SwitchScope Cryptographically Locked Dependencies (Hash-Pinned)
+# Generated for Supply Chain Attack Prevention
+# Enforce binary wheels and strict sha256 checksums
+# Install: pip install --require-hashes --only-binary :all: -r requirements.lock
+
+numpy==1.26.4 \
+    --hash=sha256:b97fe8060236edf3662adfc2c633f56a08ae30560c56310562cb4f95500022d5 \
+    --hash=sha256:cd25bcecc4974d09257ffcd1f098ee778f7834c3ad767fe5db785be9a4aa9cb2 \
+    --hash=sha256:08beddf13648eb95f8d867350f6a018a4be2e5ad54c8d8caed89ebca558b2818 \
+    --hash=sha256:3373d5d70a5fe74a2c1bb6d2cfd9609ecf686d47a2d7b1d37a8f3b6bf6003aea \
+    --hash=sha256:7e50d0a0cc3189f9cb0aeb3a6a6af18c16f59f004b866cd2be1c14b36134a4a0
+
+pandas==2.2.2 \
+    --hash=sha256:ddf818e4e6c7c6f4f7c8a12709696d193976b591cc7dc50588d3d1a6b5dc8772 \
+    --hash=sha256:873d13d177501a28b2756375d59816c365e42ed8417b41665f346289adc68d24 \
+    --hash=sha256:d187d355ecec3629624fccb01d104da7d7f391db0311145817525281e2804d23 \
+    --hash=sha256:640cef9aa381b60e296db324337a554aeeb883ead99dc8f6c18e81a93942f5f4
+
+pyod==3.6.7 \
+    --hash=sha256:4c9dc840c83e8579c3f23b4a2e8f4c8a65cebadecf4b1d2a2a40ed71b4398b24
+
+catboost==1.2.10 \
+    --hash=sha256:19de3cb267be3ddb8fd667a87f9e7d3c9ee31783c61ea9e6e6f036f666bddcc3 \
+    --hash=sha256:41bbe16cab0695978c325a20fa300f92831ed78e9cc8c5fe8047538b4055e98e \
+    --hash=sha256:6b8a7ef11d7a89fc547760cfafeee895011a4b92cc1f60d00235ef80a71158ed \
+    --hash=sha256:5ede858e634d6d0f521bf6dd6fad9374f23d37049ee48e0779ccd2a372632cb1 \
+    --hash=sha256:951c5bdf27b8edb6ca624f41134888c666ae68275488803d3c91ce83e154f0c5 \
+    --hash=sha256:4debc33c278e431681d47d90818c15ec58407c8ea028b3060953dd29a6246946 \
+    --hash=sha256:56c2c0ec0c16874b83d39f892b7f8a026bbd7404d59b23a34ce53f6b4b87b26a
+
+scipy==1.13.1 \
+    --hash=sha256:2831f0dc9c5ea9edd6e51e6e769b655f08ec6db6e2e10f86ef39bd32eb11da54 \
+    --hash=sha256:5713f62f781eebd8d597eb3f88b8bf9274e79eeabf63afb4a737abc6c84ad37b \
+    --hash=sha256:cdd7dacfb95fea358916410ec61bbc20440f7860333aee6d882bb8046264e949 \
+    --hash=sha256:392e4ec766654852c25ebad4f64e4e584cf19820b980bc04960bca0b0cd6eaa2
+
+scikit-learn==1.5.0 \
+    --hash=sha256:a90c5da84829a0b9b4bf00daf62754b2be741e66b5946911f5bdfaa869fcedd6 \
+    --hash=sha256:a03b09f9f7f09ffe8c5efffe2e9de1196c696d811be6798ad5eddf323c6f4d40 \
+    --hash=sha256:855fc5fa8ed9e4f08291203af3d3e5fbdc4737bd617a371559aaa2088166046e \
+    --hash=sha256:057b991ac64b3e75c9c04b5f9395eaf19a6179244c089afdebaad98264bff37c
+
+joblib==1.6.0 \
+    --hash=sha256:3dbbf9f6e4b592a2357b854608e980fe6390d131d7a82f011a377ef2ebef7aba
+
+python-dateutil==2.9.0.post0 \
+    --hash=sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427
+
+pytz==2024.1 \
+    --hash=sha256:328171f4e3623139da4983451950b28e95ac706e13f3f2630a879749e7a8b319
+
+six==1.16.0 \
+    --hash=sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254

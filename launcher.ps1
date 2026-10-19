@@ -1,4 +1,4 @@
-﻿# SwitchScope Launcher & Environment Doctor
+# SwitchScope Launcher & Environment Doctor
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $Host.UI.RawUI.WindowTitle = "SwitchScope — 智慧網通設備異常透視與排障儀"
 
@@ -61,28 +61,58 @@ $pkgCheck = & $pythonCmd -c "import catboost, pyod, pandas" 2>&1
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host ""
-    Write-Host "[!] 提示：檢測到尚未安裝完整的機器學習套件。" -ForegroundColor Yellow
-    Write-Host "    缺少套件：catboost, pyod, pandas" -ForegroundColor DarkYellow
+    Write-Host "[!] 提示：未偵測到 C 語言加速之 CatBoost/PyOD/Pandas 套件。" -ForegroundColor Yellow
+    Write-Host "-------------------------------------------------------------------" -ForegroundColor DarkGray
+    Write-Host "🛡️ 【SwitchScope 供應鏈安全防護與執行模式】" -ForegroundColor Cyan
+    Write-Host "  [1] 啟用「零相依純地端安全模式」(Zero-Dependency Safe Mode - 推薦安全首選)" -ForegroundColor Green
+    Write-Host "      * 100% 免除 pip install，使用純 Python 內建標準庫運作！"
+    Write-Host "      * 徹底免疫 PyPI 惡意投毒、Typosquatting 偽裝包與供應鏈攻擊。"
+    Write-Host "      * 適合銀行、政府、半導體機房與隔離跳板機環境。"
     Write-Host ""
-    $installChoice = Read-Host "是否要現在自動為您執行 pip install 安裝必要套件？(Y/N，預設 Y)"
-    if ($installChoice -eq "" -or $installChoice.ToUpper() -eq "Y") {
+    Write-Host "  [2] 執行「密碼學雜湊鎖定安全安裝」(Secure Hash-Pinned Pip Install)" -ForegroundColor Yellow
+    Write-Host "      * 使用 requirements.lock，對每個 Wheel 嚴格校驗 SHA-256 雜湊值！"
+    Write-Host "      * 強制啟用 --only-binary :all:，徹底禁止執行任何 setup.py 安裝期腳本。"
+    Write-Host ""
+    Write-Host "  [3] 從本地「離線 Wheelhouse 資料夾」載入 (Air-Gapped Local Wheelhouse)" -ForegroundColor White
+    Write-Host "      * 完全不連外網，僅從本機 wheelhouse/ 資料夾載入預先審核的套件。"
+    Write-Host "-------------------------------------------------------------------" -ForegroundColor DarkGray
+    Write-Host ""
+    $modeChoice = Read-Host "請選擇執行模式 (1/2/3，按 Enter 預設 1 直接啟動零相依安全模式)"
+
+    if ($modeChoice -eq "2") {
         Write-Host ""
-        Write-Host "正在透過 pip 安裝必要套件，請稍候（約需 1~2 分鐘）..." -ForegroundColor Cyan
-        $reqPath = Join-Path $PSScriptRoot "requirements.txt"
-        & $pythonCmd -m pip install -r $reqPath
+        Write-Host "正在透過 pip 執行密碼學雜湊核對安裝 (SHA-256 Verified)..." -ForegroundColor Cyan
+        $lockPath = Join-Path $PSScriptRoot "requirements.lock"
+        & $pythonCmd -m pip install --require-hashes --only-binary :all: -r $lockPath
         if ($LASTEXITCODE -ne 0) {
-            Write-Host "[!] 套件安裝失敗，請確認網路連線或手動執行：pip install -r requirements.txt" -ForegroundColor Red
+            Write-Host "[!] 雜湊核對或安裝失敗！可能原因：檔案遭篡改或網路連線異常。" -ForegroundColor Red
             Read-Host "按 Enter 鍵結束..."
             exit 1
         }
-        Write-Host "[OK] 套件安裝成功！" -ForegroundColor Green
+        Write-Host "[OK] 官方驗證套件安裝成功！" -ForegroundColor Green
+    } elseif ($modeChoice -eq "3") {
+        $wheelDir = Join-Path $PSScriptRoot "wheelhouse"
+        if (-not (Test-Path $wheelDir)) {
+            Write-Host "[!] 錯誤：未找到本地 wheelhouse/ 資料夾！" -ForegroundColor Red
+            Read-Host "按 Enter 鍵結束..."
+            exit 1
+        }
+        Write-Host "正在從本地離線 wheelhouse 資料夾安裝套件..." -ForegroundColor Cyan
+        & $pythonCmd -m pip install --no-index --find-links $wheelDir -r (Join-Path $PSScriptRoot "requirements.txt")
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "[!] 離線安裝失敗。" -ForegroundColor Red
+            Read-Host "按 Enter 鍵結束..."
+            exit 1
+        }
+        Write-Host "[OK] 本地離線套件安裝成功！" -ForegroundColor Green
     } else {
-        Write-Host "您選擇手動安裝。請於終端機執行：pip install -r requirements.txt 後再啟動。" -ForegroundColor Yellow
-        Read-Host "按 Enter 鍵結束..."
-        exit 1
+        Write-Host ""
+        Write-Host "[OK] 已切換至【零相依純地端安全模式】，無須安裝任何第三方 pip 套件！" -ForegroundColor Green
+        Write-Host "     * 異常檢測引擎：Native Python ECOD (純標準庫數學計算)" -ForegroundColor Gray
+        Write-Host "     * 故障分類引擎：Native Python CCIE 專家規則決策樹" -ForegroundColor Gray
     }
 } else {
-    Write-Host "[OK] 所有機器學習核心套件均已就緒！" -ForegroundColor Green
+    Write-Host "[OK] 所有機器學習核心套件均已就緒！(C 語言加速版 ECOD + CatBoost)" -ForegroundColor Green
 }
 
 Write-Host ""

@@ -147,7 +147,20 @@ SwitchScope 不做「拿大砲打蒼蠅」的事（不盲目將海量數據全�
     4. **雙向佈線真實度驗證**：比對兩台設備的 CDP/LLDP 對接互聯真實紀錄。
 * **全網跨設備衝突矩陣與一體化修復腳本 (Master Fleet Remediation Macro)**：
   * 表格化列出所有跨機衝突、受影響介面、雙機根因剖析。
-  * **一鍵複製全網多機修復腳本**：按各實體設備 Hostname 自動分段（`! === Core-SW-01 ===`, `! === office1-switch-15F ===`），一次修復全網所有交換機！
+### 模組 9：🛡️ 軟體供應鏈安全加固與零相依純地端安全模式 (Supply Chain Security & Zero-Dependency Safe Mode)
+* **防範 PyPI 惡意投毒與 Typosquatting (偽裝惡意包)**：
+  * 徹底解決傳統 `pip install` 鬆散版本或惡意依賴可能導致的「安裝期任意程式碼執行 (`setup.py` ACE)」與上游帳號被盜風險。
+* **密碼學雜湊鎖定 (`requirements.lock`)**：
+  * 提供鎖定官方二進位 Wheel 之 `requirements.lock`，強制啟用 `--require-hashes` 與 `--only-binary :all:`：
+    ```bash
+    pip install --require-hashes --only-binary :all: -r requirements.lock
+    ```
+  * 只要檔案遭篡改或偽造 1 個 byte，pip 立刻拒絕安裝並拋出安全性警報！
+* **極限安全機房：零相依純 Python 模式 (Zero-Dependency Safe Mode)**：
+  * **SwitchScope 核心演算法具備 100% 純標準庫容錯能力**。
+  * 在國防、金融、半導體機房等嚴禁執行 `pip install` 的跳板機上，**完全不安裝任何第三方 pip 套件亦可 100% 正常運行**，攻擊面直接歸零！
+* **一鍵供應鏈安全審計儀 (`tools/audit_supply_chain.py`)**：
+  * 一鍵檢測 PyPI 鏡像源是否遭劫持、掃描本機是否誤裝偽裝同名惡意包、校驗鎖定檔雜湊完整性。
 
 ---
 
@@ -158,23 +171,27 @@ SwitchScope/
   ├── core/
   │    ├── parser.py           # Cisco CLI 多指令正則剖析器 (Status, Counters, LACP, CDP/LLDP, Routing, Timeline)
   │    ├── sanitizer.py        # 地端機敏密碼、Community、IP 脫敏防護器
-  │    ├── multi_chassis.py    # 全網多實體設備雙向校驗、衝突檢測與全網架構引擎 (NEW)
-  │    └── llm_gateway.py      # 本地 Ollama 串接與離線 CCIE 專家決策樹
+  │    ├── multi_chassis.py    # 全網多實體設備雙向校驗、衝突檢測與全網架構引擎
+  │    └── llm_gateway.py      # 本地 Ollama 串接 (預設 Qwen3.5) 與離線 CCIE 專家決策樹
   ├── ml_engine/
-  │    ├── ecod_detector.py    # PyOD ECOD 實體計數器無監督異常檢測
-  │    └── fault_classifier.py # CatBoost 決策樹、跨設備拓撲連動、路由狀態機與全域會診總評引擎
+  │    ├── ecod_detector.py    # 雙軌異常檢測 (C 語言 PyOD ECOD + 零相依純 Python ECOD 容錯)
+  │    └── fault_classifier.py # 雙軌故障分類 (CatBoost 決策樹 + 零相依純 Python 專家決策樹)
+  ├── tools/
+  │    └── audit_supply_chain.py # 供應鏈安全與依賴完整性審計儀 (NEW)
   ├── web/
   │    └── index.html          # 前端現代化面板 (單機透視 + 全網多實體機跨機聯動 + 衝突矩陣 + 拓撲)
   ├── samples/
-  │    ├── multi_chassis_demo/ # 3 台實體設備對接示範包 (Core-SW-01, office1-15F, Floor2-02) (NEW)
+  │    ├── multi_chassis_demo/ # 3 台實體設備對接示範包 (Core-SW-01, office1-15F, Floor2-02)
   │    ├── cisco_troubleshoot_sample.txt      # 實戰多重故障排查範例 Log (LACP + BPDU + CRC)
   │    ├── cisco_flapping_sample.txt          # 高頻震盪與離峰下班休眠實戰 Log
   │    ├── cisco_ccie_routing_sample.txt      # CCIE 核心路由實戰 Log (OSPF EXSTART + BGP + EIGRP)
   │    ├── cisco_timeline_quiesced_sample.txt # 12 天前歷史平息事件 (時間序列感知免白查)
   │    └── cisco_ccie_cdp_topology_sample.txt # CCIE 實體拓撲連動 Log (跨交換機錯插 + 上聯穿透)
+  ├── requirements.txt         # 嚴格釘選之套件清單 (含供應鏈安全警示)
+  ├── requirements.lock        # 密碼學 SHA-256 雜湊鎖定檔 (--require-hashes 專用)
   ├── server.py                # 本機輕量 API 伺服器 (支援批次上傳與資料夾掃描)
-  ├── test_engine.py           # 自動化迴歸測試套件 (涵蓋 L2/L3/CDP拓撲/時序感知/多實體機聯動)
-  ├── launcher.ps1             # 智慧環境檢查與相依性修復啟動器
+  ├── test_engine.py           # 自動化迴歸測試套件 (涵蓋 L2/L3/CDP拓撲/時序感知/多機聯動/供應鏈安全)
+  ├── launcher.ps1             # 具備供應鏈安全守門防護之啟動器 (支援零相依安全模式)
   ├── 啟動服務.bat              # Windows 雙擊極速啟動 (自動開啟瀏覽器)
   ├── LICENSE                  # MIT 開源授權條款
   └── README.md                # 專案詳細說明文件

@@ -208,6 +208,45 @@ def run_ollama_gateway_test():
     assert len(res.get("response", "")) > 50
     print("[OK] Ollama Qwen3.5 integration & fallback assertions passed 100%!")
 
+def run_supply_chain_security_test():
+    import os
+    import ml_engine.ecod_detector as ec
+    import ml_engine.fault_classifier as fc
+    print("\n=== SUPPLY CHAIN SECURITY & ZERO-DEPENDENCY TEST ===")
+
+    # 1. Check requirements.lock exists and has SHA-256 hashes
+    lock_file = os.path.join(os.path.dirname(__file__), "requirements.lock")
+    assert os.path.exists(lock_file), "requirements.lock is missing"
+    with open(lock_file, "r", encoding="utf-8") as f:
+        lock_txt = f.read()
+    assert "--hash=sha256:" in lock_txt, "requirements.lock must contain sha256 hashes"
+    print(f"[OK] requirements.lock verified with {lock_txt.count('--hash=sha256:')} SHA-256 hashes.")
+
+    # 2. Test Zero-Dependency Safe Mode Fallback
+    orig_pyod = ec.HAS_PYOD
+    orig_catboost = fc.HAS_CATBOOST
+    try:
+        ec.HAS_PYOD = False
+        fc.HAS_CATBOOST = False
+
+        detector = ec.ECODPortDetector()
+        res = detector.detect([
+            {"port": "Gi1/0/1", "crc_errors": 0},
+            {"port": "Gi1/0/2", "crc_errors": 5000}
+        ])
+        assert res["outlier_count"] == 1, "Zero-dependency ECOD failed to detect outlier"
+        assert "Zero-Dependency" in res["engine"], "Must report Zero-Dependency engine"
+        print(f"[OK] Zero-Dependency Pure-Python ECOD outlier detection verified: {res['engine']}")
+
+        classifier = fc.SwitchFaultClassifier()
+        assert "Zero-Dependency" in classifier.engine_type
+        print(f"[OK] Zero-Dependency Pure-Python Fault Classifier verified: {classifier.engine_type}")
+    finally:
+        ec.HAS_PYOD = orig_pyod
+        fc.HAS_CATBOOST = orig_catboost
+
+    print("[OK] All Supply Chain Security & Zero-Dependency assertions passed 100%!")
+
 if __name__ == '__main__':
     run_test()
     run_routing_test()
@@ -215,4 +254,5 @@ if __name__ == '__main__':
     run_cdp_topology_test()
     run_multi_chassis_fleet_test()
     run_ollama_gateway_test()
+    run_supply_chain_security_test()
 
