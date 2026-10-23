@@ -1,0 +1,73 @@
+Switch# show version
+Cisco IOS Software, Catalyst L3 Switch Software (CAT9K_IOSXE), Version 17.06.03
+cisco C9300-48P (X86) processor with 1819580K/6147K bytes of memory.
+Processor board ID FOC2412L01B
+Switch uptime is 14 weeks, 2 days, 4 hours, 18 minutes
+
+Switch# show switch
+Switch#  Role      Mac Address     Priority Version  State
+------------------------------------------------------------
+*1       Active    0018.ba3e.a200     15     V01     Ready
+ 2       Standby   0018.ba3e.b300     1      V01     Ready
+
+Switch# show etherchannel summary
+Flags:  D - down        P - bundled in port-channel
+        I - stand-alone s - suspended
+        H - Hot-standby (LACP only)
+        R - Layer3      S - Layer2
+        U - in use      f - failed to allocate aggregator
+
+Group  Port-channel  Protocol    Ports
+------+-------------+-----------+-----------------------------------------------
+1      Po1(SU)         LACP      Gi1/0/1(P)    Gi1/0/2(s)
+2      Po2(SU)         LACP      Gi1/0/3(P)    Gi1/0/4(P)
+
+Switch# show interfaces status
+Port      Name               Status       Vlan       Duplex  Speed Type
+Gi1/0/1   Uplink-Core-1      connected    trunk      a-full a-1000 10/100/1000BaseTX
+Gi1/0/2   Uplink-Core-2      suspended    trunk      a-full a-1000 10/100/1000BaseTX
+Gi1/0/3   Storage-NAS-1      connected    trunk      a-full a-1000 10/100/1000BaseTX
+Gi1/0/4   Storage-NAS-2      connected    trunk      a-full a-1000 10/100/1000BaseTX
+Gi1/0/5   Legacy-Printer     connected    10           half    100 10/100/1000BaseTX
+Gi1/0/13  Branch-Fiber-Link  connected    trunk      a-full a-1000 1000BaseSX
+Gi1/0/24  MeetingRoom-AP     err-disabled 20           auto   auto 10/100/1000BaseTX
+
+Switch# show interfaces
+GigabitEthernet1/0/1 is up, line protocol is up (connected)
+  5 minute input rate 1520000 bits/sec, 412 packets/sec
+  5 minute output rate 2840000 bits/sec, 620 packets/sec
+     182938102 bytes, 0 no buffer
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+     0 output errors, 0 collisions, 0 interface resets
+
+GigabitEthernet1/0/2 is up, line protocol is down (suspended)
+  5 minute input rate 0 bits/sec, 0 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     0 input errors, 0 CRC, 0 frame
+     0 output errors, 0 collisions
+
+GigabitEthernet1/0/5 is up, line protocol is up (connected)
+  5 minute input rate 45000 bits/sec, 12 packets/sec
+  5 minute output rate 89000 bits/sec, 24 packets/sec
+     49182 bytes, 0 no buffer
+     128 input errors, 0 CRC, 0 frame
+     421 output errors, 388 collisions
+
+GigabitEthernet1/0/13 is up, line protocol is up (connected)
+  5 minute input rate 8420000 bits/sec, 1290 packets/sec
+  5 minute output rate 9100000 bits/sec, 1420 packets/sec
+     982194812 bytes, 0 no buffer
+     14829 input errors, 12480 CRC, 120 frame, 0 overrun, 0 ignored
+     0 output errors, 0 collisions
+
+Switch# show ip route
+Gateway of last resort is 10.0.0.1 to network 0.0.0.0
+S*    0.0.0.0/0 [1/0] via 10.0.0.1
+C     10.0.0.0/24 is directly connected, Vlan1
+C     10.0.10.0/24 is directly connected, Vlan10
+C     10.0.20.0/24 is directly connected, Vlan20
+
+Switch# show logging
+%SPANTREE-2-BLOCK_PORT: Received BPDU on port Gi1/0/24 with BPDU Guard enabled. Disabling port.
+%PM-4-ERR_DISABLE: bpduguard error detected on Gi1/0/24, putting Gi1/0/24 in err-disable state
+%LINK-3-UPDOWN: Interface GigabitEthernet1/0/24, changed state to down
