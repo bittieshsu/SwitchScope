@@ -1,4 +1,9 @@
 import sys
+if hasattr(sys.stdout, 'reconfigure'):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except Exception:
+        pass
 from core.parser import CiscoParser
 from ml_engine.ecod_detector import ECODPortDetector
 from ml_engine.fault_classifier import SwitchFaultClassifier

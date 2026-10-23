@@ -39,9 +39,24 @@ if (-not $pythonCmd) {
     Write-Host "-------------------------------------------------------------------" -ForegroundColor DarkGray
     Write-Host ""
 
-    $choice = Read-Host "是否要為您開啟 Python 官網下載頁面？(Y/N，預設 Y)"
-    if ($choice -eq "" -or $choice.ToUpper() -eq "Y") {
-        Start-Process "https://www.python.org/downloads/"
+    $hasWinget = Get-Command winget -ErrorAction SilentlyContinue
+    if ($hasWinget) {
+        $choice = Read-Host "請選擇安裝方式 (1: 自動一鍵安裝 Python 3.11 / 2: 開啟官網手動下載，預設 1)"
+        if ($choice -eq "" -or $choice -eq "1") {
+            Write-Host "正在為您透過 winget 自動下載並安裝 Python 3.11 (無須點下一步)..." -ForegroundColor Cyan
+            & winget install --id Python.Python.3.11 -e --silent --accept-package-agreements --accept-source-agreements
+            Write-Host ""
+            Write-Host "[OK] Python 安裝完成！請重新雙擊「啟動服務.bat」即可！" -ForegroundColor Green
+            Read-Host "按 Enter 鍵關閉..."
+            exit 0
+        } else {
+            Start-Process "https://www.python.org/downloads/"
+        }
+    } else {
+        $choice = Read-Host "是否要為您開啟 Python 官網下載頁面？(Y/N，預設 Y)"
+        if ($choice -eq "" -or $choice.ToUpper() -eq "Y") {
+            Start-Process "https://www.python.org/downloads/"
+        }
     }
     Write-Host ""
     Write-Host "請於安裝完成後，重新執行此啟動檔即可。" -ForegroundColor Gray
