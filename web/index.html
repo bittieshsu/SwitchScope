@@ -1,0 +1,4482 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwitchScope — 智慧網通設備異常透視與排障儀 (ML + Local AI)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --card-border: #1f293d;
+      --accent-cyan: #06b6d4;
+      --accent-blue: #3b82f6;
+      --accent-purple: #8b5cf6;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --text-main: #f3f4f6;
+      --text-sub: #9ca3af;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-sans: 'Noto Sans TC', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --card-border: #1f293d;
+      --accent-cyan: #06b6d4;
+      --accent-blue: #3b82f6;
+      --accent-purple: #8b5cf6;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --text-main: #f3f4f6;
+      --text-sub: #9ca3af;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-sans: 'Noto Sans TC', sans-serif;
+      --base-font-size: 15px;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: var(--base-font-size);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(180deg, #131c31 0%, #0c1322 100%);
+      border-bottom: 1px solid var(--card-border);
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-logo {
+      font-size: 26px;
+      color: var(--accent-cyan);
+      filter: drop-shadow(0 0 10px rgba(6,182,212,0.6));
+    }
+    .brand-title {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      background: linear-gradient(90deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-subtitle {
+      font-size: 14px;
+      color: var(--text-sub);
+    }
+    .badges {
+      display: flex;
+      gap: 10px;
+    }
+    .badge {
+      font-family: var(--font-mono);
+      font-size: 14.5px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 600;
+      border: 1px solid transparent;
+    }
+    .badge-ecod { background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3); }
+    .badge-catboost { background: rgba(139, 92, 246, 0.15); color: #a78bfa; border-color: rgba(139, 92, 246, 0.3); }
+    .badge-airgap { background: rgba(6, 182, 212, 0.15); color: #38bdf8; border-color: rgba(6, 182, 212, 0.3); }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 24px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Action Toolbar */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 20px;
+    }
+    .btn-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn {
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 14.5px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: none;
+      transition: all 0.2s ease;
+    }
+    .btn-secondary {
+      background: #1e293b;
+      color: #cbd5e1;
+      border: 1px solid #334155;
+    }
+    .btn-secondary:hover { background: #334155; color: #fff; }
+    .btn-primary {
+      background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+    }
+    .btn-primary:hover {
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+      transform: translateY(-1px);
+    }
+    .toggle-label {
+      font-size: 14.5px;
+      color: var(--text-sub);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* CLI Input Area */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      font-family: var(--font-mono);
+      font-size: 14.5px;
+      background: #1e293b;
+      color: #94a3b8;
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: 1px solid #334155;
+    }
+    textarea {
+      width: 100%;
+      height: 160px;
+      background: #090d16;
+      border: 1px solid #2d3748;
+      border-radius: 8px;
+      color: #a5f3fc;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      padding: 12px;
+      resize: vertical;
+      line-height: 1.4;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(6,182,212,0.3);
+    }
+
+    /* Physical Switch Faceplate Panel */
+    .switch-chassis {
+      background: #141b2d;
+      border: 2px solid #2d3748;
+      border-radius: 12px;
+      padding: 18px 24px;
+      position: relative;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.8), 0 4px 20px rgba(0,0,0,0.4);
+    }
+    .chassis-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .chassis-model {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      color: #38bdf8;
+    }
+    .chassis-legend {
+      display: flex;
+      gap: 16px;
+      font-size: 14px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .led-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .led-green { background: #10b981; box-shadow: 0 0 8px #10b981; }
+    .led-red { background: #ef4444; box-shadow: 0 0 8px #ef4444; }
+    .led-amber { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
+    .led-gray { background: #64748b; }
+    @keyframes pulse-flap {
+      0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 12px #f59e0b; }
+      50% { opacity: 0.3; transform: scale(0.8); box-shadow: 0 0 4px #ef4444; }
+    }
+    .led-flapping {
+      background: #f59e0b;
+      animation: pulse-flap 0.7s infinite ease-in-out;
+    }
+
+    /* Next-Action Reasoning Playbook Styles */
+    .playbook-container {
+      margin-top: 16px;
+      background: #0d1527;
+      border: 1px solid #1e3a5f;
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .playbook-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .playbook-subtitle {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-bottom: 12px;
+    }
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .step-item {
+      background: #090e1a;
+      border: 1px solid #1f293d;
+      border-radius: 8px;
+      padding: 10px 14px;
+    }
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .step-badge {
+      font-family: var(--font-mono);
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #fbbf24;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .step-purpose {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+    .step-cmd {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: #38bdf8;
+      background: #111b2f;
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid #1e3a5f;
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+    .step-reason {
+      font-size: 14px;
+      color: #cbd5e1;
+      line-height: 1.4;
+    }
+    .macro-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(90deg, #16243d 0%, #0c1527 100%);
+      border: 1px dashed #38bdf8;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-top: 12px;
+    }
+    .macro-info {
+      font-size: 14px;
+      color: #bae6fd;
+    }
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+      gap: 10px;
+    }
+    .port-jack {
+      background: #090d16;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 8px 6px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .port-jack:hover {
+      border-color: var(--accent-cyan);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(6,182,212,0.3);
+    }
+    .port-id {
+      font-family: var(--font-mono);
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-bottom: 4px;
+    }
+    .port-status-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      font-size: 14px;
+      font-family: var(--font-mono);
+    }
+
+    /* Diagnostics Section (CatBoost & ECOD) */
+    .diag-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 1024px) {
+      .diag-layout { grid-template-columns: 1fr; }
+    }
+
+    .health-gauge-card {
+      background: linear-gradient(145deg, #131d33, #0f172a);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .score-circle {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      border: 6px solid #ef4444;
+      background: rgba(239, 68, 68, 0.05);
+      box-shadow: 0 0 25px rgba(239, 68, 68, 0.2);
+    }
+    .score-val {
+      font-family: var(--font-mono);
+      font-size: 40px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+    }
+    .score-lbl {
+      font-size: 14px;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .score-status-text {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    /* Diagnoses List */
+    .diag-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .diag-item {
+      background: #141d33;
+      border-left: 4px solid #3b82f6;
+      border-radius: 10px;
+      padding: 16px 20px;
+      border-top: 1px solid var(--card-border);
+      border-right: 1px solid var(--card-border);
+      border-bottom: 1px solid var(--card-border);
+    }
+    .diag-item.critical { border-left-color: var(--red); }
+    .diag-item.high { border-left-color: var(--amber); }
+    .diag-item.warning { border-left-color: var(--accent-cyan); }
+    .diag-item.normal { border-left-color: var(--green); }
+
+    .diag-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    .diag-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .diag-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .diag-meta {
+      display: flex;
+      gap: 8px;
+    }
+    .diag-badge {
+      font-family: var(--font-mono);
+      font-size: 14.5px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .badge-critical { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+    .badge-high { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .badge-conf { background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.4); }
+
+    .diag-cause {
+      font-size: 14.5px;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+    }
+    .diag-exp {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    .cli-box {
+      background: #090d16;
+      border: 1px solid #2d3748;
+      border-radius: 8px;
+      padding: 12px;
+      position: relative;
+    }
+    .cli-code {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: #38bdf8;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 14.5px;
+      padding: 4px 10px;
+      background: #1e293b;
+      color: #93c5fd;
+      border: 1px solid #3b82f6;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .copy-btn:hover { background: #3b82f6; color: #fff; }
+
+    /* Tier-2 LLM Escalation & Interactive Triage Panel */
+    .triage-section {
+      background: linear-gradient(180deg, #131b2e 0%, #0d1322 100%);
+      border: 1px solid #2d3e66;
+      border-radius: 14px;
+      padding: 24px;
+    }
+    .triage-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .triage-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .ollama-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .ollama-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #090d16;
+      border: 1px solid #1f293d;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 14.5px;
+      font-weight: 600;
+      color: #cbd5e1;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .ollama-status-badge:hover {
+      border-color: #38bdf8;
+      background: #0d1527;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .status-dot.online {
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      animation: pulseDot 2s infinite;
+    }
+    .status-dot.offline {
+      background: #ef4444;
+      box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+    }
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.2); }
+    }
+    .ollama-select {
+      background: #090d16;
+      border: 1px solid #2d3e66;
+      color: #38bdf8;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 6px;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s ease;
+    }
+    .ollama-select:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+    }
+    .ollama-notice-bar {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9));
+      border: 1px solid #1e3a5f;
+      border-left: 4px solid #38bdf8;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: #cbd5e1;
+      flex-wrap: wrap;
+    }
+    .cmd-pill {
+      background: #090d16;
+      border: 1px solid #38bdf8;
+      color: #38bdf8;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+    }
+    .btn-xs {
+      padding: 4px 10px;
+      font-size: 14.5px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .ai-source-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 2px 8px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+    .ai-source-tag.offline {
+      color: #f59e0b;
+      background: rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+    .chat-container {
+      background: #090d16;
+      border: 1px solid #1f293d;
+      border-radius: 10px;
+      padding: 18px;
+      height: 380px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+    .chat-bubble {
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 15px;
+      line-height: 1.65;
+      max-width: 88%;
+    }
+    .chat-bubble.ai {
+      background: #162038;
+      border: 1px solid #2d3e66;
+      align-self: flex-start;
+      color: #f1f5f9;
+    }
+    .chat-bubble.ai pre {
+      background: #070d18;
+      padding: 10px 14px;
+      border-radius: 6px;
+      margin: 10px 0;
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      color: #38bdf8;
+      overflow-x: auto;
+      border: 1px solid #1e293b;
+    }
+    .chat-bubble.user {
+      background: #2563eb;
+      color: #fff;
+      align-self: flex-end;
+      font-size: 15px;
+    }
+
+    /* Quick Action Prompt Chips */
+    .quick-prompts-container {
+      margin-top: 10px;
+      margin-bottom: 12px;
+      background: #0d1527;
+      border: 1px solid #1e2d4d;
+      border-radius: 8px;
+      padding: 10px 14px;
+    }
+    .quick-prompts-label {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .quick-prompts-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .quick-chip {
+      background: #131c31;
+      border: 1px solid #233559;
+      color: #cbd5e1;
+      font-size: 14px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .quick-chip:hover {
+      background: #1e3a5f;
+      border-color: #38bdf8;
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 10px;
+    }
+    .chat-input {
+      flex: 1;
+      background: #090d16;
+      border: 1px solid #2d3748;
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 14.5px;
+    }
+    .chat-input:focus {
+      outline: none;
+      border-color: var(--accent-cyan);
+    }
+
+    /* Executive Triage Master Panel */
+    .executive-triage-panel {
+      background: linear-gradient(145deg, #0d162b 0%, #0a1120 100%);
+      border: 1px solid #1e3a5f;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+    .triage-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #1e293b;
+      padding-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .triage-panel-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .triage-icon {
+      font-size: 28px;
+    }
+    .triage-main-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #f8fafc;
+      letter-spacing: -0.3px;
+    }
+    .triage-sub-title {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+    .triage-status-badge {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+    .triage-status-badge.healthy {
+      background: rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+      border-color: rgba(34, 197, 94, 0.4);
+    }
+    .primary-blocker-card {
+      background: linear-gradient(90deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.04) 100%);
+      border-left: 4px solid #ef4444;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-top: 16px;
+    }
+    .primary-blocker-card.healthy {
+      background: linear-gradient(90deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.04) 100%);
+      border-left-color: #22c55e;
+    }
+    .blocker-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .blocker-tag {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #fca5a5;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .blocker-target {
+      font-family: var(--font-mono);
+      font-size: 14.5px;
+      font-weight: 800;
+      color: #38bdf8;
+      background: #090e1a;
+      padding: 2px 10px;
+      border-radius: 4px;
+      border: 1px solid #1e293b;
+    }
+    .blocker-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .blocker-desc {
+      font-size: 14.5px;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+    .verdict-box {
+      background: #080d19;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-top: 16px;
+    }
+    .verdict-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-bottom: 8px;
+    }
+    .verdict-content {
+      font-size: 14.5px;
+      color: #e2e8f0;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .roadmap-step {
+      background: #0c1424;
+      border: 1px solid #1e293d;
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .roadmap-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #1e3a5f;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .roadmap-body {
+      flex: 1;
+    }
+    .roadmap-phase {
+      font-size: 14px;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 4px;
+    }
+    .roadmap-action {
+      font-size: 14px;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+    .unified-macros-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 20px;
+    }
+    @media (max-width: 1024px) {
+      .unified-macros-grid { grid-template-columns: 1fr; }
+    }
+    .macro-card {
+      background: #090e1c;
+      border: 1px solid #1f2d45;
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .macro-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .macro-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #e2e8f0;
+    }
+    .macro-card-sub {
+      font-size: 14.5px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+    .macro-code-preview {
+      max-height: 140px;
+      overflow-y: auto;
+      background: #040711;
+      border: 1px solid #141c2c;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-family: var(--font-mono);
+      font-size: 14.5px;
+      color: #38bdf8;
+      white-space: pre-wrap;
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    /* Modal for Port Details */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-card {
+      background: #111827;
+      border: 1px solid #374151;
+      border-radius: 14px;
+      width: 520px;
+      max-width: 90vw;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    }
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 1px solid #1f2937;
+      padding-bottom: 12px;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      color: #9ca3af;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .metric-box {
+      background: #0d1322;
+      border: 1px solid #1f293d;
+      border-radius: 8px;
+      padding: 10px;
+    }
+    .metric-label { font-size: 14.5px; color: var(--text-sub); }
+    .metric-val { font-family: var(--font-mono); font-size: 15px; font-weight: 700; color: #fff; margin-top: 2px; }
+
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding: 14px 32px;
+      text-align: center;
+      font-size: 14px;
+      color: var(--text-sub);
+    }
+    /* Chronological Event Timeline Styles */
+    .timeline-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+    }
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .timeline-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .timeline-span-badge {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      color: #a5b4fc;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .timeline-stats-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .timeline-stat-chip {
+      font-size: 14px;
+      padding: 4px 12px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+    }
+    .stat-active { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .stat-recent { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .stat-quiesced { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+
+    .timeline-track {
+      position: relative;
+      padding-left: 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .timeline-track::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 6px;
+      bottom: 6px;
+      width: 2px;
+      background: #1e293b;
+    }
+    .timeline-node {
+      position: relative;
+      background: #090e1a;
+      border: 1px solid #1f293d;
+      border-radius: 8px;
+      padding: 10px 14px;
+      transition: all 0.2s ease;
+    }
+    .timeline-node:hover {
+      border-color: #38bdf8;
+      background: #0d1527;
+    }
+    .timeline-dot {
+      position: absolute;
+      left: -24px;
+      top: 14px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid #090e1a;
+    }
+    .dot-quiesced { background: #10b981; box-shadow: 0 0 8px rgba(16, 185, 129, 0.5); }
+    .dot-active { background: #ef4444; box-shadow: 0 0 8px rgba(239, 68, 68, 0.6); }
+    .dot-recent { background: #f59e0b; box-shadow: 0 0 8px rgba(245, 158, 11, 0.5); }
+    .dot-info { background: #64748b; }
+
+    .node-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .node-time {
+      font-family: var(--font-mono);
+      font-size: 14.5px;
+      color: #94a3b8;
+    }
+    .node-ago {
+      font-family: var(--font-mono);
+      font-size: 14.5px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+    .ago-quiesced { color: #34d399; background: rgba(16, 185, 129, 0.1); }
+    .ago-active { color: #f87171; background: rgba(239, 68, 68, 0.15); }
+    .ago-recent { color: #fbbf24; background: rgba(245, 158, 11, 0.1); }
+    .node-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 4px;
+    }
+    .node-detail {
+      font-size: 14px;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+
+    /* ========================================================
+       CCIE Multi-Chassis Architecture & Topology Visualizer
+       ======================================================== */
+    .topology-panel {
+      background: linear-gradient(180deg, #0e172a 0%, #090f1e 100%);
+      border: 1px solid #1e3a5f;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .topo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .topo-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #38bdf8;
+    }
+    .topo-filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .topo-filter-btn {
+      background: #131c31;
+      border: 1px solid #233559;
+      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .topo-filter-btn.active, .topo-filter-btn:hover {
+      background: #1e3a5f;
+      border-color: #38bdf8;
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(56, 189, 248, 0.25);
+    }
+    .topo-legend {
+      display: flex;
+      gap: 14px;
+      font-size: 14.5px;
+      color: #94a3b8;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      padding: 8px 14px;
+      background: #070c17;
+      border-radius: 8px;
+      border: 1px solid #142036;
+      align-items: center;
+    }
+    .topo-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .topo-legend-line {
+      width: 22px;
+      height: 3px;
+      border-radius: 2px;
+      display: inline-block;
+    }
+    .topo-canvas-box {
+      background: radial-gradient(circle at 50% 50%, #0f1d38 0%, #050913 100%);
+      border: 1px solid #1e2d4d;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 50px rgba(0,0,0,0.85);
+      min-height: 440px;
+    }
+    .topo-svg {
+      width: 100%;
+      height: 460px;
+      display: block;
+      user-select: none;
+    }
+    @keyframes topoPulse {
+      0% { stroke-opacity: 1; stroke-width: 3.5; }
+      50% { stroke-opacity: 0.35; stroke-width: 6; }
+      100% { stroke-opacity: 1; stroke-width: 3.5; }
+    }
+    .topo-link-miscable {
+      stroke: #ef4444;
+      stroke-width: 3.5;
+      stroke-dasharray: 6 3;
+      animation: topoPulse 1.2s infinite ease-in-out;
+      cursor: pointer;
+    }
+    .topo-link-normal {
+      stroke: #06b6d4;
+      stroke-width: 2.5;
+      cursor: pointer;
+      transition: stroke-width 0.2s, stroke 0.2s;
+    }
+    .topo-link-normal:hover { stroke-width: 4.5; stroke: #38bdf8; }
+    .topo-link-po {
+      stroke: #3b82f6;
+      stroke-width: 4;
+      cursor: pointer;
+      transition: stroke-width 0.2s;
+    }
+    .topo-link-po:hover { stroke-width: 5.5; }
+    .topo-link-vlan {
+      stroke: #f59e0b;
+      stroke-width: 3;
+      stroke-dasharray: 5 3;
+      cursor: pointer;
+    }
+    .topo-link-vlan:hover { stroke-width: 4.5; }
+    .topo-link-drops {
+      stroke: #fb923c;
+      stroke-width: 2.5;
+      stroke-dasharray: 3 3;
+      cursor: pointer;
+    }
+    .topo-node {
+      cursor: pointer;
+      transition: transform 0.2s, filter 0.2s;
+    }
+    .topo-node:hover {
+      filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.6));
+    }
+    .topo-node.selected rect {
+      stroke: #38bdf8 !important;
+      stroke-width: 2.5 !important;
+      filter: drop-shadow(0 0 14px rgba(56, 189, 248, 0.9));
+    }
+    .topo-inspector {
+      margin-top: 16px;
+      background: #090e1c;
+      border: 1px solid #1e3a5f;
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: none;
+      animation: topoFadeIn 0.3s ease;
+    }
+    @keyframes topoFadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .topo-inspector-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #192742;
+      padding-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .topo-inspector-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .topo-inspector-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .topo-prop-box {
+      background: #0d1629;
+      border: 1px solid #1c2b4a;
+      border-radius: 8px;
+      padding: 10px 14px;
+    }
+    .topo-prop-lbl { font-size: 14.5px; color: #94a3b8; }
+    .topo-prop-val { font-family: var(--font-mono); font-size: 14.5px; font-weight: 700; color: #f1f5f9; margin-top: 2px; }
+    .topo-advice-box {
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: 14.5px;
+      line-height: 1.6;
+    }
+    .topo-advice-box.critical {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #fca5a5;
+    }
+    .topo-advice-box.warning {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #fde68a;
+    }
+    .topo-advice-box.healthy {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #a7f3d0;
+    }
+
+    /* ========================================================
+       Multi-Chassis Fleet Mode Styles
+       ======================================================== */
+    .mode-tabs-container {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #1e293b;
+      padding-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .mode-tab-btn {
+      background: #0d1527;
+      border: 1px solid #1e2d4d;
+      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    .mode-tab-btn:hover {
+      background: #14223d;
+      color: #fff;
+      border-color: #38bdf8;
+    }
+    .mode-tab-btn.active {
+      background: linear-gradient(135deg, #13223f 0%, #1e1b4b 100%);
+      color: #38bdf8;
+      border-color: #38bdf8;
+      box-shadow: 0 4px 16px rgba(56, 189, 248, 0.25);
+    }
+    .mode-badge-new {
+      background: linear-gradient(90deg, #8b5cf6, #ec4899);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Fleet Ingestion Card */
+    .fleet-ingest-card {
+      background: linear-gradient(145deg, #0e172a 0%, #090f1e 100%);
+      border: 1px solid #1e3a5f;
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .fleet-drop-zone {
+      border: 2px dashed #233b67;
+      background: #070d1a;
+      border-radius: 10px;
+      padding: 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 16px;
+    }
+    .fleet-drop-zone:hover, .fleet-drop-zone.dragover {
+      border-color: #38bdf8;
+      background: #0d1830;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+    }
+    .drop-zone-icon {
+      font-size: 36px;
+      margin-bottom: 8px;
+    }
+    .drop-zone-text {
+      font-size: 14px;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 4px;
+    }
+    .drop-zone-sub {
+      font-size: 14px;
+      color: #64748b;
+    }
+    .file-chips-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .file-chip {
+      background: #131f38;
+      border: 1px solid #1e3a5f;
+      color: #38bdf8;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .file-chip-remove {
+      color: #f87171;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    /* Fleet Scanner Row */
+    .fleet-scanner-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      background: #070d19;
+      border: 1px solid #162544;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 8px;
+    }
+    .fleet-folder-input {
+      flex: 1;
+      background: #0b1325;
+      border: 1px solid #1e293b;
+      border-radius: 6px;
+      padding: 8px 12px;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      min-width: 260px;
+    }
+    .fleet-folder-input:focus {
+      outline: none;
+      border-color: #38bdf8;
+    }
+
+    /* Fleet Summary Strip */
+    .fleet-stat-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .fleet-stat-card {
+      background: #0c1426;
+      border: 1px solid #1c2e4f;
+      border-radius: 10px;
+      padding: 14px 18px;
+    }
+    .fleet-stat-num {
+      font-family: var(--font-mono);
+      font-size: 26px;
+      font-weight: 800;
+      color: #f8fafc;
+      margin-top: 2px;
+    }
+    .fleet-stat-label {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #94a3b8;
+    }
+
+    /* Fleet Device Cards Grid */
+    .fleet-device-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .fleet-dev-card {
+      background: #0b1325;
+      border: 1px solid #1e3a5f;
+      border-radius: 12px;
+      padding: 16px;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .fleet-dev-card:hover {
+      border-color: #38bdf8;
+      box-shadow: 0 4px 20px rgba(56, 189, 248, 0.2);
+      transform: translateY(-2px);
+    }
+    .fleet-dev-card.critical {
+      border-left: 4px solid #ef4444;
+    }
+    .fleet-dev-card.healthy {
+      border-left: 4px solid #10b981;
+    }
+    .fleet-dev-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    .fleet-dev-name {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .fleet-dev-score {
+      font-family: var(--font-mono);
+      font-size: 14.5px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .score-green { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .score-amber { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .score-red { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+
+    /* Cross-Device Conflict Table */
+    .conflict-table-box {
+      background: #0a1122;
+      border: 1px solid #1e3a5f;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .conflict-table-head {
+      background: #0e1b36;
+      padding: 14px 20px;
+      border-bottom: 1px solid #1e2d4d;
+      font-size: 14px;
+      font-weight: 800;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .conflict-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .conflict-table th {
+      background: #090f1e;
+      padding: 10px 14px;
+      text-align: left;
+      color: #94a3b8;
+      font-weight: 700;
+      border-bottom: 1px solid #162544;
+    }
+    .conflict-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #142036;
+      color: #cbd5e1;
+      vertical-align: top;
+    }
+    .conflict-table tr:hover td {
+      background: #0e1930;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-logo">⬡</div>
+      <div>
+        <div class="brand-title">SwitchScope</div>
+        <div class="brand-subtitle">智慧網通設備異常透視與排障儀 (ML + Local AI Copilot)</div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div class="badges">
+        <span class="badge badge-ecod">⚡ ECOD: Unsupervised ML</span>
+        <span class="badge badge-catboost">🌲 CatBoost: Decision Tree</span>
+        <span class="badge badge-airgap">🔒 100% 地端離線零洩漏</span>
+      </div>
+      <!-- Interactive Font Size Zoom Controls -->
+      <div style="display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.08); padding: 4px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12);">
+        <span style="font-size: 13px; color: #94a3b8; font-weight: 600;">字體大小:</span>
+        <button type="button" class="btn btn-xs" style="padding: 2px 8px; font-size: 13px; font-weight: 700; background: #1e293b; color: #38bdf8; border: 1px solid #334155; border-radius: 4px; cursor: pointer;" onclick="changeFontSize(-1)" title="縮小字體">A-</button>
+        <span id="fontLevelLabel" style="font-size: 13px; font-weight: 700; color: #fff; min-width: 36px; text-align: center;">標準</span>
+        <button type="button" class="btn btn-xs" style="padding: 2px 8px; font-size: 13px; font-weight: 700; background: #1e293b; color: #38bdf8; border: 1px solid #334155; border-radius: 4px; cursor: pointer;" onclick="changeFontSize(1)" title="放大字體">A+</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Global Mode Switcher Tabs -->
+    <div class="mode-tabs-container">
+      <button class="mode-tab-btn active" id="tabSingleMode" onclick="switchGlobalMode('single')">
+        <span>⬡</span>
+        <span>單機深入透視模式 (Single-Switch Deep Diagnostic)</span>
+      </button>
+      <button class="mode-tab-btn" id="tabFleetMode" onclick="switchGlobalMode('fleet')">
+        <span>🏢</span>
+        <span>多台實體設備跨機聯動模式 (Multi-Chassis Fleet Cross-Correlation)</span>
+        <span class="mode-badge-new">NEW 全網真實架構</span>
+      </button>
+    </div>
+
+    <!-- Single Switch Section Wrapper -->
+    <div id="singleSwitchSection">
+      <!-- Action Toolbar -->
+      <div class="toolbar">
+      <div class="btn-group">
+        <button class="btn btn-secondary" onclick="loadSample()">📋 載入二層多重故障 (LACP + BPDU + CRC)</button>
+        <button class="btn btn-secondary" onclick="loadSample('flapping')">🚨 載入高頻震盪 Log (Link Flapping)</button>
+        <button class="btn btn-secondary" style="border-color: #6366f1; color: #a5b4fc;" onclick="loadSample('routing')">🌐 載入 CCIE 路由實戰 (OSPF + BGP + EIGRP)</button>
+        <button class="btn btn-secondary" style="border-color: #06b6d4; color: #38bdf8;" onclick="loadSample('topology')">🔌 載入 CCIE 拓撲聯動 (CDP/LLDP 跨設備錯插 & 上聯穿透)</button>
+        <button class="btn btn-secondary" style="border-color: #10b981; color: #6ee7b7;" onclick="loadSample('timeline')">⏳ 載入時序平息實戰 (12天前歷史跳動)</button>
+        <button class="btn btn-secondary" onclick="clearInput()">🗑️ 清空內容</button>
+      </div>
+      <div class="btn-group">
+        <label class="toggle-label">
+          <input type="checkbox" id="maskIpsCheck" checked>
+          <span>🛡️ 自動脫敏機敏密碼與私網 IP</span>
+        </label>
+        <button class="btn btn-primary" onclick="analyzeSwitch()">🚀 開始 ML 智慧診斷</button>
+      </div>
+    </div>
+
+    <!-- Golden Command Guide Box -->
+    <div class="card" style="background: linear-gradient(135deg, #0e1e38 0%, #0d1527 100%); border: 1px solid #1e3a5f;">
+      <div class="card-header" style="margin-bottom: 8px;">
+        <div class="card-title" style="color: #38bdf8;">
+          <span>👑 現場 3 秒極速採集：全方位健檢「黃金指令包」 (Golden All-in-One CLI)</span>
+        </div>
+        <button class="btn btn-primary" onclick="copyGoldenMacro(this)">
+          📋 一鍵複製黃金採集指令
+        </button>
+      </div>
+      <div style="font-size: 13px; color: #94a3b8; margin-bottom: 10px;">
+        現場免摸索！點擊右上方按鈕複製 ➔ 到 Switch 終端機 (Console/SSH) 點右鍵一次貼上 ➔ 自動關閉換頁跑完 ➔ 全選輸出貼入下方即可！
+      </div>
+      <pre style="background: #070b14; border: 1px solid #1e293d; border-radius: 8px; padding: 10px 14px; font-family: var(--font-mono); font-size: 12px; color: #38bdf8; overflow-x: auto;" id="goldenMacroText">terminal length 0
+show clock
+show version
+show switch
+show etherchannel summary
+show interfaces status
+show interfaces | include (?:is (?:up|down)|input rate|output rate|errors|CRC|drops)
+show cdp neighbors detail
+show lldp neighbors
+show mac address-table
+show ip arp
+show ip route
+show ip ospf neighbor
+show ip bgp summary
+show ip eigrp neighbors
+show mpls ldp neighbor
+show logging | include %
+terminal default length</pre>
+    </div>
+
+    <!-- CLI Input -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span>💻 Cisco Switch CLI 輸出貼入區 (支援整段複製或各別指令)</span>
+        </div>
+        <div class="chips">
+          <span class="chip">show version</span>
+          <span class="chip">show etherchannel sum</span>
+          <span class="chip">show int status</span>
+          <span class="chip">show interfaces</span>
+          <span class="chip">show cdp neighbors detail</span>
+          <span class="chip">show mac address-table</span>
+          <span class="chip">show ip arp</span>
+          <span class="chip">show ip route</span>
+          <span class="chip">show ip ospf neighbor</span>
+          <span class="chip">show ip bgp summary</span>
+          <span class="chip">show logging</span>
+        </div>
+      </div>
+      <textarea id="cliInput" placeholder="請將 Switch Console 或 SSH 終端機輸出的文字整坨貼在此處 (例如 show etherchannel summary, show interfaces status, show interfaces, show cdp neighbors detail, show mac address-table, show ip arp, show logging 等)..."></textarea>
+    </div>
+
+    <!-- Physical Switch Faceplate (面板模擬器) -->
+    <div class="switch-chassis" id="chassisContainer" style="display: none;">
+      <div class="chassis-header">
+        <div class="chassis-model" id="chassisModelTitle">Cisco Catalyst 9300-48P Front Panel</div>
+        <div class="chassis-legend">
+          <div class="legend-item"><span class="led-dot led-green"></span> 正常 (Connected)</div>
+          <div class="legend-item"><span class="led-dot led-flapping"></span> 震盪狂跳 (Flapping)</div>
+          <div class="legend-item"><span class="led-dot led-red"></span> 鎖死 (Err-Disabled)</div>
+          <div class="legend-item"><span class="led-dot led-amber"></span> 掛起/CRC異常 (Suspended / Outlier)</div>
+          <div class="legend-item"><span class="led-dot led-gray"></span> 離線 (Not Connected)</div>
+        </div>
+      </div>
+      <div class="port-grid" id="portGrid">
+        <!-- Rendered by JavaScript -->
+      </div>
+    </div>
+
+    <!-- CCIE Multi-Chassis Architecture & Topology Visualizer (實體與邏輯對接拓撲架構圖) -->
+    <div class="topology-panel" id="topologyContainer" style="display: none;">
+      <div class="topo-header">
+        <div class="topo-title">
+          <span>🌐</span>
+          <span>CCIE 實體與邏輯對接拓撲架構圖 (Multi-Chassis Topology & Link Telemetry)</span>
+        </div>
+        <div class="topo-filters">
+          <button class="topo-filter-btn active" id="btnTopoAll" onclick="setTopoFilter('all', this)">全部拓撲</button>
+          <button class="topo-filter-btn" id="btnTopoAnomalies" onclick="setTopoFilter('anomalies', this)">🚨 僅看異常鏈路</button>
+          <button class="topo-filter-btn" id="btnTopoTrunks" onclick="setTopoFilter('trunks', this)">🏢 交換機幹道 (Trunks)</button>
+          <button class="topo-filter-btn" id="btnTopoEndpoints" onclick="setTopoFilter('endpoints', this)">💻 終端設備與主機</button>
+        </div>
+      </div>
+
+      <div class="topo-legend">
+        <div class="topo-legend-item"><span class="topo-legend-line" style="background:#06b6d4;"></span> 正常鏈路 (Trunk/Access)</div>
+        <div class="topo-legend-item"><span class="topo-legend-line" style="background:#3b82f6; height:4px;"></span> Port-Channel 聚合組</div>
+        <div class="topo-legend-item"><span class="topo-legend-line" style="background:#ef4444; border-bottom: 2px dashed #ef4444;"></span> 🚨 跨設備錯插 (Mis-cabling)</div>
+        <div class="topo-legend-item"><span class="topo-legend-line" style="background:#f59e0b; border-bottom: 2px dashed #f59e0b;"></span> ⚠️ Native VLAN 衝突</div>
+        <div class="topo-legend-item"><span class="topo-legend-line" style="background:#fb923c; border-bottom: 2px dotted #fb923c;"></span> 🌊 緩衝區丟包 (Drops)</div>
+        <div style="margin-left: auto; color: #64748b; font-size: 11px;">💡 提示：點擊任何節點或線路，即刻穿透檢視 CCIE 拓撲對接詳情與處置 SOP</div>
+      </div>
+
+      <div class="topo-canvas-box">
+        <svg id="topoCanvas" class="topo-svg" viewBox="0 0 1000 480" preserveAspectRatio="xMidYMid meet">
+          <!-- Rendered dynamically by JavaScript -->
+        </svg>
+      </div>
+
+      <!-- Topology Inspector (點擊節點/鏈路展開詳情) -->
+      <div class="topo-inspector" id="topoInspector">
+        <!-- Populated by JavaScript -->
+      </div>
+    </div>
+
+    <!-- CCIE Executive Triage & Master Action (全域會診總評與統整下一動) -->
+    <div class="executive-triage-panel" id="executiveTriagePanel" style="display: none;">
+      <div class="triage-panel-header">
+        <div class="triage-panel-title">
+          <span class="triage-icon">👑</span>
+          <div>
+            <div class="triage-main-title">CCIE 全域會診總評與統整下一動 (Unified Executive Triage)</div>
+            <div class="triage-sub-title">雙層機器學習 (CatBoost + ECOD) 全局關聯分析：主次分流、杜絕碎片化逐孔排查</div>
+          </div>
+        </div>
+        <div class="triage-status-badge" id="triageStatusBadge">CRITICAL BLOCKER</div>
+      </div>
+
+      <div class="primary-blocker-card" id="primaryBlockerBox">
+        <div class="blocker-header">
+          <span class="blocker-tag">🚨 當前最高優先級主震央 (Primary Blocker)</span>
+          <span class="blocker-target" id="blockerTarget">--</span>
+        </div>
+        <div class="blocker-title" id="blockerTitle">--</div>
+        <div class="blocker-desc" id="blockerDesc">--</div>
+      </div>
+
+      <div class="verdict-box">
+        <div class="verdict-label">💡 首席 CCIE 會診整合意見與處置策略：</div>
+        <div class="verdict-content" id="verdictText">--</div>
+      </div>
+
+      <div class="roadmap-grid" id="roadmapGrid">
+        <!-- Rendered by JavaScript -->
+      </div>
+
+      <div class="unified-macros-grid">
+        <div class="macro-card">
+          <div class="macro-card-header">
+            <div>
+              <div class="macro-card-title">⚡ 全域統整深度採集指令包 (一次查完)</div>
+              <div class="macro-card-sub">整合全機主因與次要疑點，終端機貼上一次搞定全域二次研判</div>
+            </div>
+            <button class="btn btn-primary" style="padding: 6px 14px; font-size: 12px;" onclick="copyUnifiedInvestigation(this)">
+              📋 複製統整採集指令
+            </button>
+          </div>
+          <pre class="macro-code-preview" id="unifiedInvPreview"></pre>
+        </div>
+
+        <div class="macro-card">
+          <div class="macro-card-header">
+            <div>
+              <div class="macro-card-title">🛡️ 全域整合現場修復腳本 (依優先級配置)</div>
+              <div class="macro-card-sub">包含 configure terminal 與 end，集中火力修復主因並驗證</div>
+            </div>
+            <button class="btn btn-secondary" style="background:#059669; border-color:#10b981; color:#fff; padding: 6px 14px; font-size: 12px;" onclick="copyUnifiedRemediation(this)">
+              📋 複製整合修復腳本
+            </button>
+          </div>
+          <pre class="macro-code-preview" id="unifiedRemPreview"></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chronological Event Timeline (時序事件溯源與時效分析) -->
+    <div class="timeline-panel" id="timelineContainer" style="display: none; margin-bottom: 24px;">
+      <div class="timeline-header">
+        <div class="timeline-title">
+          <span>⏳</span>
+          <span>時序事件溯源與時效分析 (Chronological Time-Series Timeline)</span>
+        </div>
+        <div class="timeline-span-badge" id="timelineSpanBadge">日誌跨度: --</div>
+      </div>
+      <div style="font-size: 13px; color: #94a3b8; margin-bottom: 14px;">
+        💡 <strong>CCIE 時間序列排障</strong>：以最新一筆 Log 為當前時間基準，將全機日誌按時間由先至後排列。精準區分「<strong>進行中即時故障</strong>」與「<strong>歷史已平息雜訊</strong>」，避免耗費時間排查多天前已平息之過往紀錄（避免白查！）。
+      </div>
+      <div class="timeline-stats-bar" id="timelineStatsBar">
+        <!-- Rendered by JavaScript -->
+      </div>
+      <div class="timeline-track" id="timelineTrack">
+        <!-- Rendered by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Diagnostics Layout -->
+    <div class="diag-layout" id="diagContainer" style="display: none;">
+      <!-- Health Score Gauge -->
+      <div class="health-gauge-card">
+        <div class="score-circle" id="scoreCircle">
+          <div class="score-val" id="scoreVal">--</div>
+          <div class="score-lbl">Health Score</div>
+        </div>
+        <div class="score-status-text" id="scoreStatus">分析中...</div>
+        <div style="font-size: 11px; color: var(--text-sub); margin-top: 8px;" id="scoreSummary">
+          ML 深度檢測已完成
+        </div>
+      </div>
+
+      <!-- CatBoost & ECOD Diagnoses Cards -->
+      <div class="diag-list" id="diagList">
+        <!-- Rendered by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Tier-2 LLM Escalation & Interactive Triage Panel -->
+    <div class="triage-section" id="triageSection" style="display: none;">
+      <div class="triage-header">
+        <div class="triage-title">
+          <span>🤖 Tier-2 本地 AI 排障助理 (CCIE Reasoning Copilot)</span>
+        </div>
+        <!-- Ollama Model & Connection Toolbar -->
+        <div class="ollama-toolbar">
+          <div class="ollama-status-badge" id="ollamaStatusBadge" onclick="checkOllamaStatus(true)" title="點擊重新檢測本地 Ollama 連線狀態">
+            <span class="status-dot offline" id="ollamaDot"></span>
+            <span id="ollamaStatusText">Ollama: 偵測中...</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <label for="ollamaModelSelect" style="font-size: 11px; color: #94a3b8; font-weight: 600;">模型：</label>
+            <select id="ollamaModelSelect" class="ollama-select" onchange="handleModelChange()">
+              <option value="qwen2.5:1.5b">Qwen2.5:1.5b (極低功耗 1.5B / 8GB普通筆電首選 🚀)</option>
+              <option value="qwen2.5-coder:1.5b">Qwen2.5-Coder:1.5b (代碼特化 1.5B / 超順暢 💻)</option>
+              <option value="qwen3.5" selected>Qwen3.5 (筆電最佳平衡首選 ⭐)</option>
+              <option value="qwen3.5:3b">Qwen3.5:3b (極速 3B / 輕薄筆電 ⚡)</option>
+              <option value="qwen3.5:7b">Qwen3.5:7b (標準 7B / 建議16GB記憶體)</option>
+              <option value="qwen2.5-coder:7b">Qwen2.5-Coder:7b (Cisco 腳本特化)</option>
+              <option value="qwen2.5:3b">Qwen2.5:3b (經典輕量 3B)</option>
+              <option value="custom">自訂模型名稱...</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Laptop Optimization & Offline Ollama Command Guide Banner -->
+      <div class="ollama-notice-bar" id="ollamaNoticeBar">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 18px;">💻</span>
+          <div>
+            <div style="font-weight: 700; color: #38bdf8; font-size: 12px; margin-bottom: 2px;">
+              筆電輕量 LLM 調優：推薦 Qwen3.5 (記憶體僅需 3~6GB，相較 Gemma 4 更流暢省電、不卡死筆電)
+            </div>
+            <div style="font-size: 11px; color: #94a3b8;" id="ollamaNoticeHelp">
+              若本地尚未啟動模型，請於 Windows 終端執行：<code class="cmd-pill" id="ollamaCmdCode">ollama run qwen3.5</code>（啟動後本頁面將自動熱接）
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-xs" style="background: #1e3a5f; color: #38bdf8; border: 1px solid #38bdf8;" onclick="copyOllamaCmd(this)">📋 複製指令</button>
+          <button class="btn btn-xs btn-secondary" onclick="checkOllamaStatus(true)">🔄 檢查連線</button>
+        </div>
+      </div>
+      <div class="chat-container" id="chatBox">
+        <div class="chat-bubble ai" id="aiWelcomeBubble">
+          您好！SwitchScope 的 Tier-1 機器學習（CatBoost & ECOD）已完成初步數據透視。若您對診斷有疑問、或需要知道<strong>「下一步該在 Switch 敲什麼指令驗證」</strong>，請隨時向我提問！
+        </div>
+      </div>
+
+      <!-- Quick Action Prompt Pills / 傻瓜一鍵諮詢卡片 -->
+      <div class="quick-prompts-container" id="quickPromptsContainer">
+        <div class="quick-prompts-label">⚡ 點擊一鍵諮詢（免打字傻瓜按鈕）：</div>
+        <div class="quick-prompts-grid" id="quickPromptsGrid">
+          <!-- Populated dynamically by JavaScript -->
+        </div>
+      </div>
+
+      <div class="chat-input-row">
+        <input type="text" class="chat-input" id="chatInput" placeholder="例如：請告訴我 Po1 被掛起的下一步診斷指令是什麼？或是點擊上方一鍵諮詢按鈕..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+        <button class="btn btn-primary" onclick="sendChatMessage()">送出諮詢</button>
+      </div>
+    </div>
+  </div> <!-- /#singleSwitchSection -->
+
+  <!-- ========================================================
+       Multi-Chassis Fleet Analysis Section (多台實體設備模式)
+       ======================================================== -->
+  <div id="fleetSection" style="display: none;">
+    <!-- Fleet Ingestion Card -->
+    <div class="fleet-ingest-card">
+      <div class="card-header" style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <div class="card-title" style="color: #38bdf8; font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+          <span>📁</span>
+          <span>多台 Switch 配置/日誌批次匯入與資料夾一鍵掃描 (Multi-Chassis Ingestion)</span>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-secondary" style="border-color: #6366f1; color: #a5b4fc;" onclick="loadFleetDemo()">
+            🏢 載入 3 台實體設備對接示範包 (Core + Dist + Access)
+          </button>
+          <button class="btn btn-primary" onclick="analyzeFleetFiles()">
+            🚀 開始全網多機聯動診斷
+          </button>
+        </div>
+      </div>
+
+      <div style="font-size: 13px; color: #94a3b8; margin-bottom: 14px; line-height: 1.5;">
+        💡 <strong>CCIE 實體跨機聯動排障</strong>：支援一次匯入 2 ~ 50 台交換機之 <code>show run</code>、<code>show version</code>、<code>show cdp nei</code>、<code>show int</code> 或 <code>.conf / .txt</code> 檔案。引擎將自動跨機雙向比對兩端連接埠的 <strong>LACP 聚合對稱性</strong>、<strong>Trunk Native VLAN</strong>、<strong>MTU 差異</strong> 與 <strong>跨設備錯插跳線</strong>！
+      </div>
+
+      <!-- Drop Zone -->
+      <div class="fleet-drop-zone" id="fleetDropZone" onclick="document.getElementById('fleetFileInput').click()">
+        <div class="drop-zone-icon">📥</div>
+        <div class="drop-zone-text">點擊選擇檔案，或直接將多個 .txt / .conf / .log 檔案拖曳至此</div>
+        <div class="drop-zone-sub">支援按住 Ctrl / Shift 一次選取多個檔案</div>
+        <input type="file" id="fleetFileInput" multiple accept=".txt,.conf,.cfg,.log" style="display: none;" onclick="event.stopPropagation()" onchange="handleFleetFilesSelect(event)">
+        <div class="file-chips-grid" id="fleetFileChips" onclick="event.stopPropagation()"></div>
+      </div>
+
+      <!-- Local Folder Scanner Row -->
+      <div class="fleet-scanner-row">
+        <span style="font-size: 12px; font-weight: 700; color: #38bdf8; display: flex; align-items: center; gap: 6px;">
+          <span>📂</span> 本機機房備份資料夾掃描：
+        </span>
+        <input type="text" class="fleet-folder-input" id="fleetFolderPathInput" placeholder="請輸入本機資料夾路徑，例如: C:\Users\Kerr\Downloads\SwitchScope\samples\multi_chassis_demo">
+        <button class="btn btn-secondary" style="padding: 6px 14px; font-size: 12px;" onclick="scanLocalFolder()">
+          📂 掃描資料夾分析
+        </button>
+      </div>
+    </div>
+
+    <!-- Fleet Results Container -->
+    <div id="fleetResultsContainer" style="display: none;">
+      <!-- Fleet Stat Strip -->
+      <div class="fleet-stat-strip" id="fleetStatStrip">
+        <!-- Rendered by JavaScript -->
+      </div>
+
+      <!-- Fleet Device Inventory Cards Grid -->
+      <div style="font-size: 14px; font-weight: 800; color: #38bdf8; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+        <span>🖧</span>
+        <span>全網實體設備清冊與健康評估 (Fleet Switch Inventory)</span>
+      </div>
+      <div class="fleet-device-grid" id="fleetDeviceGrid">
+        <!-- Rendered by JavaScript -->
+      </div>
+
+      <!-- Global Multi-Chassis Architecture Topology -->
+      <div class="topology-panel" id="fleetTopologyPanel">
+        <div class="topo-header">
+          <div class="topo-title">
+            <span>🌐</span>
+            <span>全網多實體設備跨機聯動架構圖 (Multi-Chassis Real Topology & Link Verification)</span>
+          </div>
+          <div class="topo-filters">
+            <button class="topo-filter-btn active" id="btnFleetTopoAll" onclick="setFleetTopoFilter('all', this)">全部拓撲</button>
+            <button class="topo-filter-btn" id="btnFleetTopoConflicts" onclick="setFleetTopoFilter('conflicts', this)">🚨 僅看雙機衝突鏈路</button>
+          </div>
+        </div>
+
+        <div class="topo-legend">
+          <div class="topo-legend-item"><span class="topo-legend-line" style="background:#06b6d4;"></span> 雙向驗證正常鏈路</div>
+          <div class="topo-legend-item"><span class="topo-legend-line" style="background:#3b82f6; height:4px;"></span> Port-Channel 雙機對接聚合組</div>
+          <div class="topo-legend-item"><span class="topo-legend-line" style="background:#ef4444; border-bottom: 2px dashed #ef4444;"></span> 🚨 跨設備錯插 / LACP 不對稱</div>
+          <div class="topo-legend-item"><span class="topo-legend-line" style="background:#f59e0b; border-bottom: 2px dashed #f59e0b;"></span> ⚠️ 雙機 Native VLAN 衝突</div>
+          <div style="margin-left: auto; color: #64748b; font-size: 11px;">💡 提示：點擊任何實體交換機節點或對接線路，即刻穿透雙機檢驗詳情</div>
+        </div>
+
+        <div class="topo-canvas-box">
+          <svg id="fleetTopoCanvas" class="topo-svg" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet">
+            <!-- Rendered by JavaScript -->
+          </svg>
+        </div>
+
+        <!-- Fleet Link Inspector -->
+        <div class="topo-inspector" id="fleetTopoInspector">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Cross-Device Conflicts & Inconsistency Matrix Table -->
+      <div class="conflict-table-box" id="fleetConflictBox">
+        <div class="conflict-table-head">
+          <span>🚨</span>
+          <span>全網跨設備不一致與衝突對照表 (Cross-Device Discrepancies & Conflict Matrix)</span>
+        </div>
+        <table class="conflict-table" id="fleetConflictTable">
+          <thead>
+            <tr>
+              <th>本端設備與介面</th>
+              <th>對端設備與介面</th>
+              <th>衝突類型</th>
+              <th>嚴重度</th>
+              <th>雙機關聯根因分析</th>
+              <th>兩端現場修復腳本 (CLI)</th>
+            </tr>
+          </thead>
+          <tbody id="fleetConflictTbody">
+            <!-- Rendered by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Master Fleet Remediation Macro Card -->
+      <div class="macro-card" style="margin-bottom: 24px; padding: 20px;">
+        <div class="macro-card-header">
+          <div>
+            <div class="macro-card-title" style="font-size: 16px;">👑 全網跨設備一體化修復腳本 (Master Multi-Chassis Remediation Macro)</div>
+            <div class="macro-card-sub" style="font-size: 12px;">已按各實體交換機主機名稱分段排版，包含 configure terminal 與 write memory</div>
+          </div>
+          <button class="btn btn-primary" onclick="copyFleetRemediation(this)">
+            📋 一鍵複製全網修復腳本
+          </button>
+        </div>
+        <pre class="macro-code-preview" style="max-height: 240px; font-size: 12px;" id="fleetRemPreview"></pre>
+      </div>
+
+      <!-- Fleet Copilot (CCIE Multi-Chassis Reasoning Copilot) -->
+      <div class="triage-section" id="fleetTriageSection" style="margin-top: 24px;">
+        <div class="triage-header">
+          <div class="triage-title">
+            <span>🤖 多機全網 AI 諮詢助理 (Fleet CCIE Reasoning Copilot)</span>
+          </div>
+          <div class="ollama-toolbar">
+            <div class="ollama-status-badge" onclick="checkOllamaStatus(true)" title="點擊重新檢測本地 Ollama 連線">
+              <span class="status-dot offline fleet-ollama-dot"></span>
+              <span class="fleet-ollama-text">Ollama: 偵測中...</span>
+            </div>
+            <div style="font-size: 11px; color: #94a3b8;">
+              模型：<span class="cmd-pill current-model-badge">qwen3.5</span>
+            </div>
+          </div>
+        </div>
+        <div class="chat-container" id="fleetChatBox" style="height: 240px;">
+          <div class="chat-bubble ai">
+            您好！多機聯防引擎已完成跨交換機拓撲比對。若您想了解<strong>「跨設備 LACP 單邊掛起該如何排查」</strong>、<strong>「Trunk Native VLAN 不一致的修復順序」</strong>或需要針對這幾台 Switch 產生對外事故通報，請隨時向我提問！
+          </div>
+        </div>
+        <!-- Fleet Quick Action Pills -->
+        <div class="quick-prompts-container">
+          <div class="quick-prompts-label">⚡ 全網快速諮詢建議（免打字傻瓜按鈕）：</div>
+          <div class="quick-prompts-grid">
+            <div class="quick-chip" onclick="sendFleetQuickPrompt('請分析這幾台 Switch 的 LACP 與 Native VLAN 衝突，並列出先修哪一台交換機最安全？')">⚖️ 跨機修復優先順序建議</div>
+            <div class="quick-chip" onclick="sendFleetQuickPrompt('產生給客戶的跨設備連線異常與修復進度通報 (Line/Email 格式)')">📢 產生跨機維運通報</div>
+            <div class="quick-chip" onclick="sendFleetQuickPrompt('請說明跨交換機 Native VLAN 不一致為什麼會導致 STP 封鎖連接埠？')">🛡️ STP PVID 衝突原理</div>
+          </div>
+        </div>
+        <div class="chat-input-row">
+          <input type="text" class="chat-input" id="fleetChatInput" placeholder="詢問多台設備關聯問題，例如：修復時如果先動 Core-SW 會不會斷線？..." onkeypress="if(event.key==='Enter') sendFleetChatMessage()">
+          <button class="btn btn-primary" onclick="sendFleetChatMessage()">送出諮詢</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </main>
+
+  <!-- Port Details Modal -->
+  <div class="modal-overlay" id="portModal" onclick="closeModal(event)">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-head">
+        <h3 id="modalPortName" style="color: #38bdf8; font-family: var(--font-mono);">Gi1/0/1 Details</h3>
+        <button class="modal-close" onclick="document.getElementById('portModal').style.display='none'">&times;</button>
+      </div>
+      <div class="metric-grid">
+        <div class="metric-box">
+          <div class="metric-label">Status (狀態)</div>
+          <div class="metric-val" id="mStatus">connected</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">VLAN</div>
+          <div class="metric-val" id="mVlan">trunk</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Duplex / Speed</div>
+          <div class="metric-val" id="mDuplex">full / 1000</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">CRC Errors (實體錯誤)</div>
+          <div class="metric-val" id="mCrc" style="color: #f87171;">0</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Input / Output Errors</div>
+          <div class="metric-val" id="mErrors">0 / 0</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Collisions (碰撞)</div>
+          <div class="metric-val" id="mCollisions">0</div>
+        </div>
+      </div>
+      <div style="background: #090d16; border: 1px solid #1f2937; border-radius: 8px; padding: 12px;">
+        <div style="font-size: 11px; color: #94a3b8; margin-bottom: 4px;">ECOD 離群評估與分析：</div>
+        <div id="mEcodExp" style="font-size: 12px; color: #e2e8f0; line-height: 1.4;">計數器在正常基線範圍內。</div>
+      </div>
+      <!-- CDP / LLDP Topology Telemetry Box -->
+      <div style="background: #0d1527; border: 1px solid #1e3a5f; border-radius: 8px; padding: 12px; margin-top: 12px;">
+        <div style="font-size: 11px; font-weight: 700; color: #38bdf8; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+          <span>🌐</span> CDP / LLDP 對端實體拓撲與設備身分 (Topology Telemetry)：
+        </div>
+        <div id="mTopologyDetails" style="font-size: 12px; color: #cbd5e1; line-height: 1.5;">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    SwitchScope v1.0.0 — 專為現場網管與 SI 打造的純地端智慧排障系統 | Powered by ECOD (PyOD) & CatBoost
+  </footer>
+
+  <script>
+    /* ========================================================
+       Global Mode Switcher & Multi-Chassis Fleet JS Engine
+       ======================================================== */
+    let currentGlobalMode = 'single';
+    let queuedFleetFiles = [];
+    let currentFleetData = null;
+    let currentFleetTopoFilter = 'all';
+    let fleetNodesMap = {};
+    let fleetLinksMap = {};
+    let dropZoneInited = false;
+
+    function switchGlobalMode(mode) {
+      currentGlobalMode = mode;
+      const tabSingle = document.getElementById('tabSingleMode');
+      const tabFleet = document.getElementById('tabFleetMode');
+      const secSingle = document.getElementById('singleSwitchSection');
+      const secFleet = document.getElementById('fleetSection');
+
+      if (mode === 'single') {
+        tabSingle.classList.add('active');
+        tabFleet.classList.remove('active');
+        secSingle.style.display = 'block';
+        secFleet.style.display = 'none';
+      } else {
+        tabFleet.classList.add('active');
+        tabSingle.classList.remove('active');
+        secSingle.style.display = 'none';
+        secFleet.style.display = 'block';
+        initFleetDropZone();
+      }
+    }
+
+    function initFleetDropZone() {
+      if (dropZoneInited) return;
+      dropZoneInited = true;
+      const zone = document.getElementById('fleetDropZone');
+      if (!zone) return;
+
+      ['dragenter', 'dragover'].forEach(name => {
+        zone.addEventListener(name, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          zone.classList.add('dragover');
+        }, false);
+      });
+
+      ['dragleave', 'drop'].forEach(name => {
+        zone.addEventListener(name, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          zone.classList.remove('dragover');
+        }, false);
+      });
+
+      zone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleFileList(files);
+      }, false);
+    }
+
+    function handleFleetFilesSelect(e) {
+      handleFileList(e.target.files);
+    }
+
+    function handleFileList(files) {
+      if (!files || files.length === 0) return;
+      Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          const existing = queuedFleetFiles.find(f => f.name === file.name);
+          if (existing) {
+            existing.content = event.target.result;
+          } else {
+            queuedFleetFiles.push({
+              name: file.name,
+              content: event.target.result,
+              size: file.size
+            });
+          }
+          renderFleetFileChips();
+        };
+        reader.readAsText(file);
+      });
+    }
+
+    function renderFleetFileChips() {
+      const container = document.getElementById('fleetFileChips');
+      if (!container) return;
+      container.innerHTML = '';
+      queuedFleetFiles.forEach((f, idx) => {
+        const chip = document.createElement('div');
+        chip.className = 'file-chip';
+        chip.innerHTML = `
+          <span>📄</span>
+          <span>${escapeHtml(f.name)} (${(f.content.length / 1024).toFixed(1)} KB)</span>
+          <span class="file-chip-remove" onclick="removeFleetFile(${idx}, event)">&times;</span>
+        `;
+        container.appendChild(chip);
+      });
+    }
+
+    function removeFleetFile(index, event) {
+      if (event) event.stopPropagation();
+      queuedFleetFiles.splice(index, 1);
+      renderFleetFileChips();
+    }
+
+    async function loadFleetDemo() {
+      try {
+        const res = await fetch('/api/sample-batch');
+        const data = await res.json();
+        if (data.success && data.files) {
+          queuedFleetFiles = data.files.map(f => ({
+            name: f.name,
+            content: f.content,
+            size: f.content.length
+          }));
+          renderFleetFileChips();
+          await analyzeFleetFiles();
+        }
+      } catch (err) {
+        alert('載入實體多機示範包失敗: ' + err);
+      }
+    }
+
+    async function scanLocalFolder() {
+      const folderInput = document.getElementById('fleetFolderPathInput');
+      const folderPath = folderInput.value.trim();
+      if (!folderPath) {
+        alert('請輸入本機資料夾路徑！例如：C:\\Users\\Kerr\\Downloads\\SwitchScope\\samples\\multi_chassis_demo');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/scan-folder', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ folder_path: folderPath, mask_ips: true })
+        });
+        const data = await res.json();
+        if (!data.success) {
+          alert('資料夾掃描失敗: ' + (data.error || '未知錯誤'));
+          return;
+        }
+        renderFleetResults(data);
+      } catch (err) {
+        alert('掃描請求失敗: ' + err);
+      }
+    }
+
+    async function analyzeFleetFiles() {
+      if (queuedFleetFiles.length === 0) {
+        alert('請先拖入或選擇至少一個 Switch 的 .txt 或 .conf 檔案，或點擊「載入 3 台實體設備示範包」！');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/analyze-batch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ files: queuedFleetFiles, mask_ips: true })
+        });
+        const data = await res.json();
+        if (!data.success) {
+          alert('批次分析失敗: ' + (data.error || '未知錯誤'));
+          return;
+        }
+        renderFleetResults(data);
+      } catch (err) {
+        alert('分析請求失敗: ' + err);
+      }
+    }
+
+    function renderFleetResults(data) {
+      currentFleetData = data;
+      document.getElementById('fleetResultsContainer').style.display = 'block';
+
+      // 1. Stat Strip
+      const statStrip = document.getElementById('fleetStatStrip');
+      const sum = data.fleet_summary || {};
+      statStrip.innerHTML = `
+        <div class="fleet-stat-card">
+          <div class="fleet-stat-label">🏢 納管實體交換機 (Total Switches)</div>
+          <div class="fleet-stat-num" style="color:#38bdf8;">${sum.total_devices || 0} <span style="font-size:14px; color:#94a3b8;">台</span></div>
+        </div>
+        <div class="fleet-stat-card">
+          <div class="fleet-stat-label">🟢 全健康設備 (Healthy Switches)</div>
+          <div class="fleet-stat-num" style="color:#34d399;">${sum.healthy_devices || 0} <span style="font-size:14px; color:#94a3b8;">台</span></div>
+        </div>
+        <div class="fleet-stat-card">
+          <div class="fleet-stat-label">🚨 跨機阻斷衝突 (Cross-Chassis Inconsistencies)</div>
+          <div class="fleet-stat-num" style="color:#f87171;">${sum.total_conflicts || 0} <span style="font-size:14px; color:#94a3b8;">項</span></div>
+        </div>
+        <div class="fleet-stat-card">
+          <div class="fleet-stat-label">🔗 雙向互聯驗證鏈路 (Verified Inter-Switch Links)</div>
+          <div class="fleet-stat-num" style="color:#a78bfa;">${sum.total_verified_links || 0} <span style="font-size:14px; color:#94a3b8;">條</span></div>
+        </div>
+      `;
+
+      // 2. Device Inventory Cards Grid
+      const devGrid = document.getElementById('fleetDeviceGrid');
+      devGrid.innerHTML = '';
+      (data.devices || []).forEach(dev => {
+        const card = document.createElement('div');
+        const isCritical = dev.health_score < 70;
+        card.className = `fleet-dev-card ${isCritical ? 'critical' : 'healthy'}`;
+
+        let scoreClass = 'score-green';
+        if (dev.health_score < 60) scoreClass = 'score-red';
+        else if (dev.health_score < 85) scoreClass = 'score-amber';
+
+        card.innerHTML = `
+          <div class="fleet-dev-head">
+            <div>
+              <div class="fleet-dev-name">${escapeHtml(dev.hostname)}</div>
+              <div style="font-size: 11px; color: #38bdf8; margin-top: 2px;">${escapeHtml(dev.role)}</div>
+            </div>
+            <div class="fleet-dev-score ${scoreClass}">${dev.health_score} 分</div>
+          </div>
+          <div style="font-size: 11px; color: #94a3b8; margin-bottom: 8px; line-height: 1.6;">
+            <div>硬體型號: <strong>${escapeHtml(dev.model)}</strong></div>
+            <div>運行時間: ${escapeHtml(dev.uptime)}</div>
+            <div>來源檔案: <span style="font-family:var(--font-mono); color:#cbd5e1;">${escapeHtml(dev.filename)}</span></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #192742; padding-top:8px; margin-top:8px;">
+            <span style="font-size:11px; font-weight:700; color:${dev.blocker_count > 0 ? '#f87171' : '#34d399'};">
+              ${dev.blocker_count > 0 ? `🚨 ${dev.blocker_count} 項阻斷疑點` : '✓ 雙向運作良好'}
+            </span>
+            <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="focusFleetDevice('${escapeHtml(dev.hostname)}')">
+              🔎 單機透視
+            </button>
+          </div>
+        `;
+        devGrid.appendChild(card);
+      });
+
+      // 3. Render Multi-Chassis Architecture Topology
+      renderFleetTopology(data, currentFleetTopoFilter);
+
+      // 4. Render Cross-Device Conflict Table
+      const tbody = document.getElementById('fleetConflictTbody');
+      tbody.innerHTML = '';
+      const conflicts = data.cross_conflicts || [];
+      if (conflicts.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#34d399; padding:20px;">✓ 全網所有實體交換機對接埠雙向驗證 100% 對稱一致，未檢出任何跨機衝突！</td></tr>`;
+      } else {
+        conflicts.forEach(c => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong style="color:#38bdf8;">${escapeHtml(c.source_device)}</strong><br><span style="font-family:var(--font-mono); color:#94a3b8;">${escapeHtml(c.source_port)}</span></td>
+            <td><strong style="color:#a78bfa;">${escapeHtml(c.target_device)}</strong><br><span style="font-family:var(--font-mono); color:#94a3b8;">${escapeHtml(c.target_port)}</span></td>
+            <td><span style="font-family:var(--font-mono); font-size:11px; background:#18233c; padding:2px 6px; border-radius:4px; color:#fef08a;">${escapeHtml(c.type)}</span></td>
+            <td><span class="diag-badge ${c.severity === 'CRITICAL' ? 'badge-critical' : 'badge-high'}">${c.severity}</span></td>
+            <td style="max-width:320px; line-height:1.5;">${escapeHtml(c.detail)}</td>
+            <td>
+              <pre style="background:#070d19; border:1px solid #1e293b; border-radius:6px; padding:6px 10px; font-family:var(--font-mono); font-size:11px; color:#38bdf8; margin:0;">${escapeHtml(c.local_remediation || '')}</pre>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      // 5. Master Remediation Macro
+      document.getElementById('fleetRemPreview').innerText = data.fleet_remediation_macro || '';
+
+      // 6. Auto-link: Proactive Fleet Briefing across all switch files
+      initProactiveFleetChat(data);
+    }
+
+    function setFleetTopoFilter(mode, btn) {
+      currentFleetTopoFilter = mode;
+      document.querySelectorAll('#fleetTopologyPanel .topo-filter-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      if (currentFleetData) {
+        renderFleetTopology(currentFleetData, mode);
+      }
+    }
+
+    function renderFleetTopology(data, filterMode = 'all') {
+      const svg = document.getElementById('fleetTopoCanvas');
+      if (!svg || !data) return;
+      svg.innerHTML = '';
+      fleetNodesMap = {};
+      fleetLinksMap = {};
+
+      const devices = data.devices || [];
+      const links = data.verified_links || [];
+
+      // Categorize devices into tiers
+      const upstreamDevs = devices.filter(d => d.tier === 'upstream');
+      const middleDevs = devices.filter(d => d.tier === 'middle');
+      const downstreamDevs = devices.filter(d => d.tier === 'downstream');
+
+      if (upstreamDevs.length === 0 && devices.length > 0) {
+        upstreamDevs.push(devices[0]);
+      }
+
+      const assignCoords = (devList, y) => {
+        const count = devList.length;
+        devList.forEach((d, idx) => {
+          d.width = 230;
+          d.height = 76;
+          d.y = y;
+          if (count === 1) {
+            d.x = 500;
+          } else {
+            const step = Math.min(280, 740 / (count - 1));
+            const startX = 500 - ((count - 1) * step) / 2;
+            d.x = startX + idx * step;
+          }
+          fleetNodesMap[d.id] = d;
+        });
+      };
+
+      assignCoords(upstreamDevs, 75);
+      assignCoords(middleDevs, 240);
+      assignCoords(downstreamDevs, 405);
+
+      let visibleLinks = links;
+      if (filterMode === 'conflicts') {
+        visibleLinks = links.filter(l => l.has_conflict);
+      }
+
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      defs.innerHTML = `
+        <pattern id="fleetTopoGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#162544" stroke-width="0.8" opacity="0.6"/>
+        </pattern>
+        <linearGradient id="fleetGradCore" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#28225c"/>
+          <stop offset="100%" stop-color="#0c1122"/>
+        </linearGradient>
+        <linearGradient id="fleetGradDist" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1e293b"/>
+          <stop offset="100%" stop-color="#0c1322"/>
+        </linearGradient>
+        <linearGradient id="fleetGradAccess" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0e374d"/>
+          <stop offset="100%" stop-color="#081422"/>
+        </linearGradient>
+      `;
+      svg.appendChild(defs);
+
+      const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      bg.setAttribute('width', '1000');
+      bg.setAttribute('height', '500');
+      bg.setAttribute('fill', 'url(#fleetTopoGrid)');
+      bg.setAttribute('rx', '10');
+      svg.appendChild(bg);
+
+      const tierG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      tierG.innerHTML = `
+        <text x="35" y="32" fill="#818cf8" font-size="11" font-weight="800" letter-spacing="1">▲ 核心骨幹層 (CORE / BACKBONE)</text>
+        <line x1="30" y1="145" x2="970" y2="145" stroke="#1e293b" stroke-dasharray="4 4" stroke-width="1"/>
+        <text x="35" y="195" fill="#38bdf8" font-size="11" font-weight="800" letter-spacing="1">◆ 匯聚與分佈層 (DISTRIBUTION)</text>
+        <line x1="30" y1="325" x2="970" y2="325" stroke="#1e293b" stroke-dasharray="4 4" stroke-width="1"/>
+        <text x="35" y="365" fill="#2dd4bf" font-size="11" font-weight="800" letter-spacing="1">▼ 接入交換機與周邊層 (ACCESS LAYER)</text>
+      `;
+      svg.appendChild(tierG);
+
+      const linksG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      linksG.setAttribute('id', 'fleetLinksG');
+
+      visibleLinks.forEach(link => {
+        const srcNode = fleetNodesMap[link.source_id];
+        const tgtNode = fleetNodesMap[link.target_id];
+        if (!srcNode || !tgtNode) return;
+
+        fleetLinksMap[link.id] = { link, srcNode, tgtNode };
+
+        const isUp = tgtNode.y < srcNode.y;
+        const srcX = srcNode.x;
+        const srcY = isUp ? (srcNode.y - srcNode.height / 2) : (srcNode.y + srcNode.height / 2);
+        const tgtX = tgtNode.x;
+        const tgtY = isUp ? (tgtNode.y + tgtNode.height / 2) : (tgtNode.y - tgtNode.height / 2);
+
+        const cy1 = srcY + (tgtY - srcY) * 0.52;
+        const cy2 = srcY + (tgtY - srcY) * 0.48;
+        const pathD = `M ${srcX} ${srcY} C ${srcX} ${cy1}, ${tgtX} ${cy2}, ${tgtX} ${tgtY}`;
+
+        let linkClass = 'topo-link-normal';
+        const hasCritical = link.conflicts && link.conflicts.some(c => c.severity === 'CRITICAL');
+        const hasWarning = link.conflicts && link.conflicts.some(c => c.severity === 'HIGH' || c.severity === 'WARNING');
+
+        if (hasCritical) linkClass = 'topo-link-miscable';
+        else if (hasWarning) linkClass = 'topo-link-vlan';
+        else if (link.po) linkClass = 'topo-link-po';
+
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.setAttribute('id', 'fleet_g_' + link.id);
+        g.style.cursor = 'pointer';
+        g.onclick = () => inspectFleetLink(link.id);
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', pathD);
+        path.setAttribute('class', linkClass);
+        path.setAttribute('fill', 'none');
+        g.appendChild(path);
+
+        const labelSrcY = isUp ? (srcY - 14) : (srcY + 14);
+        const srcPill = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        srcPill.innerHTML = `
+          <rect x="${srcX - 26}" y="${labelSrcY - 8}" width="52" height="16" rx="4" fill="#090e1a" stroke="#1e3a5f" stroke-width="1"/>
+          <text x="${srcX}" y="${labelSrcY + 3.5}" fill="#38bdf8" font-size="9" font-weight="700" font-family="JetBrains Mono" text-anchor="middle">${link.source_port}</text>
+        `;
+        g.appendChild(srcPill);
+
+        const labelTgtY = isUp ? (tgtY + 14) : (tgtY - 14);
+        const tgtPill = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        tgtPill.innerHTML = `
+          <rect x="${tgtX - 26}" y="${labelTgtY - 8}" width="52" height="16" rx="4" fill="#090e1a" stroke="#1e3a5f" stroke-width="1"/>
+          <text x="${tgtX}" y="${labelTgtY + 3.5}" fill="#a78bfa" font-size="9" font-weight="700" font-family="JetBrains Mono" text-anchor="middle">${link.target_port}</text>
+        `;
+        g.appendChild(tgtPill);
+
+        const midX = (srcX + tgtX) / 2;
+        const midY = (srcY + tgtY) / 2;
+        let badgeHtml = '';
+
+        if (hasCritical) {
+          badgeHtml = `
+            <rect x="${midX - 75}" y="${midY - 11}" width="150" height="22" rx="11" fill="#7f1d1d" stroke="#ef4444" stroke-width="1.5"/>
+            <text x="${midX}" y="${midY + 4}" fill="#fecaca" font-size="10" font-weight="800" text-anchor="middle">🚨 跨機錯插 / LACP 衝突</text>
+          `;
+        } else if (hasWarning) {
+          badgeHtml = `
+            <rect x="${midX - 70}" y="${midY - 11}" width="140" height="22" rx="11" fill="#78350f" stroke="#f59e0b" stroke-width="1.5"/>
+            <text x="${midX}" y="${midY + 4}" fill="#fef08a" font-size="10" font-weight="800" text-anchor="middle">⚠️ 雙機 Native VLAN 衝突</text>
+          `;
+        } else if (link.po) {
+          badgeHtml = `
+            <rect x="${midX - 50}" y="${midY - 10}" width="100" height="20" rx="10" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.2"/>
+            <text x="${midX}" y="${midY + 4}" fill="#bfdbfe" font-size="10" font-weight="700" text-anchor="middle">🔗 ${link.po} 雙機聚合</text>
+          `;
+        }
+
+        if (badgeHtml) {
+          const badgeG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+          badgeG.innerHTML = badgeHtml;
+          g.appendChild(badgeG);
+        }
+
+        linksG.appendChild(g);
+      });
+      svg.appendChild(linksG);
+
+      const nodesG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      devices.forEach(dev => {
+        let gradId = 'fleetGradDist';
+        let strokeColor = '#38bdf8';
+        let icon = '◆';
+
+        if (dev.tier === 'upstream') {
+          gradId = 'fleetGradCore';
+          strokeColor = '#6366f1';
+          icon = '🏢';
+        } else if (dev.tier === 'downstream') {
+          gradId = 'fleetGradAccess';
+          strokeColor = '#0d9488';
+          icon = '🏬';
+        }
+
+        if (dev.health_score < 70) strokeColor = '#ef4444';
+
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.setAttribute('id', 'fleet_node_' + dev.id);
+        g.setAttribute('class', 'topo-node');
+        g.setAttribute('transform', `translate(${dev.x - dev.width / 2}, ${dev.y - dev.height / 2})`);
+        g.onclick = () => inspectFleetNode(dev.id);
+
+        g.innerHTML = `
+          <rect width="${dev.width}" height="${dev.height}" rx="10" fill="url(#${gradId})" stroke="${strokeColor}" stroke-width="2"/>
+          <text x="14" y="20" fill="#93c5fd" font-size="11" font-weight="800">${icon} ${escapeHtml(dev.role)}</text>
+          <text x="14" y="42" fill="#ffffff" font-size="14" font-weight="900" font-family="JetBrains Mono">${escapeHtml(dev.hostname)}</text>
+          <text x="14" y="60" fill="#94a3b8" font-size="10">${escapeHtml(dev.model)} | 健康度: ${dev.health_score}分</text>
+          ${dev.health_score < 70 ? `<circle cx="${dev.width - 12}" cy="12" r="6" fill="#ef4444" stroke="#ffffff" stroke-width="1.5"/>` : ''}
+        `;
+        nodesG.appendChild(g);
+      });
+      svg.appendChild(nodesG);
+
+      const critLink = visibleLinks.find(l => l.has_conflict);
+      if (critLink) {
+        inspectFleetLink(critLink.id);
+      }
+    }
+
+    function inspectFleetLink(linkId) {
+      const item = fleetLinksMap[linkId];
+      if (!item) return;
+      const { link, srcNode, tgtNode } = item;
+
+      const inspector = document.getElementById('fleetTopoInspector');
+      inspector.style.display = 'block';
+
+      document.querySelectorAll('#fleetLinksG path').forEach(p => p.style.opacity = '0.35');
+      const activeEl = document.querySelector(`#fleet_g_${link.id} path`);
+      if (activeEl) {
+        activeEl.style.opacity = '1';
+        activeEl.style.strokeWidth = '5.5';
+      }
+
+      let conflictHtml = '';
+      if (link.conflicts && link.conflicts.length > 0) {
+        conflictHtml = link.conflicts.map(c => `
+          <div class="topo-advice-box ${c.severity === 'CRITICAL' ? 'critical' : 'warning'}" style="margin-top:10px;">
+            <strong>${c.severity === 'CRITICAL' ? '🚨' : '⚠️'} ${escapeHtml(c.title)}：</strong><br>
+            ${escapeHtml(c.detail)}<br><br>
+            <strong>💡 建議修復指令：</strong>
+            <pre style="background:#090d16; padding:8px 12px; border-radius:6px; color:#38bdf8; margin-top:6px; font-family:var(--font-mono); font-size:12px;">${escapeHtml(c.local_remediation || '')}</pre>
+          </div>
+        `).join('');
+      } else {
+        conflictHtml = `
+          <div class="topo-advice-box healthy" style="margin-top:10px;">
+            <strong>🟢 雙機對接規格完全對稱一致：</strong><br>
+            經跨機雙向比對，${escapeHtml(srcNode.hostname)} 與 ${escapeHtml(tgtNode.hostname)} 之間之實體介面、VLAN、雙工速率與聚合配置皆雙向吻合，無任何衝突。
+          </div>
+        `;
+      }
+
+      inspector.innerHTML = `
+        <div class="topo-inspector-head">
+          <div class="topo-inspector-title">
+            <span>🔗</span>
+            <span>實體雙機互聯穿透檢驗: <strong>${escapeHtml(srcNode.hostname)} [${escapeHtml(link.source_port)}]</strong> ➔ <strong>${escapeHtml(tgtNode.hostname)} [${escapeHtml(link.target_port)}]</strong></span>
+          </div>
+          <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="document.getElementById('fleetTopoInspector').style.display='none'">✕ 關閉</button>
+        </div>
+
+        <div class="topo-inspector-grid">
+          <div class="topo-prop-box">
+            <div class="topo-prop-lbl">本端交換機 (Source Switch)</div>
+            <div class="topo-prop-val" style="color:#38bdf8;">${escapeHtml(srcNode.hostname)} (${escapeHtml(link.source_port)})</div>
+          </div>
+          <div class="topo-prop-box">
+            <div class="topo-prop-lbl">對端交換機 (Target Switch)</div>
+            <div class="topo-prop-val" style="color:#a78bfa;">${escapeHtml(tgtNode.hostname)} (${escapeHtml(link.target_port)})</div>
+          </div>
+          <div class="topo-prop-box">
+            <div class="topo-prop-lbl">聚合對稱性 (Port-Channel)</div>
+            <div class="topo-prop-val">${link.po ? `<span style="color:#38bdf8;">${escapeHtml(link.po)}</span>` : '<span style="color:#94a3b8;">無聚合 (獨立埠)</span>'}</div>
+          </div>
+          <div class="topo-prop-box">
+            <div class="topo-prop-lbl">介面速率 / 雙工</div>
+            <div class="topo-prop-val">${escapeHtml(link.speed)}M / ${escapeHtml(link.duplex)}</div>
+          </div>
+        </div>
+        ${conflictHtml}
+      `;
+    }
+
+    function inspectFleetNode(nodeId) {
+      const dev = fleetNodesMap[nodeId];
+      if (!dev) return;
+
+      const inspector = document.getElementById('fleetTopoInspector');
+      inspector.style.display = 'block';
+
+      document.querySelectorAll('#fleetLinksG path').forEach(p => p.style.opacity = '1');
+      document.querySelectorAll('#fleetTopoCanvas .topo-node').forEach(n => n.classList.remove('selected'));
+      const activeEl = document.getElementById('fleet_node_' + dev.id);
+      if (activeEl) activeEl.classList.add('selected');
+
+      inspector.innerHTML = `
+        <div class="topo-inspector-head">
+          <div class="topo-inspector-title">
+            <span>🏢</span>
+            <span>實體交換機身分穿透: <strong>${escapeHtml(dev.hostname)}</strong></span>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-primary" style="padding: 4px 10px; font-size: 11px;" onclick="focusFleetDevice('${escapeHtml(dev.hostname)}')">🔎 進入單機透視</button>
+            <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="document.getElementById('fleetTopoInspector').style.display='none'">✕ 關閉</button>
+          </div>
+        </div>
+
+        <div class="topo-inspector-grid">
+          <div class="topo-prop-box">
+            <div class="topo-prop-lbl">設備架構層級 (Tier / Role)</div>
+            <div class="topo-prop-val" style="color:#38bdf8;">${escapeHtml(dev.role)}</div>
+          </div>
+          <div class="topo-prop-box">
+            <div class="topo-prop-lbl">硬體型號 (Model)</div>
+            <div class="topo-prop-val">${escapeHtml(dev.model)}</div>
+          </div>
+          <div class="topo-prop-box">
+            <div class="topo-prop-lbl">綜合健康度評分</div>
+            <div class="topo-prop-val" style="color:${dev.health_score < 70 ? '#f87171' : '#34d399'};">${dev.health_score} / 100 分</div>
+          </div>
+          <div class="topo-prop-box">
+            <div class="topo-prop-lbl">運行時間 (Uptime)</div>
+            <div class="topo-prop-val">${escapeHtml(dev.uptime)}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function focusFleetDevice(hostname) {
+      if (!currentFleetData || !currentFleetData.devices) return;
+      const dev = currentFleetData.devices.find(d => d.hostname === hostname || d.norm_name === hostname);
+      if (!dev) return;
+
+      switchGlobalMode('single');
+
+      const f = queuedFleetFiles.find(file => file.name === dev.filename || file.name.includes(hostname));
+      if (f) {
+        document.getElementById('cliInput').value = f.content;
+        analyzeSwitch();
+      }
+    }
+
+    function copyFleetRemediation(btn) {
+      const text = document.getElementById('fleetRemPreview').innerText;
+      navigator.clipboard.writeText(text);
+      const old = btn.innerText;
+      btn.innerText = '✓ 全網修復腳本已複製！';
+      setTimeout(() => btn.innerText = old, 2500);
+    }
+
+    let currentAnalysisData = null;
+
+    // Load sample
+    async function loadSample(type) {
+      try {
+        const url = type ? `/api/sample?type=${encodeURIComponent(type)}` : '/api/sample';
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('cliInput').value = data.sample;
+        }
+      } catch (err) {
+        alert('無法載入範例: ' + err);
+      }
+    }
+
+    function clearInput() {
+      document.getElementById('cliInput').value = '';
+    }
+
+    // Main Analysis
+    async function analyzeSwitch() {
+      const text = document.getElementById('cliInput').value.trim();
+      const maskIps = document.getElementById('maskIpsCheck').checked;
+
+      if (!text) {
+        alert('請先貼入 Cisco CLI 輸出文字！');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ raw_text: text, mask_ips: maskIps })
+        });
+        const data = await res.json();
+        if (!data.success) {
+          alert('分析失敗: ' + data.error);
+          return;
+        }
+
+        currentAnalysisData = data;
+        renderAll(data);
+
+      } catch (err) {
+        alert('請求錯誤: ' + err);
+      }
+    }
+
+    // Render UI Components
+    function renderAll(data) {
+      // 1. Show sections
+      document.getElementById('chassisContainer').style.display = 'block';
+      document.getElementById('topologyContainer').style.display = 'block';
+      document.getElementById('executiveTriagePanel').style.display = 'block';
+      document.getElementById('diagContainer').style.display = 'grid';
+      document.getElementById('triageSection').style.display = 'block';
+
+      // 2. Chassis Title
+      const dev = data.device_info;
+      document.getElementById('chassisModelTitle').innerText = `${dev.model || 'Cisco Switch'} Front Panel (Uptime: ${dev.uptime || 'N/A'})`;
+
+      // 3. Render Ports Faceplate
+      renderPortGrid(data.ports_table, data.ecod_results.anomalies);
+
+      // 3B. Render CCIE Multi-Chassis Topology Visualizer
+      renderTopology(data, currentTopoFilter);
+
+      // 4. Render CCIE Executive Triage & Master Actions
+      renderExecutiveTriage(data.global_triage);
+
+      // 4B. Render Chronological Event Timeline
+      renderTimeline(data.timeline);
+
+      // 5. Render Health Gauge
+      renderHealthGauge(data.health_score);
+
+      // 6. Render Diagnoses Cards
+      renderDiagnoses(data.diagnoses);
+
+      // 7. Render One-Click Quick Action Prompts
+      renderQuickPrompts(data);
+
+      // 8. Auto-link: Proactive CCIE Briefing in Chat with Full Context
+      initProactiveSingleChat(data);
+    }
+
+    function renderExecutiveTriage(triage) {
+      if (!triage) return;
+      const panel = document.getElementById('executiveTriagePanel');
+      panel.style.display = 'block';
+
+      const statusBadge = document.getElementById('triageStatusBadge');
+      const blockerBox = document.getElementById('primaryBlockerBox');
+      const blockerTarget = document.getElementById('blockerTarget');
+      const blockerTitle = document.getElementById('blockerTitle');
+      const blockerDesc = document.getElementById('blockerDesc');
+      const verdictText = document.getElementById('verdictText');
+      const roadmapGrid = document.getElementById('roadmapGrid');
+      const unifiedInv = document.getElementById('unifiedInvPreview');
+      const unifiedRem = document.getElementById('unifiedRemPreview');
+
+      if (!triage.has_critical_blocker || !triage.primary_issue) {
+        statusBadge.className = 'triage-status-badge healthy';
+        statusBadge.innerText = 'HEALTHY / ALL CLEAR';
+        blockerBox.className = 'primary-blocker-card healthy';
+        blockerTarget.innerText = 'Switch Overall';
+        blockerTitle.innerText = '設備整體運作良好 (無系統級阻斷性故障)';
+        blockerDesc.innerText = '未檢出任何全網擴散性故障或端口掛起，各項指標均在標準基線之內。';
+      } else {
+        const p = triage.primary_issue;
+        statusBadge.className = 'triage-status-badge';
+        statusBadge.innerText = `${p.severity} BLOCKER`;
+        blockerBox.className = 'primary-blocker-card';
+        blockerTarget.innerText = p.target || 'N/A';
+        blockerTitle.innerText = p.title || '異常故障';
+        blockerDesc.innerHTML = `${escapeHtml(p.impact_scope || '')}。根因研判：${escapeHtml(p.root_cause || '')}
+          <div style="margin-top:10px;">
+            <button type="button" class="btn btn-xs" style="background:#1e3a5f; color:#38bdf8; border:1px solid #38bdf8; padding:6px 14px; font-size:13px; font-weight:700; border-radius:6px; cursor:pointer;" onclick="askAiAboutBlocker()">
+              🤖 呼叫 CCIE Copilot 深入推理解析此主震央 ➔
+            </button>
+          </div>
+        `;
+      }
+
+      verdictText.innerText = triage.executive_opinion || '分析完成。';
+
+      // Render Roadmap Steps
+      roadmapGrid.innerHTML = '';
+      (triage.action_plan || []).forEach(step => {
+        const item = document.createElement('div');
+        item.className = 'roadmap-step';
+        item.innerHTML = `
+          <div class="roadmap-num">${step.order || step.step || '•'}</div>
+          <div class="roadmap-body">
+            <div class="roadmap-phase">${escapeHtml(step.phase)}</div>
+            <div class="roadmap-action">${escapeHtml(step.action)}</div>
+          </div>
+        `;
+        roadmapGrid.appendChild(item);
+      });
+
+      unifiedInv.innerText = triage.unified_investigation_macro || '';
+      unifiedRem.innerText = triage.unified_remediation_macro || '';
+    }
+
+    function renderTimeline(timeline) {
+      const container = document.getElementById('timelineContainer');
+      if (!timeline || !timeline.has_timeline || !timeline.events || timeline.events.length === 0) {
+        container.style.display = 'none';
+        return;
+      }
+      container.style.display = 'block';
+
+      // Span badge
+      document.getElementById('timelineSpanBadge').innerText =
+        `⏱️ 日誌涵蓋跨度: ${timeline.earliest_log} ~ ${timeline.latest_log} (${timeline.span_days} 天 / ${timeline.span_hours} 小時)`;
+
+      // Stats bar
+      const statsBar = document.getElementById('timelineStatsBar');
+      statsBar.innerHTML = `
+        <span class="timeline-stat-chip stat-active">🔴 進行中即時: ${timeline.active_count || 0} 項</span>
+        <span class="timeline-stat-chip stat-recent">🟡 近期 24H 需觀察: ${timeline.recent_count || 0} 項</span>
+        <span class="timeline-stat-chip stat-quiesced">🟢 歷史已平息 (>24H): ${timeline.quiesced_count || 0} 項</span>
+        <span style="font-size: 11px; color: #64748b; display: flex; align-items: center; margin-left: auto;">
+          總計分析 ${timeline.events.length} 筆時序節點
+        </span>
+      `;
+
+      // Render track
+      const track = document.getElementById('timelineTrack');
+      track.innerHTML = '';
+
+      timeline.events.forEach(ev => {
+        const node = document.createElement('div');
+        node.className = 'timeline-node';
+
+        let dotClass = 'dot-info';
+        let agoClass = '';
+        if (ev.recency_tag === 'QUIESCED') {
+          dotClass = 'dot-quiesced';
+          agoClass = 'ago-quiesced';
+        } else if (ev.recency_tag === 'ACTIVE') {
+          dotClass = 'dot-active';
+          agoClass = 'ago-active';
+        } else if (ev.recency_tag === 'RECENT') {
+          dotClass = 'dot-recent';
+          agoClass = 'ago-recent';
+        }
+
+        node.innerHTML = `
+          <div class="timeline-dot ${dotClass}"></div>
+          <div class="node-header">
+            <span class="node-time">📅 ${escapeHtml(ev.timestamp)}</span>
+            <span class="node-ago ${agoClass}">⏳ ${escapeHtml(ev.time_ago_str)}</span>
+          </div>
+          <div class="node-title">${escapeHtml(ev.title)}</div>
+          <div class="node-detail">${escapeHtml(ev.detail)}</div>
+        `;
+        track.appendChild(node);
+      });
+    }
+
+    /* ========================================================
+       CCIE Multi-Chassis Architecture & Topology Visualizer JS
+       ======================================================== */
+    let currentTopoFilter = 'all';
+    let topoNodesData = {};
+    let topoLinksData = {};
+
+    function setTopoFilter(mode, btn) {
+      currentTopoFilter = mode;
+      document.querySelectorAll('.topo-filter-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      if (currentAnalysisData) {
+        renderTopology(currentAnalysisData, mode);
+      }
+    }
+
+    function renderTopology(data, filterMode = 'all') {
+      const container = document.getElementById('topologyContainer');
+      const svg = document.getElementById('topoCanvas');
+      if (!data) {
+        container.style.display = 'none';
+        return;
+      }
+      container.style.display = 'block';
+
+      topoNodesData = {};
+      topoLinksData = {};
+
+      // 1. Determine DUT (Local Switch Under Test)
+      const dev = data.device_info || {};
+      const dutNode = {
+        id: 'node_dut',
+        hostname: dev.hostname || 'Local-Switch',
+        full_hostname: `${dev.hostname || 'Local-Switch'} (Local Chassis)`,
+        model: dev.model || 'Catalyst Switch',
+        platform: dev.model || 'Cisco Catalyst Switch',
+        uptime: dev.uptime || 'N/A',
+        mgmt_ip: dev.ip || '10.20.7.1',
+        role: 'DUT (本機受檢設備)',
+        tier: 'local',
+        icon: '⬡',
+        ports: []
+      };
+      topoNodesData[dutNode.id] = dutNode;
+
+      // 2. Classify CDP / LLDP Neighbors into Upstream vs Downstream
+      const cdpList = data.cdp_neighbors || [];
+      const lldpList = data.lldp_neighbors || [];
+      const peerMap = {};
+
+      function getOrCreatePeer(devId, platform, mgmtIp, nativeVlan, peerTypeGuess) {
+        if (!peerMap[devId]) {
+          const lower = devId.toLowerCase();
+          const isUpstream = (peerTypeGuess === 'Core Switch') ||
+            lower.includes('core') || lower.includes('dist') || lower.includes('agg') || lower.includes('spine');
+          
+          let roleTitle = '下聯接入交換機 (Access SW)';
+          let roleIcon = '🏬';
+          if (isUpstream) {
+            roleTitle = '上聯核心骨幹 (Core/Dist)';
+            roleIcon = '🏢';
+          } else if (lower.includes('ap') || lower.includes('air-')) {
+            roleTitle = '無線基地台 (AP)';
+            roleIcon = '📡';
+          } else if (lower.includes('phone') || lower.includes('cp-')) {
+            roleTitle = 'IP 電話 (VoIP)';
+            roleIcon = '📞';
+          }
+
+          const nodeObj = {
+            id: 'peer_' + devId.replace(/[^a-zA-Z0-9_-]/g, '_'),
+            raw_id: devId,
+            hostname: devId.split('.')[0],
+            full_hostname: devId,
+            platform: platform || 'Cisco Switch/Router',
+            mgmt_ip: mgmtIp || 'N/A',
+            native_vlan: nativeVlan,
+            tier: isUpstream ? 'upstream' : 'downstream',
+            role: roleTitle,
+            icon: roleIcon,
+            ports: []
+          };
+          peerMap[devId] = nodeObj;
+          topoNodesData[nodeObj.id] = nodeObj;
+        }
+        return peerMap[devId];
+      }
+
+      cdpList.forEach(c => {
+        const p = getOrCreatePeer(c.device_id, c.platform, c.mgmt_ip, c.native_vlan, c.peer_type);
+        p.ports.push(c);
+      });
+
+      lldpList.forEach(l => {
+        const p = getOrCreatePeer(l.device_id, 'LLDP Device', l.mgmt_ip, null, null);
+        p.ports.push(l);
+      });
+
+      // 3. End Host Nodes (from MAC & ARP where port has no CDP/LLDP neighbor)
+      const hostNodes = [];
+      (data.ports_table || []).forEach(port => {
+        if (!port.cdp_neighbor && !port.lldp_neighbor) {
+          const hasMac = port.mac_addresses && port.mac_addresses.length > 0;
+          const hasIp = port.ip_addresses && port.ip_addresses.length > 0;
+          const hasDrops = (port.out_drops || 0) > 1000;
+          if (hasMac || hasIp || hasDrops) {
+            const primaryIp = hasIp ? port.ip_addresses[0] : (hasMac ? port.mac_addresses[0] : 'Client');
+            const hostNode = {
+              id: 'host_' + port.port.replace(/[^a-zA-Z0-9_-]/g, '_'),
+              hostname: hasIp ? `PC: ${primaryIp}` : `MAC: ${primaryIp}`,
+              full_hostname: hasIp ? `終端主機 IP: ${port.ip_addresses.join(', ')}` : `終端 MAC: ${port.mac_addresses.join(', ')}`,
+              platform: '終端主機 / 虛擬機 (Endpoint PC/VM)',
+              mgmt_ip: primaryIp,
+              tier: 'downstream',
+              role: '終端主機群 (End Host)',
+              icon: '💻',
+              local_port: port.port,
+              port_data: port,
+              ports: [{ local_port: port.port, remote_port: 'NIC 網卡' }]
+            };
+            hostNodes.push(hostNode);
+            topoNodesData[hostNode.id] = hostNode;
+          }
+        }
+      });
+
+      // 4. Synthesize Links & Cross-Correlate Anomalies
+      const diagnoses = data.diagnoses || [];
+      const hasMiscabling = diagnoses.some(d => d.fault_type === 'LACP_CROSS_DEVICE_MISCABLING');
+      const nativeVlanDiag = diagnoses.find(d => d.fault_type === 'CDP_NATIVE_VLAN_MISMATCH');
+
+      // Etherchannel map
+      const portPoMap = {};
+      (data.etherchannel || []).forEach(ec => {
+        (ec.ports || []).forEach(pStr => {
+          const pName = pStr.split('(')[0].trim();
+          portPoMap[pName] = ec.po_name;
+        });
+      });
+
+      const links = [];
+
+      // Links from peerMap
+      Object.values(peerMap).forEach(peer => {
+        peer.ports.forEach(conn => {
+          const localP = conn.local_port;
+          const remoteP = conn.remote_port;
+          const portObj = (data.ports_table || []).find(p => p.port === localP) || {};
+          const poName = portPoMap[localP] || null;
+
+          let anomalyType = null;
+          let anomalySeverity = null;
+          let anomalyTitle = null;
+          let anomalyAdvice = null;
+
+          // Mis-cabling detection: Po member connected to access while peer is core
+          if (poName && peer.tier === 'downstream' && hasMiscabling) {
+            anomalyType = 'miscable';
+            anomalySeverity = 'CRITICAL';
+            anomalyTitle = '🚨 跨設備錯插! (LACP 聚合組成員錯接至不同交換機)';
+            anomalyAdvice = `此實體埠 <code>${localP}</code> 在配置中加入了聚合組 <code>${poName}</code>，但實體跳線卻插往了接入層交換機 <strong>${peer.full_hostname}</strong>，而同組之其他成員卻連往核心骨幹！因兩端 Partner System ID 不相符，軟體防環機制已將此埠 (s) Suspended 掛起。`;
+          } else if (nativeVlanDiag && localP === nativeVlanDiag.target) {
+            anomalyType = 'vlan';
+            anomalySeverity = 'HIGH';
+            anomalyTitle = '⚠️ Native VLAN 衝突 (本端與對端 PVID 不一致)';
+            anomalyAdvice = `本端 <code>${localP}</code> 之 Native VLAN 為 <strong>${portObj.vlan || 2007}</strong>，但對端 <strong>${peer.full_hostname}</strong> 之 Native VLAN 為 <strong>${peer.native_vlan || 1}</strong>。兩端 Trunk PVID 衝突，STP 協議已觸發 <code>%SPANTREE-2-BLOCK_PVID_LOCAL</code> 阻斷該 VLAN 以防環路。`;
+          } else if (portObj.status === 'suspended') {
+            anomalyType = 'miscable';
+            anomalySeverity = 'HIGH';
+            anomalyTitle = '🟠 埠處於 Suspended 掛起狀態';
+            anomalyAdvice = `介面被掛起，請確認 LACP 模式與對端跳線是否一致。`;
+          } else if ((portObj.out_drops || 0) > 1000) {
+            anomalyType = 'drops';
+            anomalySeverity = 'WARNING';
+            anomalyTitle = `🌊 ${portObj.out_drops.toLocaleString()} 次 Output Drops 丟包`;
+            anomalyAdvice = `上聯/下聯埠存在緩衝區溢位丟包。`;
+          }
+
+          const linkObj = {
+            id: `link_${localP.replace(/[^a-zA-Z0-9_-]/g, '_')}_${peer.id}`,
+            source: dutNode,
+            target: peer,
+            local_port: localP,
+            remote_port: remoteP,
+            po: poName,
+            status: portObj.status || 'connected',
+            duplex: portObj.duplex || 'full',
+            speed: portObj.speed || '1000',
+            vlan: portObj.vlan || 'trunk',
+            anomaly_type: anomalyType,
+            anomaly_severity: anomalySeverity,
+            anomaly_title: anomalyTitle,
+            anomaly_advice: anomalyAdvice,
+            port_obj: portObj,
+            peer_obj: peer
+          };
+          links.push(linkObj);
+          topoLinksData[linkObj.id] = linkObj;
+        });
+      });
+
+      // Links from hostNodes
+      hostNodes.forEach(host => {
+        const portObj = host.port_data;
+        const localP = host.local_port;
+        let anomalyType = null;
+        let anomalySeverity = null;
+        let anomalyTitle = null;
+        let anomalyAdvice = null;
+
+        if ((portObj.out_drops || 0) > 1000) {
+          anomalyType = 'drops';
+          anomalySeverity = 'NORMAL';
+          anomalyTitle = `🌊 ${portObj.out_drops.toLocaleString()} Drops (終端緩衝區溢位)`;
+          anomalyAdvice = `終端 PC 突發流量 (Microburst) 或電腦休眠所致，屬一般接入層常見現象，非核心骨幹擁塞，業務通訊正常。`;
+        }
+
+        const linkObj = {
+          id: `link_${localP.replace(/[^a-zA-Z0-9_-]/g, '_')}_${host.id}`,
+          source: dutNode,
+          target: host,
+          local_port: localP,
+          remote_port: 'NIC 網卡',
+          po: null,
+          status: portObj.status || 'connected',
+          duplex: portObj.duplex || 'full',
+          speed: portObj.speed || '1000',
+          vlan: portObj.vlan || '2007',
+          anomaly_type: anomalyType,
+          anomaly_severity: anomalySeverity,
+          anomaly_title: anomalyTitle,
+          anomaly_advice: anomalyAdvice,
+          port_obj: portObj,
+          peer_obj: host
+        };
+        links.push(linkObj);
+        topoLinksData[linkObj.id] = linkObj;
+      });
+
+      // 5. Apply Filter Mode
+      let filteredLinks = links;
+      if (filterMode === 'anomalies') {
+        filteredLinks = links.filter(l => l.anomaly_type !== null);
+      } else if (filterMode === 'trunks') {
+        filteredLinks = links.filter(l => l.target.tier === 'upstream' || (l.target.tier === 'downstream' && !l.target.id.startsWith('host_')));
+      } else if (filterMode === 'endpoints') {
+        filteredLinks = links.filter(l => l.target.tier === 'downstream');
+      }
+
+      // Collect visible nodes
+      const visibleNodeMap = { [dutNode.id]: dutNode };
+      filteredLinks.forEach(l => {
+        visibleNodeMap[l.target.id] = l.target;
+      });
+
+      const upstreamNodes = Object.values(visibleNodeMap).filter(n => n.tier === 'upstream');
+      const downstreamNodes = Object.values(visibleNodeMap).filter(n => n.tier === 'downstream');
+
+      // 6. Coordinates Layout (SVG 1000 x 480)
+      // Upstream nodes at Y = 68
+      const upCount = upstreamNodes.length;
+      upstreamNodes.forEach((node, idx) => {
+        node.width = 220;
+        node.height = 72;
+        node.y = 68;
+        if (upCount === 1) {
+          node.x = 500;
+        } else {
+          const step = 640 / (upCount - 1);
+          node.x = 180 + idx * step;
+        }
+      });
+
+      // Local DUT at Y = 228
+      dutNode.width = 240;
+      dutNode.height = 76;
+      dutNode.x = 500;
+      dutNode.y = 228;
+
+      // Downstream nodes at Y = 392
+      const downCount = downstreamNodes.length;
+      downstreamNodes.forEach((node, idx) => {
+        node.width = 210;
+        node.height = 72;
+        node.y = 392;
+        if (downCount === 1) {
+          node.x = 500;
+        } else {
+          const step = Math.min(270, 720 / (downCount - 1));
+          const startX = 500 - ((downCount - 1) * step) / 2;
+          node.x = startX + idx * step;
+        }
+      });
+
+      // 7. Render SVG Elements
+      renderSvgTopology(svg, dutNode, Object.values(visibleNodeMap), filteredLinks);
+
+      // 8. Helpful guidance if no external CDP/LLDP neighbors exist in log
+      const inspector = document.getElementById('topoInspector');
+      if (inspector && links.length === 0) {
+        inspector.style.display = 'block';
+        inspector.innerHTML = `
+          <div style="background:rgba(6,182,212,0.08); border:1px solid rgba(6,182,212,0.25); border-radius:8px; padding:12px 16px; font-size:13.5px; color:#bae6fd; display:flex; align-items:center; gap:12px;">
+            <span style="font-size:22px;">💡</span>
+            <div>
+              <strong style="color:#38bdf8;">拓撲透視提示：</strong> 本日誌未包含 <code>show cdp neighbors detail</code> 或 <code>show lldp neighbors</code> 輸出，因此畫布居中呈現受檢設備 (DUT)。<br>
+              若需檢視上下聯交換機真實跨機對接與連線診斷，請點選上方【CDP拓撲】範例或貼入包含 CDP 鄰居的日誌！
+            </div>
+          </div>
+        `;
+      }
+
+      // Auto inspect critical link or DUT
+      const criticalLink = filteredLinks.find(l => l.anomaly_severity === 'CRITICAL') || filteredLinks.find(l => l.anomaly_type);
+      if (criticalLink) {
+        inspectTopoLink(criticalLink.id);
+      } else {
+        inspectTopoNode(dutNode.id);
+      }
+    }
+
+    function renderSvgTopology(svg, dutNode, nodes, links) {
+      svg.innerHTML = '';
+
+      // Defs
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      defs.innerHTML = `
+        <pattern id="topoGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#162544" stroke-width="0.8" opacity="0.6"/>
+        </pattern>
+        <linearGradient id="gradDut" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1e293b"/>
+          <stop offset="100%" stop-color="#0c1322"/>
+        </linearGradient>
+        <linearGradient id="gradCore" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#28225c"/>
+          <stop offset="100%" stop-color="#0c1122"/>
+        </linearGradient>
+        <linearGradient id="gradAccess" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0e374d"/>
+          <stop offset="100%" stop-color="#081422"/>
+        </linearGradient>
+        <linearGradient id="gradHost" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#162e5c"/>
+          <stop offset="100%" stop-color="#091021"/>
+        </linearGradient>
+      `;
+      svg.appendChild(defs);
+
+      // Background Rect
+      const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      bg.setAttribute('width', '1000');
+      bg.setAttribute('height', '480');
+      bg.setAttribute('fill', 'url(#topoGrid)');
+      bg.setAttribute('rx', '10');
+      svg.appendChild(bg);
+
+      // Tier Labels & Dividers
+      const tierG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      tierG.innerHTML = `
+        <text x="35" y="32" fill="#818cf8" font-size="11" font-weight="800" letter-spacing="1">▲ 上聯核心骨幹層 (UPSTREAM CORE / DISTRIBUTION)</text>
+        <line x1="30" y1="138" x2="970" y2="138" stroke="#1e293b" stroke-dasharray="4 4" stroke-width="1"/>
+        <text x="35" y="185" fill="#38bdf8" font-size="11" font-weight="800" letter-spacing="1">◆ 本機受檢交換機 (LOCAL DUT)</text>
+        <line x1="30" y1="312" x2="970" y2="312" stroke="#1e293b" stroke-dasharray="4 4" stroke-width="1"/>
+        <text x="35" y="348" fill="#2dd4bf" font-size="11" font-weight="800" letter-spacing="1">▼ 下聯接入設備與終端群 (DOWNSTREAM ACCESS & ENDPOINTS)</text>
+      `;
+      svg.appendChild(tierG);
+
+      // Links Group
+      const linksG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      linksG.setAttribute('id', 'topoLinksG');
+
+      // Group links by peer to calculate multi-link offsets
+      const linksByPeer = {};
+      links.forEach(l => {
+        if (!linksByPeer[l.target.id]) linksByPeer[l.target.id] = [];
+        linksByPeer[l.target.id].push(l);
+      });
+
+      links.forEach(l => {
+        const target = l.target;
+        const peerGroup = linksByPeer[target.id] || [l];
+        const total = peerGroup.length;
+        const idx = peerGroup.indexOf(l);
+        const offset = total > 1 ? (idx - (total - 1) / 2) * 36 : 0;
+
+        const isUp = target.y < dutNode.y;
+        const srcX = dutNode.x + offset;
+        const srcY = isUp ? (dutNode.y - dutNode.height / 2) : (dutNode.y + dutNode.height / 2);
+        const tgtX = target.x + offset;
+        const tgtY = isUp ? (target.y + target.height / 2) : (target.y - target.height / 2);
+
+        const cy1 = srcY + (tgtY - srcY) * 0.52;
+        const cy2 = srcY + (tgtY - srcY) * 0.48;
+        const pathD = `M ${srcX} ${srcY} C ${srcX} ${cy1}, ${tgtX} ${cy2}, ${tgtX} ${tgtY}`;
+
+        let linkClass = 'topo-link-normal';
+        if (l.anomaly_type === 'miscable') linkClass = 'topo-link-miscable';
+        else if (l.anomaly_type === 'vlan') linkClass = 'topo-link-vlan';
+        else if (l.anomaly_type === 'drops') linkClass = 'topo-link-drops';
+        else if (l.po) linkClass = 'topo-link-po';
+
+        const linkG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        linkG.setAttribute('id', 'g_' + l.id);
+        linkG.style.cursor = 'pointer';
+        linkG.onclick = () => inspectTopoLink(l.id);
+
+        // Path
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', pathD);
+        path.setAttribute('class', linkClass);
+        path.setAttribute('fill', 'none');
+        linkG.appendChild(path);
+
+        // Source Port Label
+        const labelSrcY = isUp ? (srcY - 14) : (srcY + 14);
+        const srcPill = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        srcPill.innerHTML = `
+          <rect x="${srcX - 24}" y="${labelSrcY - 8}" width="48" height="16" rx="4" fill="#090e1a" stroke="#1e3a5f" stroke-width="1"/>
+          <text x="${srcX}" y="${labelSrcY + 3.5}" fill="#38bdf8" font-size="9" font-weight="700" font-family="JetBrains Mono" text-anchor="middle">${l.local_port}</text>
+        `;
+        linkG.appendChild(srcPill);
+
+        // Target Port Label
+        const labelTgtY = isUp ? (tgtY + 14) : (tgtY - 14);
+        const tgtPill = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        tgtPill.innerHTML = `
+          <rect x="${tgtX - 24}" y="${labelTgtY - 8}" width="48" height="16" rx="4" fill="#090e1a" stroke="#1e3a5f" stroke-width="1"/>
+          <text x="${tgtX}" y="${labelTgtY + 3.5}" fill="#a78bfa" font-size="9" font-weight="700" font-family="JetBrains Mono" text-anchor="middle">${l.remote_port}</text>
+        `;
+        linkG.appendChild(tgtPill);
+
+        // Midpoint Status Badge
+        const midX = (srcX + tgtX) / 2;
+        const midY = (srcY + tgtY) / 2;
+        let badgeHtml = '';
+
+        if (l.anomaly_type === 'miscable') {
+          badgeHtml = `
+            <rect x="${midX - 70}" y="${midY - 11}" width="140" height="22" rx="11" fill="#7f1d1d" stroke="#ef4444" stroke-width="1.5"/>
+            <text x="${midX}" y="${midY + 4}" fill="#fecaca" font-size="10" font-weight="800" text-anchor="middle">🚨 跨設備錯插! (${l.po || 'LACP'})</text>
+          `;
+        } else if (l.anomaly_type === 'vlan') {
+          badgeHtml = `
+            <rect x="${midX - 75}" y="${midY - 11}" width="150" height="22" rx="11" fill="#78350f" stroke="#f59e0b" stroke-width="1.5"/>
+            <text x="${midX}" y="${midY + 4}" fill="#fef08a" font-size="10" font-weight="800" text-anchor="middle">⚠️ Native VLAN 衝突 (${l.vlan} vs ${target.native_vlan || 1})</text>
+          `;
+        } else if (l.anomaly_type === 'drops') {
+          badgeHtml = `
+            <rect x="${midX - 58}" y="${midY - 10}" width="116" height="20" rx="10" fill="#431407" stroke="#fb923c" stroke-width="1.2"/>
+            <text x="${midX}" y="${midY + 4}" fill="#ffedd5" font-size="10" font-weight="700" text-anchor="middle">🌊 ${(l.port_obj.out_drops || 0).toLocaleString()} Drops</text>
+          `;
+        } else if (l.po) {
+          badgeHtml = `
+            <rect x="${midX - 50}" y="${midY - 10}" width="100" height="20" rx="10" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.2"/>
+            <text x="${midX}" y="${midY + 4}" fill="#bfdbfe" font-size="10" font-weight="700" text-anchor="middle">🔗 ${l.po} 聚合 (LACP)</text>
+          `;
+        }
+
+        if (badgeHtml) {
+          const badgeG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+          badgeG.innerHTML = badgeHtml;
+          linkG.appendChild(badgeG);
+        }
+
+        linksG.appendChild(linkG);
+      });
+      svg.appendChild(linksG);
+
+      // Nodes Group
+      const nodesG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      nodes.forEach(node => {
+        let gradId = 'gradHost';
+        let strokeColor = '#3b82f6';
+        let roleColor = '#60a5fa';
+
+        if (node.tier === 'local') {
+          gradId = 'gradDut';
+          strokeColor = '#06b6d4';
+          roleColor = '#38bdf8';
+        } else if (node.tier === 'upstream') {
+          gradId = 'gradCore';
+          strokeColor = '#6366f1';
+          roleColor = '#a5b4fc';
+        } else if (node.tier === 'downstream' && !node.id.startsWith('host_')) {
+          gradId = 'gradAccess';
+          strokeColor = '#0d9488';
+          roleColor = '#2dd4bf';
+        }
+
+        // Check if node connects to an anomaly link
+        const hasNodeAnomaly = links.some(l => (l.target.id === node.id || l.source.id === node.id) && l.anomaly_severity === 'CRITICAL');
+        if (hasNodeAnomaly) {
+          strokeColor = '#ef4444';
+        }
+
+        const nodeG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        nodeG.setAttribute('id', 'node_' + node.id);
+        nodeG.setAttribute('class', 'topo-node');
+        nodeG.setAttribute('transform', `translate(${node.x - node.width / 2}, ${node.y - node.height / 2})`);
+        nodeG.onclick = () => inspectTopoNode(node.id);
+
+        nodeG.innerHTML = `
+          <rect width="${node.width}" height="${node.height}" rx="10" fill="url(#${gradId})" stroke="${strokeColor}" stroke-width="1.8"/>
+          <text x="14" y="20" fill="${roleColor}" font-size="11" font-weight="800">${node.icon} ${node.role}</text>
+          <text x="14" y="42" fill="#ffffff" font-size="14" font-weight="900" font-family="JetBrains Mono">${escapeHtml(node.hostname)}</text>
+          <text x="14" y="60" fill="#94a3b8" font-size="11">${escapeHtml((node.platform || node.model || 'Cisco Device').substring(0, 24))} (${escapeHtml(node.mgmt_ip || 'N/A')})</text>
+          ${hasNodeAnomaly ? `<circle cx="${node.width - 12}" cy="12" r="6" fill="#ef4444" stroke="#ffffff" stroke-width="1.5"/>` : ''}
+        `;
+        nodesG.appendChild(nodeG);
+      });
+      svg.appendChild(nodesG);
+    }
+
+    function inspectTopoLink(linkId) {
+      const link = topoLinksData[linkId];
+      if (!link) return;
+
+      const inspector = document.getElementById('topoInspector');
+      inspector.style.display = 'block';
+
+      // Highlight active link in SVG
+      document.querySelectorAll('#topoLinksG path').forEach(p => p.style.opacity = '0.35');
+      const activeLinkEl = document.querySelector(`#g_${link.id} path`);
+      if (activeLinkEl) {
+        activeLinkEl.style.opacity = '1';
+        activeLinkEl.style.strokeWidth = '5.5';
+      }
+
+      let adviceHtml = '';
+      if (link.anomaly_type === 'miscable') {
+        adviceHtml = `
+          <div class="topo-advice-box critical">
+            <strong>🚨 CCIE 專家根因剖析 (LACP 跨設備錯插跳線)：</strong><br>
+            ${link.anomaly_advice}<br><br>
+            <strong>💡 現場立即處置指令 (拔除錯誤成員埠 / 更正配置)：</strong>
+            <pre style="background:#090d16; padding:8px 12px; border-radius:6px; color:#38bdf8; margin-top:6px; font-family:var(--font-mono); font-size:12px;">interface ${link.local_port}
+ no channel-group 1 mode active
+! 請機房維運人員確認機櫃實體跳線，改插至核心交換機 Core-SW-01 之對應埠！</pre>
+          </div>
+        `;
+      } else if (link.anomaly_type === 'vlan') {
+        adviceHtml = `
+          <div class="topo-advice-box warning">
+            <strong>⚠️ CCIE 專家根因剖析 (Native VLAN 不一致衝突)：</strong><br>
+            ${link.anomaly_advice}<br><br>
+            <strong>💡 現場立即修正指令 (統一兩端 Trunk Native VLAN)：</strong>
+            <pre style="background:#090d16; padding:8px 12px; border-radius:6px; color:#38bdf8; margin-top:6px; font-family:var(--font-mono); font-size:12px;">interface ${link.local_port}
+ switchport trunk native vlan ${link.target.native_vlan || 1}
+! 保持 Trunk 兩端 PVID 一致，解除 STP 阻斷！</pre>
+          </div>
+        `;
+      } else if (link.anomaly_type === 'drops') {
+        adviceHtml = `
+          <div class="topo-advice-box healthy">
+            <strong>🌊 CCIE 專家研判 (終端客戶端緩衝區溢位)：</strong><br>
+            ${link.anomaly_advice}
+          </div>
+        `;
+      } else {
+        adviceHtml = `
+          <div class="topo-advice-box healthy">
+            <strong>🟢 鏈路互聯運作良好：</strong><br>
+            雙向實體層與邏輯協議皆正常，無 CRC 錯誤與丟包，協商協定流暢。
+          </div>
+        `;
+      }
+
+      const macsStr = (link.port_obj.mac_addresses || []).join(', ') || '無';
+      const ipsStr = (link.port_obj.ip_addresses || []).join(', ') || '無';
+
+      inspector.innerHTML = `
+        <div class="topo-inspector-head">
+          <div class="topo-inspector-title">
+            <span>🔗</span>
+            <span>鏈路實體與邏輯對接穿透: <strong>${escapeHtml(link.local_port)}</strong> ➔ <strong>${escapeHtml(link.target.hostname)} (${escapeHtml(link.remote_port)})</strong></span>
+          </div>
+          <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="document.getElementById('topoInspector').style.display='none'">✕ 關閉視窗</button>
+        </div>
+
+        <div class="topo-inspector-grid">
+          <div class="topo-prop-box">
+            <div class="topo-prop-lbl">本端介面 / 狀態</div>
+            <div class="topo-prop-val">${escapeHtml(link.local_port)} <span style="font-size:11px; color:#34d399;">[${escapeHtml(link.status)}]</span></div>
+          </div>
+          <div class="topo-prop-box">
+            <div class="topo-prop-lbl">對端設備身分 (Device ID)</div>
+            <div class="topo-prop-val" style="color:#a78bfa;">${escapeHtml(link.target.full_hostname)}</div>
+          </div>
+          <div class="topo-prop-box">
+            <div class="topo-prop-lbl">對端介面 (Remote Port)</div>
+            <div class="topo-prop-val">${escapeHtml(link.remote_port)}</div>
+          </div>
+          <div class="topo-prop-box">
+            <div class="topo-prop-lbl">聚合群組 (EtherChannel)</div>
+            <div class="topo-prop-val">${link.po ? `<span style="color:#38bdf8;">${escapeHtml(link.po)} (LACP)</span>` : '<span style="color:#94a3b8;">未聚合 (獨立鏈路)</span>'}</div>
+          </div>
+          <div class="topo-prop-box">
+            <div class="topo-prop-lbl">速率與雙工 (Speed / Duplex)</div>
+            <div class="topo-prop-val">${escapeHtml(link.speed)} Mbps / ${escapeHtml(link.duplex)}</div>
+          </div>
+          <div class="topo-prop-box">
+            <div class="topo-prop-lbl">VLAN / Native PVID</div>
+            <div class="topo-prop-val">本端: ${escapeHtml(link.vlan)} | 對端: ${link.target.native_vlan != null ? link.target.native_vlan : 'N/A'}</div>
+          </div>
+          <div class="topo-prop-box">
+            <div class="topo-prop-lbl">學習到之 MAC 地址</div>
+            <div class="topo-prop-val" style="font-size:11px;">${escapeHtml(macsStr)}</div>
+          </div>
+          <div class="topo-prop-box">
+            <div class="topo-prop-lbl">ARP 解析之 IP 地址</div>
+            <div class="topo-prop-val" style="color:#34d399; font-size:11px;">${escapeHtml(ipsStr)}</div>
+          </div>
+        </div>
+        ${adviceHtml}
+      `;
+    }
+
+    function inspectTopoNode(nodeId) {
+      const node = topoNodesData[nodeId];
+      if (!node) return;
+
+      const inspector = document.getElementById('topoInspector');
+      inspector.style.display = 'block';
+
+      // Highlight active node
+      document.querySelectorAll('#topoLinksG path').forEach(p => p.style.opacity = '1');
+      document.querySelectorAll('.topo-node').forEach(n => n.classList.remove('selected'));
+      const activeNodeEl = document.getElementById('node_' + node.id);
+      if (activeNodeEl) activeNodeEl.classList.add('selected');
+
+      const connectedLinks = Object.values(topoLinksData).filter(l => l.target.id === node.id || l.source.id === node.id);
+
+      let linksSummaryHtml = '';
+      if (connectedLinks.length > 0) {
+        linksSummaryHtml = `
+          <div style="margin-top: 12px; background:#070b14; border:1px solid #1e293b; border-radius:8px; padding:10px 14px;">
+            <div style="font-size:12px; font-weight:700; color:#38bdf8; margin-bottom:6px;">🔌 本節點對外互聯埠號清單 (${connectedLinks.length} 條鏈路)：</div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              ${connectedLinks.map(l => `
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; font-family:var(--font-mono); background:#0d1629; padding:4px 10px; border-radius:4px;">
+                  <span>${l.local_port} ➔ ${l.remote_port} (${l.target.hostname})</span>
+                  <span>${l.po ? l.po + ' | ' : ''}VLAN: ${l.vlan} | <strong style="color:${l.anomaly_type ? '#f87171' : '#34d399'};">${l.status}</strong></span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      inspector.innerHTML = `
+        <div class="topo-inspector-head">
+          <div class="topo-inspector-title">
+            <span>${node.icon}</span>
+            <span>設備身分與全域互聯穿透: <strong>${escapeHtml(node.full_hostname || node.hostname)}</strong></span>
+          </div>
+          <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="document.getElementById('topoInspector').style.display='none'">✕ 關閉視窗</button>
+        </div>
+
+        <div class="topo-inspector-grid">
+          <div class="topo-prop-box">
+            <div class="topo-prop-lbl">設備架構層級 (Tier / Role)</div>
+            <div class="topo-prop-val" style="color:#38bdf8;">${node.role}</div>
+          </div>
+          <div class="topo-prop-box">
+            <div class="topo-prop-lbl">硬體平台 / 型號 (Platform)</div>
+            <div class="topo-prop-val">${escapeHtml(node.platform || node.model)}</div>
+          </div>
+          <div class="topo-prop-box">
+            <div class="topo-prop-lbl">管理 IP (Management IP)</div>
+            <div class="topo-prop-val" style="color:#34d399;">${escapeHtml(node.mgmt_ip)}</div>
+          </div>
+          <div class="topo-prop-box">
+            <div class="topo-prop-lbl">運行時間 (Uptime)</div>
+            <div class="topo-prop-val">${escapeHtml(node.uptime || 'N/A')}</div>
+          </div>
+        </div>
+        ${linksSummaryHtml}
+      `;
+    }
+
+    function renderPortGrid(ports, anomalies) {
+      const grid = document.getElementById('portGrid');
+      grid.innerHTML = '';
+
+      const anomMap = {};
+      if (anomalies) {
+        anomalies.forEach(a => anomMap[a.port] = a);
+      }
+
+      ports.forEach(p => {
+        const anom = anomMap[p.port];
+        let ledClass = 'led-gray';
+        let borderColor = '#334155';
+
+        if (p.status === 'err-disabled') {
+          ledClass = 'led-red';
+          borderColor = 'rgba(239, 68, 68, 0.6)';
+        } else if (p.status === 'flapping' || (p.is_flapping && p.status !== 'connected')) {
+          ledClass = 'led-flapping';
+          borderColor = 'rgba(245, 158, 11, 0.9)';
+        } else if (p.status === 'suspended' || (anom && anom.is_outlier)) {
+          ledClass = 'led-amber';
+          borderColor = 'rgba(245, 158, 11, 0.6)';
+        } else if (p.status === 'connected' || p.status === 'up') {
+          ledClass = 'led-green';
+        }
+
+        const jack = document.createElement('div');
+        jack.className = 'port-jack';
+        jack.style.borderColor = borderColor;
+        jack.onclick = () => openPortModal(p, anom);
+
+        let peerTip = p.peer_device ? `\n➔ 對端設備: ${p.peer_device}${p.peer_port ? ' (' + p.peer_port + ')' : ''}` : '';
+        jack.title = `${p.port} (${p.status})${peerTip}`;
+
+        let peerTagHtml = '';
+        if (p.cdp_neighbor || p.lldp_neighbor) {
+          const shortPeer = (p.peer_device || '').split('.')[0];
+          peerTagHtml = `<div style="font-size: 8px; color: #38bdf8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 48px; margin-top: 1px;" title="${escapeHtml(p.peer_device)}">${escapeHtml(shortPeer)}</div>`;
+        } else if (p.ip_addresses && p.ip_addresses.length > 0) {
+          peerTagHtml = `<div style="font-size: 8px; color: #34d399; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 48px; margin-top: 1px;" title="IP: ${p.ip_addresses.join(', ')}">${p.ip_addresses[0].split('.').slice(-2).join('.')}</div>`;
+        }
+
+        jack.innerHTML = `
+          <div class="port-id">${p.port}</div>
+          <div class="port-status-bar">
+            <span class="led-dot ${ledClass}"></span>
+            <span>${(p.status || 'unknown').substring(0, 5)}</span>
+          </div>
+          ${peerTagHtml}
+        `;
+        grid.appendChild(jack);
+      });
+    }
+
+    function renderHealthGauge(score) {
+      const scoreVal = document.getElementById('scoreVal');
+      const scoreCircle = document.getElementById('scoreCircle');
+      const scoreStatus = document.getElementById('scoreStatus');
+
+      scoreVal.innerText = score;
+      if (score >= 80) {
+        scoreCircle.style.borderColor = '#10b981';
+        scoreCircle.style.boxShadow = '0 0 25px rgba(16, 185, 129, 0.3)';
+        scoreStatus.innerText = '🟢 設備健康度良好';
+        scoreStatus.style.color = '#10b981';
+      } else if (score >= 50) {
+        scoreCircle.style.borderColor = '#f59e0b';
+        scoreCircle.style.boxShadow = '0 0 25px rgba(245, 158, 11, 0.3)';
+        scoreStatus.innerText = '🟠 存在配置/連線警告';
+        scoreStatus.style.color = '#f59e0b';
+      } else {
+        scoreCircle.style.borderColor = '#ef4444';
+        scoreCircle.style.boxShadow = '0 0 25px rgba(239, 68, 68, 0.3)';
+        scoreStatus.innerText = '🔴 嚴重異常！需立即處置';
+        scoreStatus.style.color = '#ef4444';
+      }
+    }
+
+    function renderDiagnoses(diagnoses) {
+      const list = document.getElementById('diagList');
+      list.innerHTML = '<div style="font-size: 13px; font-weight: 700; color: #94a3b8; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;"><span>🔎</span> 各項異常細部技術指標穿透 (Detailed Diagnostics Breakdown)</div>';
+
+      diagnoses.forEach(d => {
+        const item = document.createElement('div');
+        const sevClass = d.severity.toLowerCase();
+        item.className = `diag-item ${sevClass}`;
+
+        const badgeClass = d.severity === 'CRITICAL' ? 'badge-critical' : (d.severity === 'HIGH' ? 'badge-high' : 'badge-conf');
+
+        let playbookHtml = '';
+        if (d.next_steps && d.next_steps.length > 0) {
+          const stepsHtml = d.next_steps.map(s => `
+            <div class="step-item">
+              <div class="step-header">
+                <span class="step-badge">${s.step}</span>
+                <span class="step-purpose">${s.purpose}</span>
+              </div>
+              <div class="step-cmd">${s.command}</div>
+              <div class="step-reason">💡 <strong>推理依據：</strong>${s.reasoning}</div>
+            </div>
+          `).join('');
+
+          playbookHtml = `
+            <div class="playbook-container">
+              <div class="playbook-title">
+                <span>🔍 下一動智慧排查決策鏈 (Next-Action Reasoning Chain)</span>
+              </div>
+              <div class="playbook-subtitle">
+                現場排障免猜測！依照以下推薦步驟在 Switch 執行驗證，各指令背後的排錯推理如下：
+              </div>
+              <div class="step-list">
+                ${stepsHtml}
+              </div>
+              ${d.macro_cli ? `
+                <div class="macro-bar">
+                  <div class="macro-info">
+                    <strong>🚀 一鍵採集批次包：</strong>在 Switch 終端機按滑鼠右鍵直接一次貼上執行
+                  </div>
+                  <button class="btn btn-primary" style="padding: 6px 14px; font-size: 12px;" onclick="copyDirectMacro(this)">
+                    📋 複製深度採集批次指令包 (Macro)
+                  </button>
+                  <div style="display:none;" class="macro-data">${escapeHtml(d.macro_cli)}</div>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }
+
+        item.innerHTML = `
+          <div class="diag-head">
+            <div class="diag-title-row">
+              <div class="diag-title">${d.title}</div>
+            </div>
+            <div class="diag-meta" style="display:flex; align-items:center; gap:8px;">
+              <span class="diag-badge ${badgeClass}">${d.severity}</span>
+              <span class="diag-badge badge-conf">ML 信心度: ${(d.confidence * 100).toFixed(0)}%</span>
+              <button type="button" class="btn btn-xs" style="margin-left:auto; background:rgba(6,182,212,0.15); color:#38bdf8; border:1px solid rgba(6,182,212,0.35); padding:4px 10px; font-size:12.5px; font-weight:600; border-radius:4px; cursor:pointer;" onclick="askAiAboutDiagnosis('${escapeHtml(d.title)}', '${escapeHtml(d.target || '')}')">
+                💬 諮詢 AI 根因
+              </button>
+            </div>
+          </div>
+          <div class="diag-cause"><strong>根因研判：</strong>${d.root_cause}</div>
+          <div class="diag-exp">${d.explanation}</div>
+          ${playbookHtml}
+          <div class="cli-box" style="margin-top: 14px;">
+            <button class="copy-btn" onclick="copyCli(this)">📋 複製現場止血/修復指令</button>
+            <div class="cli-code">${d.remediation_cli}</div>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function copyUnifiedInvestigation(btn) {
+      const text = document.getElementById('unifiedInvPreview').innerText;
+      navigator.clipboard.writeText(text);
+      const old = btn.innerText;
+      btn.innerText = '✓ 全域採集指令已複製！';
+      setTimeout(() => btn.innerText = old, 2500);
+    }
+
+    function copyUnifiedRemediation(btn) {
+      const text = document.getElementById('unifiedRemPreview').innerText;
+      navigator.clipboard.writeText(text);
+      const old = btn.innerText;
+      btn.innerText = '✓ 全域修復腳本已複製！';
+      setTimeout(() => btn.innerText = old, 2500);
+    }
+
+    function copyDirectMacro(btn) {
+      const dataEl = btn.nextElementSibling;
+      const text = dataEl.innerText;
+      navigator.clipboard.writeText(text);
+      const oldText = btn.innerText;
+      btn.innerText = '✓ 批次指令已複製！';
+      setTimeout(() => btn.innerText = oldText, 2500);
+    }
+
+    function copyGoldenMacro(btn) {
+      const code = document.getElementById('goldenMacroText').innerText;
+      navigator.clipboard.writeText(code);
+      const oldText = btn.innerText;
+      btn.innerText = '✓ 黃金採集指令已複製！';
+      setTimeout(() => btn.innerText = oldText, 2500);
+    }
+
+    function escapeHtml(str) {
+      return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function copyCli(btn) {
+      const code = btn.nextElementSibling.innerText;
+      navigator.clipboard.writeText(code);
+      btn.innerText = '✓ 已複製！';
+      setTimeout(() => btn.innerText = '📋 複製指令', 2000);
+    }
+
+    function openPortModal(port, anom) {
+      document.getElementById('modalPortName').innerText = `${port.port} 實體埠詳情`;
+      document.getElementById('mStatus').innerText = port.status;
+      document.getElementById('mVlan').innerText = port.vlan || '1';
+      document.getElementById('mDuplex').innerText = `${port.duplex} / ${port.speed}`;
+      document.getElementById('mCrc').innerText = port.crc_errors || 0;
+      document.getElementById('mErrors').innerText = `${port.in_errors || 0} / ${port.out_errors || 0}`;
+      document.getElementById('mCollisions').innerText = port.collisions || 0;
+
+      if (anom && anom.explanation) {
+        document.getElementById('mEcodExp').innerText = anom.explanation;
+      } else {
+        document.getElementById('mEcodExp').innerText = '計數器在正常基線範圍內，未被 ECOD 標記為離群異常。';
+      }
+
+      // Populate CDP / LLDP / MAC / ARP Topology
+      const topoEl = document.getElementById('mTopologyDetails');
+      let topoHtml = '';
+      if (port.cdp_neighbor) {
+        const c = port.cdp_neighbor;
+        topoHtml = `
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div><strong>對端設備 (Device ID):</strong> <span style="color:#38bdf8; font-family:var(--font-mono);">${escapeHtml(c.device_id)}</span></div>
+            <div><strong>對端連接埠 (Remote Port):</strong> <span style="color:#a78bfa; font-family:var(--font-mono);">${escapeHtml(c.remote_port)}</span></div>
+            <div><strong>對端型號 / 平台:</strong> ${escapeHtml(c.platform || 'Cisco Switch/Router')}</div>
+            <div><strong>對端管理 IP:</strong> <span style="color:#34d399; font-family:var(--font-mono);">${escapeHtml(c.mgmt_ip || '未提供')}</span></div>
+            <div><strong>對端 Native VLAN:</strong> ${c.native_vlan != null ? c.native_vlan : 'N/A'}</div>
+            <div><strong>設備角色:</strong> <span style="color:#fbbf24; font-weight:700;">${escapeHtml(port.peer_type || 'Switch')}</span></div>
+          </div>
+        `;
+      } else if (port.lldp_neighbor) {
+        const l = port.lldp_neighbor;
+        topoHtml = `
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div><strong>對端設備 (LLDP):</strong> <span style="color:#38bdf8; font-family:var(--font-mono);">${escapeHtml(l.device_id)}</span></div>
+            <div><strong>對端連接埠:</strong> <span style="color:#a78bfa; font-family:var(--font-mono);">${escapeHtml(l.remote_port)}</span></div>
+            <div><strong>管理 IP:</strong> ${escapeHtml(l.mgmt_ip || '未提供')}</div>
+            <div><strong>協議:</strong> LLDP</div>
+          </div>
+        `;
+      } else {
+        topoHtml = `<div style="color: #94a3b8; font-style: italic;">未探測到 CDP / LLDP 網通交換機鄰居（對端為一般電腦主機、印表機或未受管 Hub）。</div>`;
+      }
+
+      if (port.mac_addresses && port.mac_addresses.length > 0) {
+        const ipsStr = (port.ip_addresses && port.ip_addresses.length > 0) ? ` ➔ 關聯 IP: <span style="color:#34d399; font-family:var(--font-mono); font-weight:700;">${port.ip_addresses.join(', ')}</span>` : '';
+        topoHtml += `
+          <div style="margin-top: 8px; border-top: 1px dashed #1e3a5f; padding-top: 6px;">
+            <strong>學習到之 MAC (${port.mac_addresses.length} 個):</strong>
+            <span style="font-family:var(--font-mono); color:#93c5fd;">${port.mac_addresses.join(', ')}</span>
+            ${ipsStr}
+          </div>
+        `;
+      }
+      topoEl.innerHTML = topoHtml;
+
+      document.getElementById('portModal').style.display = 'flex';
+    }
+
+    function closeModal(e) {
+      document.getElementById('portModal').style.display = 'none';
+    }
+
+    // Ollama & Local LLM Gateway Functions
+    let currentOllamaModel = 'qwen3.5';
+
+    async function checkOllamaStatus(isManual = false) {
+      const dot = document.getElementById('ollamaDot');
+      const text = document.getElementById('ollamaStatusText');
+      const noticeBar = document.getElementById('ollamaNoticeBar');
+      const fleetDots = document.querySelectorAll('.fleet-ollama-dot');
+      const fleetTexts = document.querySelectorAll('.fleet-ollama-text');
+
+      if (dot && text) {
+        text.innerText = 'Ollama: 檢測中...';
+      }
+
+      try {
+        const res = await fetch('/api/ollama/status');
+        const data = await res.json();
+
+        if (data.online) {
+          // Ollama is online
+          if (dot) {
+            dot.className = 'status-dot online';
+          }
+          if (text) {
+            text.innerText = `Ollama: 已連線 (${data.models.length} 個模型)`;
+          }
+          fleetDots.forEach(d => d.className = 'status-dot online');
+          fleetTexts.forEach(t => t.innerText = `Ollama: 已連線 (${data.models.length} 個模型)`);
+
+          // Populate models into dropdown if detected
+          const select = document.getElementById('ollamaModelSelect');
+          if (select && data.models && data.models.length > 0) {
+            data.models.forEach(m => {
+              if (!Array.from(select.options).some(opt => opt.value === m)) {
+                const opt = document.createElement('option');
+                opt.value = m;
+                opt.innerText = `${m} (本機已安裝)`;
+                select.insertBefore(opt, select.options[select.options.length - 1]);
+              }
+            });
+          }
+
+          if (noticeBar) {
+            noticeBar.style.borderLeftColor = '#10b981';
+            const helpEl = document.getElementById('ollamaNoticeHelp');
+            if (helpEl) {
+              helpEl.innerHTML = `🟢 <strong>本地 Ollama 運作中</strong>：模型 <code class="cmd-pill">${currentOllamaModel}</code> 已就緒，全網封包與遙測 100% 於本機筆電內推理，無雲端洩漏疑慮。`;
+            }
+          }
+
+          if (isManual) {
+            alert(`✅ 本地 Ollama 連線成功！已偵測到 ${data.models.length} 個模型：\n` + (data.models.join(', ') || '尚無模型，請執行 ollama run qwen3.5'));
+          }
+        } else {
+          // Ollama is offline
+          if (dot) {
+            dot.className = 'status-dot offline';
+          }
+          if (text) {
+            text.innerText = 'Ollama: 離線 (點擊重試)';
+          }
+          fleetDots.forEach(d => d.className = 'status-dot offline');
+          fleetTexts.forEach(t => t.innerText = 'Ollama: 離線 (點擊重試)');
+
+          if (noticeBar) {
+            noticeBar.style.borderLeftColor = '#38bdf8';
+            const helpEl = document.getElementById('ollamaNoticeHelp');
+            if (helpEl) {
+              helpEl.innerHTML = `若本地尚未啟動模型，請於 Windows 終端執行：<code class="cmd-pill" id="ollamaCmdCode">ollama run ${currentOllamaModel}</code>（啟動後本頁面將自動熱接）`;
+            }
+          }
+
+          if (isManual) {
+            alert(`ℹ️ 本地 Ollama 目前未運行。\n若要使用本地大模型 Qwen3.5，請在終端機執行：\nollama run ${currentOllamaModel}\n\n目前系統仍可由 CCIE 專家離線規則引擎正常回答！`);
+          }
+        }
+      } catch (err) {
+        if (dot) dot.className = 'status-dot offline';
+        if (text) text.innerText = 'Ollama: 離線';
+        fleetDots.forEach(d => d.className = 'status-dot offline');
+        fleetTexts.forEach(t => t.innerText = 'Ollama: 離線');
+      }
+    }
+
+    function handleModelChange() {
+      const select = document.getElementById('ollamaModelSelect');
+      if (!select) return;
+      if (select.value === 'custom') {
+        const custom = prompt('請輸入本機 Ollama 模型名稱 (例如: qwen3.5:1.5b 或 deepseek-r1:7b):', 'qwen3.5:1.5b');
+        if (custom && custom.trim()) {
+          const val = custom.trim();
+          const opt = document.createElement('option');
+          opt.value = val;
+          opt.innerText = `${val} (自訂)`;
+          select.insertBefore(opt, select.options[select.options.length - 1]);
+          select.value = val;
+          currentOllamaModel = val;
+        } else {
+          select.value = 'qwen3.5';
+          currentOllamaModel = 'qwen3.5';
+        }
+      } else {
+        currentOllamaModel = select.value;
+      }
+
+      // Update badges & command code
+      const cmdCode = document.getElementById('ollamaCmdCode');
+      if (cmdCode) cmdCode.innerText = `ollama run ${currentOllamaModel}`;
+      document.querySelectorAll('.current-model-badge').forEach(b => b.innerText = currentOllamaModel);
+    }
+
+    function copyOllamaCmd(btn) {
+      const cmd = `ollama run ${currentOllamaModel}`;
+      navigator.clipboard.writeText(cmd);
+      const old = btn.innerText;
+      btn.innerText = '✓ 已複製！';
+      setTimeout(() => btn.innerText = old, 2000);
+    }
+
+    // ========================================================
+    // Continuous Conversation Memory & Proactive Copilot Linkage
+    // ========================================================
+    let singleChatHistory = [];
+    let fleetChatHistory = [];
+
+    // Global Font Size Zoom Controls
+    const fontLevels = [
+      { label: '緊湊', size: '13.5px' },
+      { label: '標準', size: '15px' },
+      { label: '大號', size: '17px' },
+      { label: '特大', size: '19px' }
+    ];
+    let currentFontLevel = 1;
+
+    function changeFontSize(delta) {
+      currentFontLevel = Math.max(0, Math.min(fontLevels.length - 1, currentFontLevel + delta));
+      const cfg = fontLevels[currentFontLevel];
+      document.documentElement.style.setProperty('--base-font-size', cfg.size);
+      document.body.style.fontSize = cfg.size;
+      const lbl = document.getElementById('fontLevelLabel');
+      if (lbl) lbl.innerText = cfg.label;
+      try {
+        localStorage.setItem('switchscope_font_level', currentFontLevel);
+      } catch (e) {}
+    }
+
+    // Auto-Linkage: Ask AI directly about Primary Blocker
+    function askAiAboutBlocker() {
+      const triage = currentAnalysisData && currentAnalysisData.global_triage;
+      if (!triage || !triage.primary_issue) return;
+      const p = triage.primary_issue;
+      const input = document.getElementById('chatInput');
+      if (input) {
+        input.value = `請針對當前最高優先級主震央【${p.title}】(${p.target})，為我詳細推演根本原因，並提供現場第一線工程師最推薦的排查與驗證指令步驟。`;
+        sendChatMessage();
+        const section = document.getElementById('triageSection');
+        if (section) section.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Auto-Linkage: Ask AI directly about a specific diagnosis
+    function askAiAboutDiagnosis(title, target) {
+      const input = document.getElementById('chatInput');
+      if (input) {
+        input.value = `請針對故障【${title}】(介面/標的: ${target || '本機'})，告訴我現場最可能的成因、可能帶來的全網影響、以及下一步在 Switch 該下什麼指令排查？`;
+        sendChatMessage();
+        const section = document.getElementById('triageSection');
+        if (section) section.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Proactive AI Briefing: Single Switch Mode
+    function initProactiveSingleChat(data) {
+      const chatBox = document.getElementById('chatBox');
+      if (!chatBox) return;
+
+      const dev = data.device_info || {};
+      const triage = data.global_triage || {};
+      const p = triage.primary_issue;
+      const health = data.health_score ?? 100;
+      const devName = dev.hostname || dev.model || 'Cisco Switch';
+
+      let briefingHtml = `
+        <div style="font-weight:700; color:#38bdf8; font-size:16px; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+          <span>🔍</span> 【CCIE 戰情總評已生成】${escapeHtml(devName)}
+        </div>
+        <div style="line-height:1.7; margin-bottom:10px; font-size:14.5px;">
+          • <strong>系統健康評分</strong>：<span style="color:${health >= 80 ? '#34d399' : (health >= 50 ? '#f59e0b' : '#ef4444')}; font-weight:700; font-size:16px;">${health} / 100 分</span><br>
+          • <strong>受檢型號與運行</strong>：<code>${escapeHtml(dev.model || 'Catalyst')}</code> (IOS: ${escapeHtml(dev.version || 'Unknown')}, 運行: ${escapeHtml(dev.uptime || 'N/A')})<br>
+      `;
+
+      if (triage.has_critical_blocker && p) {
+        briefingHtml += `
+          • 🚨 <strong style="color:#ef4444;">主震央核心阻斷 (Primary Blocker)</strong>：<span style="color:#fca5a5; font-weight:700;">${escapeHtml(p.title)}</span> [標的: <code>${escapeHtml(p.target)}</code>]<br>
+          • <strong>衝擊範疇</strong>：${escapeHtml(p.impact_scope || '')}<br>
+          • <strong>根本原因剖析</strong>：${escapeHtml(p.root_cause || '')}<br>
+        `;
+      } else {
+        briefingHtml += `• ✅ <strong>全域評估</strong>：全機各項遙測指標雙向對稱平穩，無系統級阻斷性故障。<br>`;
+      }
+
+      if (triage.executive_opinion) {
+        briefingHtml += `• 💡 <strong>處置共識</strong>：${escapeHtml(triage.executive_opinion)}<br>`;
+      }
+
+      briefingHtml += `
+        </div>
+        <div style="background:rgba(6,182,212,0.1); border-left:3px solid #06b6d4; padding:10px 14px; border-radius:6px; font-size:14px; color:#bae6fd; line-height:1.6;">
+          💬 <strong>多輪對話記憶已就緒</strong>：我已完整掌握整台交換機的所有端口狀態、CRC 離群值、路由狀態機與 CDP 拓撲。<br>
+          您可以直接在下方追問任何問題（支援連續追問記憶），或點擊下方快捷按鈕！
+        </div>
+      `;
+
+      chatBox.innerHTML = '';
+      const aiBubble = document.createElement('div');
+      aiBubble.className = 'chat-bubble ai';
+      aiBubble.innerHTML = briefingHtml;
+      chatBox.appendChild(aiBubble);
+
+      // Initialize singleChatHistory for continuous multi-turn memory
+      const sysContext = (data.triage_prompt || '') + '\n\nInstructions: You are SwitchScope CCIE Assistant. Maintain conversational context across turns. Answer questions about this specific switch considering all counters, logs, and topologies.';
+      singleChatHistory = [
+        { role: 'system', content: sysContext },
+        { role: 'assistant', content: `[CCIE Briefing for ${devName}]: Health ${health}/100. Primary Blocker: ${p ? p.title : 'Healthy'}. Executive opinion: ${triage.executive_opinion || 'Clean'}` }
+      ];
+    }
+
+    // Proactive AI Briefing: Multi-Chassis Fleet Mode (Multiple TXT Files)
+    function initProactiveFleetChat(data) {
+      const chatBox = document.getElementById('fleetChatBox');
+      if (!chatBox) return;
+
+      const devices = data.devices || [];
+      const conflicts = data.cross_conflicts || data.cross_device_conflicts || [];
+      const links = data.verified_links || [];
+      const devNames = devices.map(d => d.hostname).join(', ');
+
+      let briefingHtml = `
+        <div style="font-weight:700; color:#a78bfa; font-size:16px; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+          <span>🌐</span> 【全網機群跨設備 AI 戰情速報】(${devices.length} 台實體設備)
+        </div>
+        <div style="line-height:1.7; margin-bottom:10px; font-size:14.5px;">
+          • <strong>已匯入實體設備 (${devices.length} 台)</strong>：<code>${escapeHtml(devNames || '無')}</code><br>
+          • <strong>雙向對接互聯鏈路</strong>：已校驗 <strong>${links.length}</strong> 條實體互聯線路<br>
+      `;
+
+      if (conflicts.length > 0) {
+        briefingHtml += `• 🚨 <strong style="color:#ef4444;">檢出 ${conflicts.length} 個跨設備實體衝突 (Cross-Chassis Inconsistencies)</strong>：<br>`;
+        conflicts.forEach((c, idx) => {
+          const srcDev = c.source_device || c.local_device || 'Unknown';
+          const srcPort = c.source_port || c.local_port || '';
+          const tgtDev = c.target_device || c.remote_device || 'Unknown';
+          const tgtPort = c.target_port || c.remote_port || '';
+          briefingHtml += `&nbsp;&nbsp;&nbsp;&nbsp;${idx+1}. <span class="badge ${c.severity === 'CRITICAL' ? 'badge-critical' : 'badge-high'}" style="font-size:11px;">${c.severity}</span> <strong>${escapeHtml(c.title)}</strong> (<code>${escapeHtml(srcDev)}:${escapeHtml(srcPort)}</code> ➔ <code>${escapeHtml(tgtDev)}:${escapeHtml(tgtPort)}</code>)<br>`;
+        });
+      } else {
+        briefingHtml += `• ✅ <strong>跨機校驗結果</strong>：全網所有實體交換機對接埠配置 100% 雙向對稱，無任何跨機衝突！<br>`;
+      }
+
+      briefingHtml += `
+        </div>
+        <div style="background:rgba(139,92,246,0.1); border-left:3px solid #8b5cf6; padding:10px 14px; border-radius:6px; font-size:14px; color:#ddd6fe; line-height:1.6;">
+          💬 <strong>多設備多檔案記憶已就緒</strong>：我已完整掌握這 ${devices.length} 個檔案的所有配置與日誌，並理解全網實體拓撲架構。<br>
+          您可以直接連續追問任一台設備的處置方式（例如：「請告訴我 ${devices[0] ? devices[0].hostname : 'Switch'} 該下什麼指令修復？」），支援連續多輪對話！
+        </div>
+      `;
+
+      chatBox.innerHTML = '';
+      const aiBubble = document.createElement('div');
+      aiBubble.className = 'chat-bubble ai';
+      aiBubble.innerHTML = briefingHtml;
+      chatBox.appendChild(aiBubble);
+
+      const fleetPrompt = (data.fleet_triage_prompt || '') + '\n\nInstructions: You are SwitchScope CCIE Fleet Copilot with full visibility across ALL uploaded switch files. Maintain conversation memory and help resolve cross-chassis issues.';
+      fleetChatHistory = [
+        { role: 'system', content: fleetPrompt },
+        { role: 'assistant', content: `[Fleet Briefing]: Ingested ${devices.length} devices (${devNames}). Detected ${conflicts.length} cross-device conflicts.` }
+      ];
+    }
+
+    // Chat / Triage Copilot (Single Switch Mode - Multi-Turn Context)
+    async function sendChatMessage() {
+      const input = document.getElementById('chatInput');
+      const query = input.value.trim();
+      if (!query) return;
+
+      const chatBox = document.getElementById('chatBox');
+
+      // User Bubble
+      const userBubble = document.createElement('div');
+      userBubble.className = 'chat-bubble user';
+      userBubble.innerText = query;
+      chatBox.appendChild(userBubble);
+      input.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // Loading Bubble
+      const aiBubble = document.createElement('div');
+      aiBubble.className = 'chat-bubble ai';
+      aiBubble.innerHTML = `<span class="status-dot online" style="width:6px;height:6px;display:inline-block;margin-right:6px;"></span> 思考中 (CCIE Reasoning Engine - ${currentOllamaModel})...`;
+      chatBox.appendChild(aiBubble);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // Add to conversation history with sliding window (System + Last 8 turns / 4 rounds)
+      if (!singleChatHistory || singleChatHistory.length === 0) {
+        const sysPrompt = (currentAnalysisData ? currentAnalysisData.triage_prompt : '') + '\n\n【最高鐵則】：一律強制使用繁體中文回覆，嚴禁英文開頭！直接給出可執行的 Cisco CLI 配置指令，拒絕教科書名詞解釋。';
+        singleChatHistory = [{ role: 'system', content: sysPrompt }];
+      }
+      singleChatHistory.push({ role: 'user', content: query });
+      if (singleChatHistory.length > 9) {
+        singleChatHistory = [singleChatHistory[0], ...singleChatHistory.slice(-8)];
+      }
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: singleChatHistory, prompt: query, model: currentOllamaModel })
+        });
+        const data = await res.json();
+
+        let responseText = data.response || data.error || '無回應';
+        
+        // Save assistant reply into history
+        singleChatHistory.push({ role: 'assistant', content: responseText });
+
+        responseText = responseText.replace(/```cisco([\s\S]*?)```/g, '<pre>$1</pre>');
+        responseText = responseText.replace(/```([\s\S]*?)```/g, '<pre>$1</pre>');
+        responseText = responseText.replace(/\n/g, '<br>');
+
+        let headerTag = '';
+        if (data.source === 'ollama') {
+          headerTag = `<div class="ai-source-tag"><span class="status-dot online" style="width:6px;height:6px;"></span> 🤖 [本地 ${data.model_used || currentOllamaModel} 即時推理]</div><br>`;
+        } else {
+          headerTag = `<div class="ai-source-tag offline">🛡️ [SwitchScope CCIE 離線規則引擎]</div><br>`;
+          if (data.notice) {
+            headerTag += `<div style="font-size:12px;color:#f59e0b;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);padding:6px 10px;border-radius:6px;margin-bottom:8px;">${data.notice}</div>`;
+          }
+        }
+
+        aiBubble.innerHTML = headerTag + responseText;
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+      } catch (err) {
+        aiBubble.innerText = '連線失敗: ' + err;
+      }
+    }
+
+    // Fleet Chat / Copilot (Multi-Chassis Mode - Multi-Turn Context across multiple TXT files)
+    async function sendFleetChatMessage() {
+      const input = document.getElementById('fleetChatInput');
+      const query = input.value.trim();
+      if (!query) return;
+
+      const chatBox = document.getElementById('fleetChatBox');
+
+      // User Bubble
+      const userBubble = document.createElement('div');
+      userBubble.className = 'chat-bubble user';
+      userBubble.innerText = query;
+      chatBox.appendChild(userBubble);
+      input.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // Loading Bubble
+      const aiBubble = document.createElement('div');
+      aiBubble.className = 'chat-bubble ai';
+      aiBubble.innerHTML = `<span class="status-dot online" style="width:6px;height:6px;display:inline-block;margin-right:6px;"></span> 跨設備多檔案推理中 (Fleet Copilot - ${currentOllamaModel})...`;
+      chatBox.appendChild(aiBubble);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // Add to fleet conversation history with sliding window (System + Last 8 turns / 4 rounds)
+      if (!fleetChatHistory || fleetChatHistory.length === 0) {
+        const sysPrompt = (currentFleetData && currentFleetData.fleet_triage_prompt ? currentFleetData.fleet_triage_prompt : '') + '\n\n【最高鐵則】：一律強制使用繁體中文回覆，嚴禁英文開頭！直接給出可執行的 Cisco CLI 配置指令，拒絕教科書名詞解釋。';
+        fleetChatHistory = [{ role: 'system', content: sysPrompt }];
+      }
+      fleetChatHistory.push({ role: 'user', content: query });
+      if (fleetChatHistory.length > 9) {
+        fleetChatHistory = [fleetChatHistory[0], ...fleetChatHistory.slice(-8)];
+      }
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: fleetChatHistory, prompt: query, model: currentOllamaModel })
+        });
+        const data = await res.json();
+
+        let responseText = data.response || data.error || '無回應';
+        fleetChatHistory.push({ role: 'assistant', content: responseText });
+
+        responseText = responseText.replace(/```cisco([\s\S]*?)```/g, '<pre>$1</pre>');
+        responseText = responseText.replace(/```([\s\S]*?)```/g, '<pre>$1</pre>');
+        responseText = responseText.replace(/\n/g, '<br>');
+
+        let headerTag = '';
+        if (data.source === 'ollama') {
+          headerTag = `<div class="ai-source-tag"><span class="status-dot online" style="width:6px;height:6px;"></span> 🤖 [本地 ${data.model_used || currentOllamaModel} 全網多機推理]</div><br>`;
+        } else {
+          headerTag = `<div class="ai-source-tag offline">🛡️ [SwitchScope CCIE 離線多機規則引擎]</div><br>`;
+          if (data.notice) {
+            headerTag += `<div style="font-size:12px;color:#f59e0b;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);padding:6px 10px;border-radius:6px;margin-bottom:8px;">${data.notice}</div>`;
+          }
+        }
+
+        aiBubble.innerHTML = headerTag + responseText;
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+      } catch (err) {
+        aiBubble.innerText = '連線失敗: ' + err;
+      }
+    }
+
+    function sendFleetQuickPrompt(text) {
+      document.getElementById('fleetChatInput').value = text;
+      sendFleetChatMessage();
+    }
+
+    // Dynamic Quick Action Prompt Chips
+    function renderQuickPrompts(data) {
+      const grid = document.getElementById('quickPromptsGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const prompts = [
+        { icon: '📢', text: '產生給主管與客戶的事故現況通報 (Line/Email 格式)' },
+        { icon: '👶', text: '請用完全不懂網管的白話文解釋這台 Switch 怎麼了？' },
+        { icon: '🛡️', text: '請給我最安全的現場修復 SOP 與回退腳本 (Rollback)' }
+      ];
+
+      const diagnoses = data.diagnoses || [];
+      const hasLACP = diagnoses.some(d => d.fault_type === 'LACP_BUNDLE_SUSPENDED');
+      const hasFlap = diagnoses.some(d => d.fault_type === 'HIGH_FREQUENCY_LINK_FLAP' || d.fault_type === 'OFFHOURS_SLEEP_NORMAL');
+      const hasErrDisable = diagnoses.some(d => d.fault_type && d.fault_type.includes('ERR_DISABLE'));
+      const hasCRC = diagnoses.some(d => d.fault_type === 'PHYSICAL_CABLE_DEGRADE');
+
+      if (hasLACP) {
+        prompts.push({ icon: '🔗', text: '為什麼 LACP 會被 (s) 掛起？對端交換機通常是哪裡配錯？' });
+      }
+      if (hasFlap) {
+        prompts.push({ icon: '⚡', text: '如何用 MAC 和 ARP 查出狂跳動的埠到底接了哪台電腦？' });
+      }
+      if (hasErrDisable) {
+        prompts.push({ icon: '🔒', text: '介面被 BPDU Guard 鎖死，現場標準解除與查驗流程是什麼？' });
+      }
+      if (hasCRC) {
+        prompts.push({ icon: '🧪', text: 'CRC 錯誤要怎麼確認是光纖線壞、SFP 模組壞還是交換機孔壞？' });
+      }
+
+      const hasDrops = (data.ports_table || []).some(p => (p.out_drops || 0) > 1000);
+      if (hasDrops) {
+        prompts.push({ icon: '🌊', text: '介面有大量的 output drops 丟包，會不會影響使用者？該怎麼調整 Buffer？' });
+      }
+
+      const hasOSPF = diagnoses.some(d => d.fault_type && d.fault_type.includes('OSPF'));
+      const hasBGP = diagnoses.some(d => d.fault_type && d.fault_type.includes('BGP'));
+      const hasEIGRP = diagnoses.some(d => d.fault_type && d.fault_type.includes('EIGRP'));
+      const hasMPLS = diagnoses.some(d => d.fault_type && d.fault_type.includes('MPLS'));
+
+      if (hasOSPF) {
+        prompts.push({ icon: '🧭', text: 'OSPF 卡在 EXSTART/INIT 是什麼原因？該如何排查與解決 MTU 不匹配？' });
+      }
+      if (hasBGP) {
+        prompts.push({ icon: '🌐', text: 'BGP 狀態停在 Active 或 Idle 代表什麼意思？TCP 179 握手失敗該如何排查？' });
+      }
+      if (hasEIGRP) {
+        prompts.push({ icon: '⚡', text: 'EIGRP 發生 K-value mismatch 或卡在 SIA，現場要如何修正？' });
+      }
+      if (hasMPLS) {
+        prompts.push({ icon: '🏷️', text: 'MPLS L3VPN 收到了 BGP VPNv4 路由，為什麼客戶端 VRF 仍無法轉發？' });
+      }
+
+      const hasTimeline = (data.timeline && data.timeline.has_timeline);
+      if (hasTimeline) {
+        prompts.push({ icon: '⏳', text: '為什麼 12 天前跳動的連接埠不用去排查？時間序列是如何判定的？' });
+        prompts.push({ icon: '📜', text: '如何從時間軸區分「真有問題」與「歷史雜訊」避免徒勞白查？' });
+      }
+
+      const hasCrossCabling = diagnoses.some(d => d.fault_type === 'LACP_CROSS_DEVICE_MISCABLING');
+      const hasNativeVlan = diagnoses.some(d => d.fault_type === 'CDP_NATIVE_VLAN_MISMATCH');
+      const hasTopology = (data.cdp_neighbors && data.cdp_neighbors.length > 0) || (data.mac_table && data.mac_table.length > 0);
+
+      if (hasCrossCabling) {
+        prompts.push({ icon: '🔌', text: '為什麼聚合組會跨接到不同交換機？現場該如何更正實體跳線？' });
+      }
+      if (hasNativeVlan) {
+        prompts.push({ icon: '🛡️', text: 'CDP 檢出 Native VLAN 不匹配，會造成什麼嚴重的生成樹風險？' });
+      }
+      if (hasTopology) {
+        prompts.push({ icon: '🌐', text: '請列出全交換機的實體拓撲連線圖 (CDP 鄰居與對端埠號清單)' });
+        prompts.push({ icon: '🔍', text: '如何利用 MAC 表與 ARP 表把特定連接埠精準反查出使用者電腦？' });
+      }
+
+      prompts.forEach(p => {
+        const chip = document.createElement('div');
+        chip.className = 'quick-chip';
+        chip.innerHTML = `<span>${p.icon}</span> <span>${p.text}</span>`;
+        chip.onclick = () => askQuickPrompt(p.text);
+        grid.appendChild(chip);
+      });
+    }
+
+    function askQuickPrompt(text) {
+      document.getElementById('chatInput').value = text;
+      sendChatMessage();
+    }
+
+    // Auto-check local Ollama connection on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      checkOllamaStatus();
+    });
+  </script>
+</body>
+</html>

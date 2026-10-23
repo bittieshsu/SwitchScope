@@ -1,0 +1,38 @@
+Server_SW_3850#show version
+Cisco IOS Software, IOS-XE Software, Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Version 16.12.04
+Switch uptime is 22 weeks, 3 days, 11 hours, 24 minutes
+cisco WS-C3850-48P (MIPS) processor (revision A0) with 4194304K bytes of memory.
+Processor board ID FOC2145ABCD
+
+Server_SW_3850#show interfaces Gi2/0/37 status
+Port      Name               Status       Vlan       Duplex  Speed Type
+Gi2/0/37  Blue_Office_AP12   connected    100        a-full a-1000 10/100/1000BaseTX
+
+Server_SW_3850#show logging
+Oct  7 07:16:21.396: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet2/0/37, changed state to up
+Oct  7 07:16:23.009: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet2/0/37, changed state to down
+Oct  7 07:16:24.060: %LINK-3-UPDOWN: Interface GigabitEthernet2/0/37, changed state to down
+Oct  7 07:16:27.411: %LINK-3-UPDOWN: Interface GigabitEthernet2/0/37, changed state to up
+Oct  7 07:16:29.484: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet2/0/37, changed state to up
+Oct  7 07:17:00.962: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet2/0/37, changed state to down
+Oct  7 07:17:01.970: %LINK-3-UPDOWN: Interface GigabitEthernet2/0/37, changed state to down
+Oct  7 07:17:04.408: %LINK-3-UPDOWN: Interface GigabitEthernet2/0/37, changed state to up
+Oct  7 07:17:06.465: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet2/0/37, changed state to up
+Oct  7 07:17:34.664: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet2/0/37, changed state to down
+Oct  7 07:17:35.720: %LINK-3-UPDOWN: Interface GigabitEthernet2/0/37, changed state to down
+Oct  7 07:23:09.571: %LINK-3-UPDOWN: Interface GigabitEthernet2/0/37, changed state to up
+Oct  7 07:23:11.355: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet2/0/37, changed state to up
+Oct  7 07:23:18.777: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet2/0/37, changed state to down
+Oct  7 07:23:19.860: %LINK-3-UPDOWN: Interface GigabitEthernet2/0/37, changed state to down
+Oct  9 16:00:15.915: %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: t5it] [Source: 10.11.100.10] [localport: 22] at 00:00:15 PST Sat Oct 10 2026
+Oct  9 16:01:19.205: %SYS-6-LOGOUT: User t5it has exited tty session 2(10.11.100.10)
+Oct 10 08:44:53.991: %SMART_LIC-3-EVAL_EXPIRED_WARNING: Evaluation period expired on Nov 08 14:06:38 2022 PST
+Oct 16 08:39:53.361: %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: kerr] [Source: 10.20.7.30] [localport: 22] at 16:39:53 PST Fri Oct 16 2026
+Oct 16 08:39:54.633: %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: kerr] [Source: 10.20.7.30] [localport: 22] at 16:39:54 PST Fri Oct 16 2026
+Oct 16 09:10:03.293: %SYS-6-TTY_EXPIRE_TIMER: (exec timer expired, tty 2 (10.20.7.30)), user kerr
+Oct 16 09:10:03.294: %SYS-6-LOGOUT: User kerr has exited tty session 2(10.20.7.30)
+Oct 16 16:00:15.366: %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: t5it] [Source: 10.11.100.10] [localport: 22] at 00:00:15 PST Sat Oct 17 2026
+Oct 16 16:01:18.621: %SYS-6-LOGOUT: User t5it has exited tty session 2(10.11.100.10)
+Oct 17 08:44:54.100: %SMART_LIC-3-EVAL_EXPIRED_WARNING: Evaluation period expired on Nov 08 14:06:38 2022 PST
+Oct 19 01:52:06.759: %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: kerr] [Source: 10.20.7.30] [localport: 22] at 09:52:06 PST Mon Oct 19 2026
+Server_SW_3850#terminal default length

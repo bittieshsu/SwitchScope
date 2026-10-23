@@ -1,0 +1,96 @@
+office1-switch-15F#show version
+Cisco IOS Software, Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Version 16.12.5b, RELEASE SOFTWARE (fc3)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2021 by Cisco Systems, Inc.
+
+Switch uptime is 24 weeks, 3 days, 11 hours, 28 minutes
+Model Number: WS-C3850-48P
+System Serial Number: FCW2145A0BC
+
+office1-switch-15F#show switch
+Switch/Stack Mac Address : 8c84.42d5.e500
+                                           H/W   Current
+Switch#   Role    Mac Address     Priority Version  State
+------------------------------------------------------------
+*1       Active   8c84.42d5.e500     15     V02     Ready
+
+office1-switch-15F#show etherchannel summary
+Flags:  D - down        P - bundled in port-channel
+        I - stand-alone s - suspended
+        H - Hot-standby (LACP only)
+        R - Layer3      S - Layer2
+        U - in use      f - failed to allocate aggregator
+Group  Port-channel  Protocol    Ports
+------+-------------+-----------+-----------------------------------------------
+1      Po1(SU)         LACP      Gi1/0/1(P)    Gi1/0/2(s)
+
+office1-switch-15F#show interfaces status
+Port         Name               Status       Vlan       Duplex  Speed Type
+Gi1/0/1      Uplink_Core_Trunk  connected    trunk      a-full a-1000 10/100/1000BaseTX
+Gi1/0/2      Uplink_Core_Trunk  suspended    trunk      a-full a-1000 10/100/1000BaseTX
+Gi1/0/21     A_Blue 11_kerr     connected    2007       a-full a-1000 10/100/1000BaseTX
+Gi1/0/24     Trunk_To_Core      connected    2007       a-full a-1000 10/100/1000BaseTX
+
+office1-switch-15F#show interfaces Gi1/0/21
+GigabitEthernet1/0/21 is up, line protocol is up (connected)
+  Hardware is Gigabit Ethernet, address is 8c84.42d5.e515 (bia 8c84.42d5.e515)
+  Description: A_Blue 11_kerr
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec
+  Encapsulation ARPA, loopback not set
+  Full-duplex, 1000Mb/s, media type is 10/100/1000BaseTX
+  Input queue: 0/2000/0/0 (size/max/drops/flushes); Total output drops: 291166
+  0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+  0 output errors, 0 collisions, 2 interface resets
+
+office1-switch-15F#show cdp neighbors detail
+-------------------------
+Device ID: Core-SW-01.corp.local
+Entry address(es): 
+  IP address: 10.1.1.1
+Platform: cisco WS-C3850-48XS,  Capabilities: Router Switch IGMP 
+Interface: GigabitEthernet1/0/1,  Port ID (outgoing port): TenGigabitEthernet1/0/1
+Holdtime : 142 sec
+native VLAN: 1
+Duplex: full
+
+-------------------------
+Device ID: Floor2-Access-SW-02.corp.local
+Entry address(es): 
+  IP address: 10.1.2.254
+Platform: cisco WS-C2960X-48TS-L,  Capabilities: Switch 
+Interface: GigabitEthernet1/0/2,  Port ID (outgoing port): GigabitEthernet1/0/48
+Holdtime : 138 sec
+native VLAN: 1
+Duplex: full
+
+-------------------------
+Device ID: Core-SW-01.corp.local
+Entry address(es): 
+  IP address: 10.1.1.1
+Platform: cisco WS-C3850-48XS,  Capabilities: Router Switch IGMP 
+Interface: GigabitEthernet1/0/24,  Port ID (outgoing port): TenGigabitEthernet1/0/2
+Holdtime : 155 sec
+native VLAN: 1
+Duplex: full
+
+office1-switch-15F#show mac address-table
+          Mac Address Table
+-------------------------------------------
+Vlan    Mac Address       Type        Ports
+----    -----------       --------    -----
+2007    0015.5d07.1e2d    DYNAMIC     Gi1/0/21
+2007    7486.e20c.c0aa    DYNAMIC     Gi1/0/21
+   1    005d.73fe.dc00    DYNAMIC     Gi1/0/1
+Total Mac Addresses for this criterion: 3
+
+office1-switch-15F#show ip arp
+Protocol  Address          Age (min)  Hardware Addr   Type   Interface
+Internet  10.20.7.35             14   0015.5d07.1e2d  ARPA   Vlan2007
+Internet  10.20.7.30              8   7486.e20c.c0aa  ARPA   Vlan2007
+Internet  10.1.1.1                5   005d.73fe.dc00  ARPA   GigabitEthernet1/0/1
+
+office1-switch-15F#show logging
+Oct 19 09:12:04.120: %CDP-4-NATIVE_VLAN_MISMATCH: Native VLAN mismatch discovered on GigabitEthernet1/0/24 (2007), with Core-SW-01.corp.local TenGigabitEthernet1/0/2 (1).
+Oct 19 09:12:05.340: %SPANTREE-2-BLOCK_PVID_LOCAL: Blocking GigabitEthernet1/0/24 on VLAN2007. Inconsistent local vlan.
+Oct 19 09:14:18.910: %EC-5-BUNDLE: Interface GigabitEthernet1/0/1 joined port-channel Po1
+Oct 19 09:14:22.450: %EC-5-CANNOT_BUNDLE2: Gi1/0/2 is not compatible with Gi1/0/1 and will be suspended (partner system id is incompatible)

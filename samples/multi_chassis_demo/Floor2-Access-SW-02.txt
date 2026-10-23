@@ -1,0 +1,71 @@
+Floor2-Access-SW-02#show version
+Cisco IOS Software, C2960X Software (C2960X-UNIVERSALK9-M), Version 15.2(7)E3, RELEASE SOFTWARE (fc3)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2020 by Cisco Systems, Inc.
+
+Switch uptime is 30 weeks, 1 day, 4 hours, 10 minutes
+Model Number: WS-C2960X-48TS-L
+System Serial Number: FCW2122X011
+
+Floor2-Access-SW-02#show switch
+Switch/Stack Mac Address : 002a.6aaf.3300
+                                           H/W   Current
+Switch#   Role    Mac Address     Priority Version  State
+------------------------------------------------------------
+*1       Active   002a.6aaf.3300      1     V01     Ready
+
+Floor2-Access-SW-02#show etherchannel summary
+Flags:  D - down        P - bundled in port-channel
+        I - stand-alone s - suspended
+        H - Hot-standby (LACP only)
+        R - Layer3      S - Layer2
+        U - in use      f - failed to allocate aggregator
+Group  Port-channel  Protocol    Ports
+------+-------------+-----------+-----------------------------------------------
+No aggregators configured
+
+Floor2-Access-SW-02#show interfaces status
+Port         Name               Status       Vlan       Duplex  Speed Type
+Gi1/0/10     AIR-AP2800-Floor2  connected    20         a-full a-1000 10/100/1000BaseTX
+Gi1/0/48     Downlink_Office15  connected    trunk      a-full a-1000 10/100/1000BaseTX
+Gi1/0/49     Uplink_To_Core01   connected    trunk      a-full a-1000 10/100/1000BaseTX
+
+Floor2-Access-SW-02#show cdp neighbors detail
+-------------------------
+Device ID: office1-switch-15F.corp.local
+Entry address(es): 
+  IP address: 10.1.1.2
+Platform: cisco WS-C3850-48P,  Capabilities: Router Switch IGMP 
+Interface: GigabitEthernet1/0/48,  Port ID (outgoing port): GigabitEthernet1/0/2
+Holdtime : 138 sec
+native VLAN: 1
+Duplex: full
+
+-------------------------
+Device ID: Core-SW-01.corp.local
+Entry address(es): 
+  IP address: 10.1.1.1
+Platform: cisco WS-C3850-48XS,  Capabilities: Router Switch IGMP 
+Interface: GigabitEthernet1/0/49,  Port ID (outgoing port): TenGigabitEthernet1/0/3
+Holdtime : 142 sec
+native VLAN: 1
+Duplex: full
+
+Floor2-Access-SW-02#show mac address-table
+          Mac Address Table
+-------------------------------------------
+Vlan    Mac Address       Type        Ports
+----    -----------       --------    -----
+  20    4001.7ac8.1122    DYNAMIC     Gi1/0/10
+   1    005d.73fe.dc00    DYNAMIC     Gi1/0/49
+   1    8c84.42d5.e500    DYNAMIC     Gi1/0/48
+Total Mac Addresses for this criterion: 3
+
+Floor2-Access-SW-02#show ip arp
+Protocol  Address          Age (min)  Hardware Addr   Type   Interface
+Internet  10.1.2.254              -   002a.6aaf.3300  ARPA   Vlan1
+Internet  10.1.1.1                4   005d.73fe.dc00  ARPA   Vlan1
+Internet  10.20.20.10            18   4001.7ac8.1122  ARPA   Vlan20
+
+Floor2-Access-SW-02#show logging
+Oct 19 09:14:21.800: %SPANTREE-7-BLOCK_PORT_TYPE: GigabitEthernet1/0/48 designated forwarding

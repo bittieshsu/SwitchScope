@@ -1,0 +1,71 @@
+cisco-core-switch#terminal length 0
+cisco-core-switch#show version
+Cisco IOS Software, Catalyst L3 Switch Software (CAT9K_IOSXE), Version 17.6.3, RELEASE SOFTWARE (fc4)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2022 by Cisco Systems, Inc.
+Compiled Wed 23-Mar-22 04:12 by mcpre
+
+cisco-core-switch uptime is 42 weeks, 3 days, 14 hours, 28 minutes
+Uptime for this control processor is 42 weeks, 3 days, 14 hours, 31 minutes
+System returned to ROM by reload
+System image file is "bootflash:packages.conf"
+Last reload reason: Reload Command
+
+Model Number                    : C9300-48UXM
+System Serial Number            : FCW2418L0AZ
+Switch Ports Model              SW Version        SW Image              Mode   
+------ ----- -----              ----------        ----------            ----   
+*    1 48    C9300-48UXM        17.06.03          CAT9K_IOSXE           INSTALL
+
+cisco-core-switch#show interfaces status
+Port      Name               Status       Vlan       Duplex  Speed Type
+Gi1/0/1   OSPF-Uplink-Core1  connected    routed     a-full a-1000 10/100/1000BaseTX
+Gi1/0/2   BGP-ISP-Edge       connected    routed     a-full a-1000 10/100/1000BaseTX
+Gi1/0/3   EIGRP-Branch-Link  connected    routed     a-full a-1000 10/100/1000BaseTX
+Gi1/0/4   LAN-Access-V20     connected    20         a-full a-1000 10/100/1000BaseTX
+Gi1/0/48  Server-Trunk-Po1   connected    trunk      a-full a-1000 10/100/1000BaseTX
+
+cisco-core-switch#show ip ospf neighbor
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.255.255.1      1   EXSTART/ -      00:00:34    10.1.1.2        GigabitEthernet1/0/1
+
+cisco-core-switch#show ip bgp summary
+BGP router identifier 10.255.255.10, local AS number 65000
+BGP table version is 1, main routing table version 1
+
+Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.1.2.2        4        65100       0       0        1    0    0 00:18:24 Active
+10.254.1.1      4        65000       0       0        1    0    0 01:05:12 Idle
+
+cisco-core-switch#show ip eigrp neighbors
+EIGRP-IPv4 Neighbors for AS(100)
+H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq
+                                                    (sec)         (ms)       Cnt Num
+
+cisco-core-switch#show ip route
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area 
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
+       a - application route
+       + - replicated route, % - next hop override, p - overrides from PfR
+
+Gateway of last resort is not set
+
+      10.0.0.0/8 is variably subnetted, 6 subnets, 2 masks
+C        10.1.1.0/30 is directly connected, GigabitEthernet1/0/1
+L        10.1.1.1/32 is directly connected, GigabitEthernet1/0/1
+C        10.1.2.0/30 is directly connected, GigabitEthernet1/0/2
+L        10.1.2.1/32 is directly connected, GigabitEthernet1/0/2
+C        10.1.3.0/30 is directly connected, GigabitEthernet1/0/3
+L        10.1.3.1/32 is directly connected, GigabitEthernet1/0/3
+
+cisco-core-switch#show logging | include %
+Oct 18 14:10:02.115: %OSPF-5-ADJCHG: Process 1, Nbr 10.255.255.1 on GigabitEthernet1/0/1 from 2WAY to EXSTART, AdjOK?
+Oct 18 14:10:45.320: %OSPF-5-ADJCHG: Process 1, Nbr 10.255.255.1 on GigabitEthernet1/0/1 from EXSTART to DOWN, Neighbor Down: Too many retransmissions
+Oct 18 14:11:05.112: %DUAL-5-NBRCHANGE: IP-EIGRP(0) 100: Neighbor 10.1.3.2 (GigabitEthernet1/0/3) is down: K-value mismatch
+Oct 18 14:15:30.981: %BGP-3-NOTIFICATION: sent to neighbor 10.1.2.2 passive 4/0 (hold time expired) 0 bytes
+cisco-core-switch#terminal default length

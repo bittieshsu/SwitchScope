@@ -179,12 +179,13 @@ class SwitchScopeHandler(BaseHTTPRequestHandler):
         elif path == "/api/chat":
             prompt = req_json.get("prompt", "")
             model = req_json.get("model", "qwen3.5")
+            messages = req_json.get("messages", None)
 
-            if not prompt.strip():
-                self._send_json({"success": False, "error": "Prompt cannot be empty"}, status=400)
+            if not prompt.strip() and not messages:
+                self._send_json({"success": False, "error": "Prompt or messages cannot be empty"}, status=400)
                 return
 
-            res = llm_gateway.query_ollama(prompt, model=model)
+            res = llm_gateway.query_ollama(prompt=prompt, model=model, messages=messages)
             self._send_json(res)
 
         elif path == "/api/analyze-batch":
@@ -215,7 +216,7 @@ class SwitchScopeHandler(BaseHTTPRequestHandler):
             self.send_error(404, "Not Found")
 
     def _send_json(self, data: dict, status: int = 200):
-        body = json.dumps(data, ensure_ascii=False).encode("utf-8")
+        body = json.dumps(data, ensure_ascii=False, default=str).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))

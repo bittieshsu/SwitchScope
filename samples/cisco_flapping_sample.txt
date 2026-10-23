@@ -1,0 +1,35 @@
+Oct 15 08:40:55.199: %LINK-3-UPDOWN: Interface GigabitEthernet1/0/13, changed state to down
+Oct 15 08:41:08.659: %LINK-3-UPDOWN: Interface GigabitEthernet1/0/13, changed state to up
+Oct 15 08:41:09.659: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/13, changed state to up
+Oct 15 09:57:22.247: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/33, changed state to down
+Oct 15 09:57:23.248: %LINK-3-UPDOWN: Interface GigabitEthernet1/0/33, changed state to down
+Oct 15 09:57:28.730: %LINK-3-UPDOWN: Interface GigabitEthernet1/0/33, changed state to up
+Oct 15 09:57:29.730: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/33, changed state to up
+Oct 15 09:57:41.484: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/33, changed state to down
+Oct 15 09:57:42.487: %LINK-3-UPDOWN: Interface GigabitEthernet1/0/33, changed state to down
+Oct 15 21:45:01.099: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/21, changed state to down
+Oct 15 21:45:02.099: %LINK-3-UPDOWN: Interface GigabitEthernet1/0/21, changed state to down
+Oct 15 21:45:07.299: %LINK-3-UPDOWN: Interface GigabitEthernet1/0/21, changed state to up
+Oct 15 21:45:08.359: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/21, changed state to up
+Oct 15 21:45:11.831: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/21, changed state to down
+Oct 15 21:45:12.831: %LINK-3-UPDOWN: Interface GigabitEthernet1/0/21, changed state to down
+Oct 15 21:45:37.630: %LINK-3-UPDOWN: Interface GigabitEthernet1/0/21, changed state to up
+Oct 15 21:45:38.631: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/21, changed state to up
+Oct 16 00:44:56.766: %LINK-3-UPDOWN: Interface GigabitEthernet1/0/33, changed state to up
+Oct 16 00:44:57.768: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/33, changed state to up
+Oct 16 02:09:18.271: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/33, changed state to down
+Oct 16 02:09:19.276: %LINK-3-UPDOWN: Interface GigabitEthernet1/0/33, changed state to down
+Oct 16 02:09:50.774: %LINK-3-UPDOWN: Interface GigabitEthernet1/0/33, changed state to up
+Oct 16 02:09:51.775: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/33, changed state to up
+Oct 16 02:10:20.028: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/33, changed state to down
+Oct 16 02:10:21.031: %LINK-3-UPDOWN: Interface GigabitEthernet1/0/33, changed state to down
+Oct 16 02:10:26.530: %LINK-3-UPDOWN: Interface GigabitEthernet1/0/33, changed state to up
+Oct 16 02:10:27.537: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/33, changed state to up
+Oct 16 02:11:15.330: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/33, changed state to down
+Oct 16 02:11:16.335: %LINK-3-UPDOWN: Interface GigabitEthernet1/0/33, changed state to down
+Oct 16 02:11:37.655: %LINK-3-UPDOWN: Interface GigabitEthernet1/0/33, changed state to up
+Oct 16 02:11:38.656: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/33, changed state to up
+Oct 16 02:11:44.907: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/33, changed state to down
+Oct 16 02:11:45.908: %LINK-3-UPDOWN: Interface GigabitEthernet1/0/33, changed state to down
+Oct 16 02:12:07.018: %LINK-3-UPDOWN: Interface GigabitEthernet1/0/33, changed state to up
+Oct 16 02:12:08.019: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/33, changed state to up
