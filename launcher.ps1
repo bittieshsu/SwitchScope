@@ -1,9 +1,9 @@
-# SwitchScope Launcher & Environment Doctor
+﻿# SwitchScope Launcher & Environment Doctor
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-$Host.UI.RawUI.WindowTitle = "SwitchScope — 智慧網通設備異常透視與排障儀"
+$Host.UI.RawUI.WindowTitle = "SwitchScope - 智慧網通設備異常透視與排障儀"
 
 Write-Host "===================================================================" -ForegroundColor Cyan
-Write-Host "    ⬡ SwitchScope — 智慧網通設備異常透視與排障儀" -ForegroundColor Cyan
+Write-Host "    [SwitchScope] 智慧網通設備異常透視與排障儀" -ForegroundColor Cyan
 Write-Host "    Dual-Tier ML (ECOD + CatBoost) & Local AI Copilot" -ForegroundColor Cyan
 Write-Host "===================================================================" -ForegroundColor Cyan
 Write-Host ""
@@ -63,7 +63,7 @@ if ($LASTEXITCODE -ne 0) {
     Write-Host ""
     Write-Host "[!] 提示：未偵測到 C 語言加速之 CatBoost/PyOD/Pandas 套件。" -ForegroundColor Yellow
     Write-Host "-------------------------------------------------------------------" -ForegroundColor DarkGray
-    Write-Host "🛡️ 【SwitchScope 供應鏈安全防護與執行模式】" -ForegroundColor Cyan
+    Write-Host "[SwitchScope 供應鏈安全防護與執行模式]" -ForegroundColor Cyan
     Write-Host "  [1] 啟用「零相依純地端安全模式」(Zero-Dependency Safe Mode - 推薦安全首選)" -ForegroundColor Green
     Write-Host "      * 100% 免除 pip install，使用純 Python 內建標準庫運作！"
     Write-Host "      * 徹底免疫 PyPI 惡意投毒、Typosquatting 偽裝包與供應鏈攻擊。"
