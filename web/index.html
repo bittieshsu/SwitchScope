@@ -1632,7 +1632,96 @@
     .conflict-table tr:hover td {
       background: #0e1930;
     }
-  </style>
+  
+    /* Cross-Vendor Dual Pane Styles */
+    .cross-vendor-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 960px) {
+      .cross-vendor-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .cross-pane {
+      background: #111827;
+      border: 1px solid #1f293d;
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+    }
+    .cross-pane-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #1e293b;
+    }
+    .cross-bridge-card {
+      background: linear-gradient(135deg, #0e1e38 0%, #0d1527 100%);
+      border: 1px solid #2563eb;
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+    .cross-bridge-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .cross-vs-indicator {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #1e3a8a;
+      color: #93c5fd;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .cross-dev-badge {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 6px;
+      background: #0f172a;
+      border: 1px solid #334155;
+    }
+    .conflict-alert {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid #ef4444;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-top: 10px;
+    }
+    .dual-remedy-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    @media (max-width: 860px) {
+      .dual-remedy-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .remedy-box {
+      background: #090d16;
+      border: 1px solid #1e3a8a;
+      border-radius: 8px;
+      padding: 12px;
+    }
+</style>
 </head>
 <body>
 
@@ -1674,6 +1763,10 @@
         <span>多台實體設備跨機聯動模式 (Multi-Chassis Fleet Cross-Correlation)</span>
         <span class="mode-badge-new">NEW 全網真實架構</span>
       </button>
+        <button class="nav-tab-btn" id="tabCrossVendorMode" onclick="switchGlobalMode('cross_vendor')">
+          <span>⚡ 跨廠牌對接檢驗儀 (Cross-Vendor Dual-Pane Link Inspector)</span>
+          <span class="tab-badge" style="background: rgba(249, 115, 22, 0.2); color: #fb923c; border-color: rgba(249, 115, 22, 0.4);">NEW</span>
+        </button>
     </div>
 
     <!-- Single Switch Section Wrapper -->
@@ -1681,11 +1774,12 @@
       <!-- Action Toolbar -->
       <div class="toolbar">
       <div class="btn-group">
-        <button class="btn btn-secondary" onclick="loadSample()">📋 載入二層多重故障 (LACP + BPDU + CRC)</button>
-        <button class="btn btn-secondary" onclick="loadSample('flapping')">🚨 載入高頻震盪 Log (Link Flapping)</button>
-        <button class="btn btn-secondary" style="border-color: #6366f1; color: #a5b4fc;" onclick="loadSample('routing')">🌐 載入 CCIE 路由實戰 (OSPF + BGP + EIGRP)</button>
-        <button class="btn btn-secondary" style="border-color: #06b6d4; color: #38bdf8;" onclick="loadSample('topology')">🔌 載入 CCIE 拓撲聯動 (CDP/LLDP 跨設備錯插 & 上聯穿透)</button>
-        <button class="btn btn-secondary" style="border-color: #10b981; color: #6ee7b7;" onclick="loadSample('timeline')">⏳ 載入時序平息實戰 (12天前歷史跳動)</button>
+        <button class="btn btn-secondary" onclick="loadSample()">🔵 Cisco 實戰 (LACP+BPDU+CRC)</button>
+        <button class="btn btn-secondary" style="border-color: #f97316; color: #fdba74;" onclick="loadSample('aruba')">🟠 ArubaOS-CX 實戰 (6300M 阻塞+CRC)</button>
+        <button class="btn btn-secondary" style="border-color: #10b981; color: #6ee7b7;" onclick="loadSample('juniper')">🟢 Junos 實戰 (EX3400 光衰+VLAN)</button>
+        <button class="btn btn-secondary" style="border-color: #ef4444; color: #fca5a5;" onclick="loadSample('fortiswitch')">🔴 FortiSwitch 實戰 (FS-148F 聚合異常)</button>
+        <button class="btn btn-secondary" onclick="loadSample('flapping')">🚨 高頻震盪 (Flapping)</button>
+        <button class="btn btn-secondary" style="border-color: #6366f1; color: #a5b4fc;" onclick="loadSample('routing')">🌐 路由 (OSPF+BGP)</button>
         <button class="btn btn-secondary" onclick="clearInput()">🗑️ 清空內容</button>
       </div>
       <div class="btn-group">
@@ -1711,32 +1805,35 @@
         現場免摸索！點擊右上方按鈕複製 ➔ 到 Switch 終端機 (Console/SSH) 點右鍵一次貼上 ➔ 自動關閉換頁跑完 ➔ 全選輸出貼入下方即可！
       </div>
       <pre style="background: #070b14; border: 1px solid #1e293d; border-radius: 8px; padding: 10px 14px; font-family: var(--font-mono); font-size: 12px; color: #38bdf8; overflow-x: auto;" id="goldenMacroText">terminal length 0
-show clock
 show version
 show switch
 show etherchannel summary
 show interfaces status
-show interfaces | include (?:is (?:up|down)|input rate|output rate|errors|CRC|drops)
-show cdp neighbors detail
-show lldp neighbors
-show mac address-table
-show ip arp
-show ip route
-show ip ospf neighbor
-show ip bgp summary
-show ip eigrp neighbors
-show mpls ldp neighbor
-show logging | include %
-terminal default length</pre>
+show interfaces | include (is up|is down|duplex|Internet address|input errors|CRC|drops)</pre>
     </div>
 
     <!-- CLI Input -->
     <div class="card">
       <div class="card-header">
         <div class="card-title">
-          <span>💻 Cisco Switch CLI 輸出貼入區 (支援整段複製或各別指令)</span>
+          <span>💻 多廠牌 Switch CLI 輸出貼入區 (Cisco / Aruba / Juniper / FortiSwitch)</span>
         </div>
-        <div class="chips">
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin: 0 16px 12px 16px; padding: 8px 14px; background: rgba(15, 23, 42, 0.7); border: 1px solid #1e3a5f; border-radius: 8px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 13px; font-weight: 700; color: #38bdf8;">🏷️ 設備廠牌適配：</span>
+          <select id="vendorSelect" style="background: #090d16; border: 1px solid #38bdf8; color: #38bdf8; border-radius: 6px; padding: 4px 10px; font-family: var(--font-mono); font-size: 13px; font-weight: 600; cursor: pointer;">
+            <option value="auto">🟢 自動特徵嗅探 (Auto-Sniff)</option>
+            <option value="cisco">🔵 Cisco IOS / NX-OS</option>
+            <option value="aruba">🟠 Aruba (HPE) ArubaOS-CX</option>
+            <option value="juniper">🟢 Juniper Networks (Junos)</option>
+            <option value="fortiswitch">🔴 Fortinet (FortiSwitch)</option>
+          </select>
+        </div>
+        <div>
+          <span id="detectedVendorBadge" style="display: none; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; background: rgba(56, 189, 248, 0.15); border: 1px solid #38bdf8; color: #38bdf8;"></span>
+        </div>
+      </div> class="chips">
           <span class="chip">show version</span>
           <span class="chip">show etherchannel sum</span>
           <span class="chip">show int status</span>
@@ -2142,7 +2239,94 @@ terminal default length</pre>
       </div>
     </div>
   </div>
-  </main>
+  
+    <!-- Cross-Vendor Dual-Pane Section -->
+    <section id="crossVendorSection" style="display: none;">
+      <!-- Toolbar & Actions -->
+      <div class="toolbar" style="margin-bottom: 16px;">
+        <div class="btn-group" style="flex-wrap: wrap;">
+          <button class="btn btn-secondary" style="border-color: #f97316; color: #fdba74;" onclick="loadCrossSample('cisco_aruba')">
+            🧪 載入 Cisco ⟷ Aruba 跨廠實戰 (Trunk VLAN 黑洞 + LACP 阻塞)
+          </button>
+          <button class="btn btn-secondary" style="border-color: #ef4444; color: #fca5a5;" onclick="loadCrossSample('cisco_fortiswitch')">
+            🧪 載入 Cisco ⟷ FortiSwitch 跨廠實戰 (FortiLink 聚合錯配)
+          </button>
+          <button class="btn btn-secondary" onclick="clearCrossInputs()">
+            🗑️ 清空雙欄
+          </button>
+        </div>
+        <div>
+          <button class="btn btn-primary" style="background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%); border-color: #f97316;" onclick="analyzeCrossVendor()">
+            ⚡ 開始跨廠牌對稱鏈路深度校驗
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Guidance Banner -->
+      <div class="card" style="background: linear-gradient(135deg, #18182b 0%, #0d1222 100%); border: 1px solid #312e81; margin-bottom: 16px; padding: 12px 18px;">
+        <div style="font-size: 13.5px; color: #c7d2fe; display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 20px;">💡</span>
+          <div>
+            <strong>機房跨廠排障終極神器：</strong>左邊貼【設備 A】（如 Core Cisco），右邊貼【設備 B】（如 Access Aruba 或 FortiSwitch）。
+            系統自動提取 LLDP/CDP 拓撲關係、比對 <strong>Trunk Tagged/Untagged 映射黑洞、LACP 聚合阻塞、速率雙工與光衰 CRC</strong>，並同步產出<strong>雙邊原廠修復與回滾指令</strong>！
+          </div>
+        </div>
+      </div>
+
+      <!-- Dual Pane Grid Inputs -->
+      <div class="cross-vendor-grid">
+        <!-- Pane A -->
+        <div class="cross-pane" style="border-color: #1e3a8a;">
+          <div class="cross-pane-header">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="badge" style="background: #1e3a8a; color: #bfdbfe; font-weight: 700;">設備 A (本端 / Core)</span>
+              <span style="font-size: 13px; font-weight: 700; color: #94a3b8;">CLI 輸出文字</span>
+            </div>
+            <div>
+              <select id="vendorSelectA" style="background: #090d16; border: 1px solid #3b82f6; color: #93c5fd; border-radius: 6px; padding: 3px 8px; font-size: 12px; font-weight: 600;">
+                <option value="auto">🟢 自動識別廠牌</option>
+                <option value="cisco" selected>🔵 Cisco IOS / NX-OS</option>
+                <option value="aruba">🟠 Aruba (HPE) CX</option>
+                <option value="juniper">🟢 Juniper Junos</option>
+                <option value="fortiswitch">🔴 Fortinet FortiSwitch</option>
+              </select>
+            </div>
+          </div>
+          <textarea id="crossInputA" class="form-control" style="flex: 1; min-height: 240px; font-size: 12px; background: #070b14;" placeholder="貼入設備 A 的 CLI 輸出 (如 show version, show int status, show etherchannel, show lldp)..."></textarea>
+        </div>
+
+        <!-- Pane B -->
+        <div class="cross-pane" style="border-color: #7c2d12;">
+          <div class="cross-pane-header">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="badge" style="background: #7c2d12; color: #fed7aa; font-weight: 700;">設備 B (對端 / Access)</span>
+              <span style="font-size: 13px; font-weight: 700; color: #94a3b8;">CLI 輸出文字</span>
+            </div>
+            <div>
+              <select id="vendorSelectB" style="background: #090d16; border: 1px solid #ea580c; color: #fdba74; border-radius: 6px; padding: 3px 8px; font-size: 12px; font-weight: 600;">
+                <option value="auto">🟢 自動識別廠牌</option>
+                <option value="cisco">🔵 Cisco IOS / NX-OS</option>
+                <option value="aruba" selected>🟠 Aruba (HPE) CX</option>
+                <option value="juniper">🟢 Juniper Junos</option>
+                <option value="fortiswitch">🔴 Fortinet FortiSwitch</option>
+              </select>
+            </div>
+          </div>
+          <textarea id="crossInputB" class="form-control" style="flex: 1; min-height: 240px; font-size: 12px; background: #070b14;" placeholder="貼入設備 B 的 CLI 輸出 (如 show version, show int brief, show lacp, show lldp)..."></textarea>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+        <label style="font-size: 12.5px; color: #94a3b8; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+          <input type="checkbox" id="crossMaskIpsCheck" checked style="cursor: pointer;">
+          自動對敏感 IP / MAC / 密碼進行地端脫敏遮蔽
+        </label>
+      </div>
+
+      <!-- Results Container -->
+      <div id="crossVendorResults" style="display: none;"></div>
+    </section>
+</main>
 
   <!-- Port Details Modal -->
   <div class="modal-overlay" id="portModal" onclick="closeModal(event)">
@@ -2214,19 +2398,20 @@ terminal default length</pre>
       currentGlobalMode = mode;
       const tabSingle = document.getElementById('tabSingleMode');
       const tabFleet = document.getElementById('tabFleetMode');
+      const tabCross = document.getElementById('tabCrossVendorMode');
       const secSingle = document.getElementById('singleSwitchSection');
       const secFleet = document.getElementById('fleetSection');
+      const secCross = document.getElementById('crossVendorSection');
 
-      if (mode === 'single') {
-        tabSingle.classList.add('active');
-        tabFleet.classList.remove('active');
-        secSingle.style.display = 'block';
-        secFleet.style.display = 'none';
-      } else {
-        tabFleet.classList.add('active');
-        tabSingle.classList.remove('active');
-        secSingle.style.display = 'none';
-        secFleet.style.display = 'block';
+      if (tabSingle) tabSingle.classList.toggle('active', mode === 'single');
+      if (tabFleet) tabFleet.classList.toggle('active', mode === 'fleet');
+      if (tabCross) tabCross.classList.toggle('active', mode === 'cross_vendor');
+
+      if (secSingle) secSingle.style.display = (mode === 'single') ? 'block' : 'none';
+      if (secFleet) secFleet.style.display = (mode === 'fleet') ? 'block' : 'none';
+      if (secCross) secCross.style.display = (mode === 'cross_vendor') ? 'block' : 'none';
+
+      if (mode === 'fleet') {
         initFleetDropZone();
       }
     }
@@ -2850,10 +3035,12 @@ terminal default length</pre>
       }
 
       try {
+        const vSel = document.getElementById('vendorSelect');
+        const vendorVal = vSel ? vSel.value : 'auto';
         const res = await fetch('/api/analyze', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ raw_text: text, mask_ips: maskIps })
+          body: JSON.stringify({ raw_text: text, mask_ips: maskIps, vendor: vendorVal })
         });
         const data = await res.json();
         if (!data.success) {
@@ -2871,6 +3058,19 @@ terminal default length</pre>
 
     // Render UI Components
     function renderAll(data) {
+      const vBadge = document.getElementById('detectedVendorBadge');
+      if (vBadge && data.detected_vendor) {
+        vBadge.style.display = 'inline-block';
+        const vNames = {
+          'cisco': '🔵 Cisco IOS/NX-OS',
+          'aruba': '🟠 Aruba (HPE) CX',
+          'juniper': '🟢 Juniper Junos',
+          'fortiswitch': '🔴 Fortinet FortiSwitch'
+        };
+        const vTitle = vNames[data.detected_vendor] || data.detected_vendor;
+        const vConf = Math.round((data.vendor_confidence || 1) * 100);
+        vBadge.innerHTML = `🎯 辨識廠牌: <strong>${vTitle}</strong> (信心度: ${vConf}%)`;
+      }
       // 1. Show sections
       document.getElementById('chassisContainer').style.display = 'block';
       document.getElementById('topologyContainer').style.display = 'block';
@@ -3060,7 +3260,7 @@ terminal default length</pre>
         model: dev.model || 'Catalyst Switch',
         platform: dev.model || 'Cisco Catalyst Switch',
         uptime: dev.uptime || 'N/A',
-        mgmt_ip: dev.ip || '10.20.7.1',
+        mgmt_ip: dev.mgmt_ip || dev.ip || '本機 (Local)',
         role: 'DUT (本機受檢設備)',
         tier: 'local',
         icon: '⬡',
@@ -3852,6 +4052,12 @@ terminal default length</pre>
           <div class="cli-box" style="margin-top: 14px;">
             <button class="copy-btn" onclick="copyCli(this)">📋 複製現場止血/修復指令</button>
             <div class="cli-code">${d.remediation_cli}</div>
+          ${d.rollback_script ? `
+            <div class="cli-box" style="margin-top: 8px; border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.05);">
+              <button class="copy-btn" style="color: #f87171; border-color: rgba(239, 68, 68, 0.3);" onclick="copyCli(this)">🔴 複製安全回滾指令 (Rollback)</button>
+              <div class="cli-code" style="color: #fca5a5;">${escapeHtml(d.rollback_script)}</div>
+            </div>
+          ` : ''}
           </div>
         `;
         list.appendChild(item);
@@ -4092,10 +4298,10 @@ terminal default length</pre>
 
     // Global Font Size Zoom Controls
     const fontLevels = [
-      { label: '緊湊', size: '13.5px' },
-      { label: '標準', size: '15px' },
-      { label: '大號', size: '17px' },
-      { label: '特大', size: '19px' }
+      { label: '小 (90%)', size: '13.5px', zoom: '0.90' },
+      { label: '標準 (100%)', size: '15px', zoom: '1.00' },
+      { label: '較大 (115%)', size: '17px', zoom: '1.15' },
+      { label: '超大 (130%)', size: '19px', zoom: '1.30' }
     ];
     let currentFontLevel = 1;
 
@@ -4104,6 +4310,10 @@ terminal default length</pre>
       const cfg = fontLevels[currentFontLevel];
       document.documentElement.style.setProperty('--base-font-size', cfg.size);
       document.body.style.fontSize = cfg.size;
+      const mainEl = document.querySelector('main');
+      if (mainEl && cfg.zoom) {
+        mainEl.style.zoom = cfg.zoom;
+      }
       const lbl = document.getElementById('fontLevelLabel');
       if (lbl) lbl.innerText = cfg.label;
       try {
@@ -4475,8 +4685,231 @@ terminal default length</pre>
 
     // Auto-check local Ollama connection on page load
     window.addEventListener('DOMContentLoaded', () => {
+      try {
+        const savedLevel = localStorage.getItem('switchscope_font_level');
+        if (savedLevel !== null) {
+          const lvl = parseInt(savedLevel, 10);
+          if (!isNaN(lvl) && lvl >= 0 && lvl < fontLevels.length) {
+            currentFontLevel = lvl;
+            const cfg = fontLevels[currentFontLevel];
+            const mainEl = document.querySelector('main');
+            if (mainEl && cfg.zoom) mainEl.style.zoom = cfg.zoom;
+            const lbl = document.getElementById('fontLevelLabel');
+            if (lbl) lbl.innerText = cfg.label;
+          }
+        }
+      } catch (e) {}
       checkOllamaStatus();
     });
+  
+    // =========================================================================
+    // Cross-Vendor Dual-Pane Link Inspector Controllers
+    // =========================================================================
+    async function loadCrossSample(pairType) {
+      try {
+        const url = `/api/sample-cross?pair=${encodeURIComponent(pairType)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('crossInputA').value = data.device_a || '';
+          document.getElementById('crossInputB').value = data.device_b || '';
+          if (pairType === 'cisco_fortiswitch') {
+            document.getElementById('vendorSelectA').value = 'cisco';
+            document.getElementById('vendorSelectB').value = 'fortiswitch';
+          } else {
+            document.getElementById('vendorSelectA').value = 'cisco';
+            document.getElementById('vendorSelectB').value = 'aruba';
+          }
+        }
+      } catch (err) {
+        alert('無法載入跨廠範例: ' + err);
+      }
+    }
+
+    function clearCrossInputs() {
+      document.getElementById('crossInputA').value = '';
+      document.getElementById('crossInputB').value = '';
+      const resContainer = document.getElementById('crossVendorResults');
+      if (resContainer) {
+        resContainer.innerHTML = '';
+        resContainer.style.display = 'none';
+      }
+    }
+
+    async function analyzeCrossVendor() {
+      const textA = document.getElementById('crossInputA').value.trim();
+      const textB = document.getElementById('crossInputB').value.trim();
+      const vendorA = document.getElementById('vendorSelectA').value;
+      const vendorB = document.getElementById('vendorSelectB').value;
+      const maskIps = document.getElementById('crossMaskIpsCheck').checked;
+
+      if (!textA || !textB) {
+        alert('請先同時貼入【設備 A】與【設備 B】之 CLI 輸出文字！');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/cross-vendor-diff', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            device_a_text: textA,
+            device_a_vendor: vendorA,
+            device_b_text: textB,
+            device_b_vendor: vendorB,
+            mask_ips: maskIps
+          })
+        });
+
+        const data = await res.json();
+        if (!data.success) {
+          alert('跨廠牌對稱校驗失敗: ' + (data.error || '未知錯誤'));
+          return;
+        }
+
+        renderCrossVendorResults(data);
+
+      } catch (err) {
+        alert('請求錯誤: ' + err);
+      }
+    }
+
+    function renderCrossVendorResults(data) {
+      const container = document.getElementById('crossVendorResults');
+      container.style.display = 'block';
+
+      const devA = data.device_a || {};
+      const devB = data.device_b || {};
+      const summary = data.summary || {};
+      const links = data.link_pairs || [];
+
+      const healthColor = data.overall_health === 'HEALTHY' ? '#10b981' : (data.overall_health === 'CRITICAL' ? '#ef4444' : '#f59e0b');
+      const healthBadge = data.overall_health === 'HEALTHY' ? '🟢 雙端完全對稱正常' : `🚨 發現 ${summary.critical || 0} 個重大協議衝突`;
+
+      let linksHtml = '';
+      if (!links || links.length === 0) {
+        linksHtml = `
+          <div class="card" style="padding: 20px; text-align: center; color: #94a3b8;">
+            ⚠️ 兩端未能透過 LLDP/CDP 找到對接鏈路，請確認兩端日誌中是否包含 <code>show lldp neighbors</code> 或 <code>show cdp neighbors detail</code>！
+          </div>
+        `;
+      } else {
+        linksHtml = links.map((lp, idx) => {
+          const isConflict = lp.status === 'CONFLICT';
+          const statusBadge = isConflict 
+            ? '<span class="diag-badge badge-critical">🚨 存在互連配置衝突</span>' 
+            : '<span class="diag-badge" style="background:#059669; color:#fff;">🟢 鏈路對稱正常</span>';
+
+          const conflictsHtml = (lp.conflicts || []).map(c => `
+            <div class="conflict-alert">
+              <div style="font-weight: 700; color: #fca5a5; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                <span>⚠️ [${c.severity}]</span>
+                <span>${escapeHtml(c.title)}</span>
+              </div>
+              <div style="font-size: 13px; color: #fecaca; line-height: 1.5;">${escapeHtml(c.description)}</div>
+            </div>
+          `).join('');
+
+          return `
+            <div class="cross-bridge-card">
+              <div class="cross-bridge-header">
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                  <span class="cross-dev-badge">🅰️ ${escapeHtml(devA.hostname || 'Device A')} [${lp.port_a}]</span>
+                  <span class="cross-vs-indicator">⟷</span>
+                  <span class="cross-dev-badge" style="border-color: #f97316; color: #fdba74;">🅱️ ${escapeHtml(devB.hostname || 'Device B')} [${lp.port_b}]</span>
+                  <span style="font-size: 12px; color: #94a3b8;">(${lp.discovery_method || 'Matched'})</span>
+                </div>
+                <div>${statusBadge}</div>
+              </div>
+
+              <!-- Telemetry Comparison Table -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; font-size: 12.5px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;">
+                <div>
+                  <div style="font-weight: 700; color: #38bdf8; margin-bottom: 4px;">🅰️ ${escapeHtml(devA.hostname || 'Device A')} 端狀態:</div>
+                  <div>端口狀態: <strong>${lp.port_a_detail.status}</strong> | 速率: ${lp.port_a_detail.speed}M</div>
+                  <div>VLAN 模式: <code>${lp.port_a_detail.vlan}</code> | CRC 錯誤: <strong>${lp.port_a_detail.crc_errors}</strong></div>
+                </div>
+                <div>
+                  <div style="font-weight: 700; color: #fdba74; margin-bottom: 4px;">🅱️ ${escapeHtml(devB.hostname || 'Device B')} 端狀態:</div>
+                  <div>端口狀態: <strong>${lp.port_b_detail.status}</strong> | 速率: ${lp.port_b_detail.speed}M</div>
+                  <div>VLAN 模式: <code>${lp.port_b_detail.vlan}</code> | CRC 錯誤: <strong>${lp.port_b_detail.crc_errors}</strong></div>
+                </div>
+              </div>
+
+              <!-- Conflicts List -->
+              ${conflictsHtml}
+
+              <!-- Dual-Vendor Remediation & Rollback Boxes -->
+              <div style="margin-top: 14px;">
+                <div style="font-size: 13px; font-weight: 700; color: #e2e8f0; margin-bottom: 8px;">
+                  🛠️ 雙端成對原廠修復與回滾指令 (Simultaneous Dual-Vendor Remediation)
+                </div>
+                <div class="dual-remedy-grid">
+                  <!-- Side A Remediation -->
+                  <div class="remedy-box">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                      <span style="color: #38bdf8; font-weight: 700;">🅰️ ${escapeHtml(devA.hostname || 'Device A')} (${devA.vendor}) 修復:</span>
+                      <button class="copy-btn" onclick="copyCli(this)">📋 複製指令</button>
+                    </div>
+                    <div class="cli-code" style="color: #38bdf8;">${escapeHtml(lp.remediation_a)}</div>
+                    ${lp.rollback_a ? `
+                      <div style="margin-top: 8px; padding-top: 6px; border-top: 1px dashed rgba(239,68,68,0.4);">
+                        <button class="copy-btn" style="color: #f87171; border-color: rgba(239,68,68,0.3); font-size: 11px;" onclick="copyCli(this)">🔴 複製回滾指令 (Rollback)</button>
+                        <div class="cli-code" style="color: #fca5a5; font-size: 11px; margin-top: 4px;">${escapeHtml(lp.rollback_a)}</div>
+                      </div>
+                    ` : ''}
+                  </div>
+
+                  <!-- Side B Remediation -->
+                  <div class="remedy-box" style="border-color: #312e81;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                      <span style="color: #fdba74; font-weight: 700;">🅱️ ${escapeHtml(devB.hostname || 'Device B')} (${devB.vendor}) 修復:</span>
+                      <button class="copy-btn" onclick="copyCli(this)">📋 複製指令</button>
+                    </div>
+                    <div class="cli-code" style="color: #fdba74;">${escapeHtml(lp.remediation_b)}</div>
+                    ${lp.rollback_b ? `
+                      <div style="margin-top: 8px; padding-top: 6px; border-top: 1px dashed rgba(239,68,68,0.4);">
+                        <button class="copy-btn" style="color: #f87171; border-color: rgba(239,68,68,0.3); font-size: 11px;" onclick="copyCli(this)">🔴 複製回滾指令 (Rollback)</button>
+                        <div class="cli-code" style="color: #fca5a5; font-size: 11px; margin-top: 4px;">${escapeHtml(lp.rollback_b)}</div>
+                      </div>
+                    ` : ''}
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      container.innerHTML = `
+        <div class="card" style="margin-bottom: 16px; border-left: 4px solid ${healthColor};">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div>
+              <div style="font-size: 16px; font-weight: 800; color: #f8fafc;">
+                跨廠牌對稱鏈路審計報告
+              </div>
+              <div style="font-size: 12.5px; color: #94a3b8; margin-top: 4px;">
+                設備 A: <strong style="color: #38bdf8;">${escapeHtml(devA.hostname || 'Device A')}</strong> (${devA.vendor})
+                &nbsp;|&nbsp;
+                設備 B: <strong style="color: #fdba74;">${escapeHtml(devB.hostname || 'Device B')}</strong> (${devB.vendor})
+                &nbsp;|&nbsp;
+                發現對接鏈路數: <strong>${links.length}</strong> 條
+              </div>
+            </div>
+            <div>
+              <span class="diag-badge" style="background: ${healthColor}; color: #fff; font-size: 13px;">
+                ${healthBadge}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px;">
+          ${linksHtml}
+        </div>
+      `;
+    }
+
   </script>
 </body>
 </html>

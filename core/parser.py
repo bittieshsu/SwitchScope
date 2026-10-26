@@ -138,6 +138,11 @@ class CiscoParser:
         if m_sn:
             info["serial"] = m_sn.group(1).strip()
             
+        m_ip = re.search(r'(?:Internet address is|ip address)\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})', text, re.I)
+        if m_ip:
+            info["mgmt_ip"] = m_ip.group(1).strip()
+            info["ip"] = info["mgmt_ip"]
+            
         return info
 
     def _parse_uptime_days(self, uptime_str: str) -> float:

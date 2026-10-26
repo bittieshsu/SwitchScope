@@ -1,0 +1,30 @@
+FSW-Branch-148F # get system status
+Version: FortiSwitch-148F v7.4.2,build0820,240118 (GA)
+Serial-Number: S148FPT19008892
+Hostname: FSW-Branch-148F
+
+FSW-Branch-148F # diagnose switch physical-ports summary
+Port      Status  Speed   Duplex  VLAN    Learning  PoE
+port1     up      1000M   full    1       enabled   --
+port47    up      1000M   full    100     enabled   --
+port48    up      1000M   full    100     enabled   --
+
+FSW-Branch-148F # diagnose switch physical-ports stats
+Port: port47
+  Rx packet: 981240, Tx packet: 1420194
+  Rx error: 0, Rx CRC error: 0
+Port: port48
+  Rx packet: 10420, Tx packet: 89012
+  Rx error: 0, Rx CRC error: 0
+
+FSW-Branch-148F # diagnose switch trunk summary
+Trunk-Name: uplink_cisco
+  Members: port47, port48
+  Status: up
+  LACP-Mode: active
+  port47: bundled
+  port48: suspended
+
+FSW-Branch-148F # diagnose switch lldp auto-discovery status
+port47: Cisco-Core-DC (0018.ba3e.c100)
+port48: Cisco-Core-DC (0018.ba3e.c100)

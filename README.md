@@ -81,28 +81,26 @@ SwitchScope 不做「拿大砲打蒼蠅」的事（不盲目將海量數據全�
 ## 🖥️ 介面預覽 (Dashboard Architecture)
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────────────────┐
-│ ⬡ SwitchScope   [單機深度排障] [多台實體設備跨機聯動]   字體大小: [A-] [標準] [A+]   🟢 Ollama: 連線 │
-├────────────────────────┬───────────────────────────────────────────┬────────────────────┤
-│ 📋 CLI 文字輸入區       │ 👑 CCIE 主震央裁決 (Primary Blocker)        │ 🤖 CCIE Copilot    │
-│  [載入範例 ▼]          │  [Po1: Gi1/0/2 LACP Suspended 聚合組掛起]  │                    │
-│  - 實戰故障            │  - 影響層面: 頻寬減半，冗餘失效 (CRITICAL)   │ 戰情報告主動開場： │
-│  - 端口震盪 (下班感知)  │  - 立即下一動: 執行一鍵採集指令包           │ 「主震央為 Po1，   │
-│  - 動態路由 (OSPF/BGP) │                                           │  已產出修復指令，  │
-│  - 時序平息 (免白查)    ├───────────────────────────────────────────┤  請確認對端開關...」│
-│  - 實體拓撲連動 (CDP)  │ 🖧 實體交換機面板模擬 (48-Port Faceplate)   │                    │
-│                        │  [🟢][🟢][🟠][🔴] ... [CRC 離群橘燈/鎖死紅燈]│ 💬 連續多輪記憶：   │
-│ [🚀 開始 ML 智慧診斷]  ├───────────────────────────────────────────┤  Q: 我要建立 OSPF   │
-│                        │ 🔌 跨設備實體拓撲架構圖 (純 SVG 動態繪製)  │     怎麼協助我？   │
-│ [批次匯入多台 Log]     │  [上聯核心] ── (脈衝紅線:錯插警告) ── [DUT]│  A: 提供完整 CLI   │
-│                        │    │                                      │     `router ospf 1 │
-│                        │    └── (深藍粗線:Po1) ── [接入交換機]      │     network ...`   │
-└────────────────────────┴───────────────────────────────────────────┴────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ ⬡ SwitchScope   [單機深度排障] [多台實體設備跨機聯動] [⚡ 跨廠牌對接檢驗儀]   字體: [A-] [標準] [A+]   🟢 Ollama │
+├────────────────────────┬───────────────────────────────────────────┬────────────────────────────────────┤
+│ 📋 CLI 文字輸入區       │ 👑 CCIE 主震央裁決 (Primary Blocker)        │ 🤖 CCIE Copilot                    │
+│  [載入範例 ▼]          │  [Po1: Gi1/0/2 LACP Suspended 聚合組掛起]  │                                    │
+│  - Cisco / Aruba 實戰  │  - 影響層面: 頻寬減半，冗餘失效 (CRITICAL)   │ 戰情報告主動開場：                 │
+│  - Junos / FortiSwitch │  - 立即下一動: 執行一鍵採集指令包           │ 「主震央為 Po1，                   │
+│  - 動態路由 (OSPF/BGP) │                                           │  已產出修復指令，                  │
+│  - 時序平息 (免白查)    ├───────────────────────────────────────────┤  請確認對端開關...」                │
+│  - 實體拓撲連動 (CDP)  │ 🖧 實體交換機面板模擬 (48-Port Faceplate)   │                                    │
+│                        │  [🟢][🟢][🟠][🔴] ... [CRC 離群橘燈/鎖死紅燈]│ 💬 連續多輪記憶：                   │
+│ [🚀 開始 ML 智慧診斷]  ├───────────────────────────────────────────┤  Q: 我要建立 OSPF 怎麼協助我？      │
+│                        │ 🔌 跨設備實體拓撲架構圖 (純 SVG 動態繪製)  │  A: 提供完整 CLI `router ospf 1`   │
+│ [雙欄跨廠牌對撞校驗]   │  [上聯 Cisco] ── (差集比對) ── [接入 Aruba]│     `network ...`                  │
+└────────────────────────┴───────────────────────────────────────────┴────────────────────────────────────┘
 ```
 
 ---
 
-## 💎 十大核心模組
+## 💎 十一大核心模組
 
 ### 模組 0：👑 CCIE 全域會診總評與統整下一動 (Unified Executive Triage)
 * **主震央裁決 (Primary Blocker)**：杜絕碎片化逐孔排查！自動從全機眾多雜訊中，精準抓出最要命的致命核心故障（如骨幹 LACP 聚合掛起、全網 TCN 風暴跳動），並與次要周邊故障進行主次分流。
@@ -186,7 +184,17 @@ SwitchScope 不做「拿大砲打蒼蠅」的事（不盲目將海量數據全�
 * **全網多機多檔案 AI 知識庫連動**：
   * Fleet Copilot 自動載入所有實體交換機的日誌與互聯關係，支援跨檔案連續追問！
 
-### 模組 9：🛡️ 軟體供應鏈安全加固與零相依純地端安全模式 (Supply Chain Security & Zero-Dependency Safe Mode)
+### 模組 9：⚡ 跨廠牌雙欄對接檢驗儀 (Cross-Vendor Dual-Pane Link Inspector)
+* **雙欄對撞實戰工作區**：左欄貼【設備 A】（如 Core Cisco）、右欄貼【設備 B】（如 Access Aruba / FortiSwitch），支援一鍵載入實戰範例。
+* **四大廠牌自動特徵嗅探**：自適應識別 Cisco IOS/NX-OS、ArubaOS-CX、Juniper Junos、FortiSwitch。
+* **五重對接衝突深度審計**：
+  1. ⚡ **Trunk VLAN 差集黑洞**：自動比對 Allowed / Tagged VLAN，揪出單邊漏配造成的封包沉沒。
+  2. ⚡ **跨廠牌 LACP 聚合阻塞**：一端 LACP Active、另一端靜態 Trunk，導致端口遭防環機制標記為 Suspended 斷線。
+  3. ⚡ **MTU 巨框與速率雙工衝突**：揪出 1500 vs 9000 或 1000M vs 2000M 導致的連線震盪。
+  4. ⚡ **實體線路光衰與 CRC 累積**：秒抓互聯線路劣化。
+* **雙端成對原廠修復與回滾腳本 (Remediation & Rollback)**：同時產出雙邊原廠 CLI，並附安全回滾指令（Rollback）。
+
+### 模組 10：🛡️ 軟體供應鏈安全加固與零相依純地端安全模式 (Supply Chain Security & Zero-Dependency Safe Mode)
 * **密碼學雜湊鎖定 (`requirements.lock`)**：
   * 提供鎖定官方二進位 Wheel 之 `requirements.lock`，強制啟用 `--require-hashes` 與 `--only-binary :all:`：
     ```bash
@@ -352,8 +360,7 @@ SwitchScope/
 2. 內建 `core/sanitizer.py` 會在地端剖析前，自動將 `enable secret`、`password 7`、SNMP Community 字串以及客戶機敏資訊進行密碼學遮蔽。
 
 ### Q3: 如果我的交換機不是 Cisco，可以用嗎？
-目前 SwitchScope 深度適配 **Cisco IOS / IOS-XE / NX-OS** 之輸出語法。  
-但由於底層遵循標準 RFC 協定（如 IEEE 802.3ad LACP、IEEE 802.1AB LLDP、OSPFv2/v3、BGP-4），因此其他廠牌（如 Aruba、Huawei、Juniper）只要輸出格式相似，其路由狀態機與拓撲演算法依然具備高度參考價值。
+SwitchScope 2.0 已擴充支援 **Cisco、ArubaOS-CX、Juniper Junos、FortiSwitch** 多廠牌適配器，並提供「⚡ 跨廠牌對接檢驗儀 (Cross-Vendor Dual-Pane Link Inspector)」，左欄貼設備 A（如 Core Cisco）、右欄貼設備 B（如 Access Aruba / FortiSwitch），能秒級比對 Trunk VLAN 差集黑洞、跨廠 LACP 模式衝突與 MTU 錯配，並同步產出雙邊原廠修復與回滾指令！
 
 ### Q4: 執行 `python test_engine.py` 會測什麼？
 測試套件會自動對 7 大子系統進行回歸校驗：
@@ -367,9 +374,10 @@ SwitchScope/
 
 ---
 
-## 👨‍💻 作者 (Author)
+## 👨‍💻 作者與貢獻者 (Author & Contributors)
 
-* **Kerr** ([@kerr20801](https://github.com/kerr20801))
+* **Kerr** ([@kerr20801](https://github.com/kerr20801)) — 專案發起與核心架構設計
+* 🤖 **[Google Gemini](https://gemini.google.com)** — AI 結對編程夥伴 (Pair Programming Copilot)
 * 延續 `PacketScope` 與 `NetScope` 之維運工具矩陣，專注解決地端現場網管與 SI 核心痛點。歡迎提 PR 與 Issue 交流！
 
 ---
@@ -377,3 +385,12 @@ SwitchScope/
 ## 📄 授權條款 (License)
 
 本專案採用 [MIT License](LICENSE) 開源授權，歡迎自由修改、擴充與整合於內部維運流程中。
+
+---
+
+## ⚠️ 免責與實機聲明 (Disclaimer)
+
+> 💡 **老實說聲明 (Honest Note)**：  
+> 本工具核心規則、決策樹與排障邏輯深度針對 **Cisco** 實機環境調校與驗證；其他廠牌（ArubaOS-CX、Juniper Junos、FortiSwitch）適配器與跨廠牌對接目前**其他廠牌沒測過，只用 AI 測過就好 XD**。  
+> 現場套用修復指令前請務必人工複核（或先備妥各家安全回滾腳本），歡迎有各廠牌實體設備環境的各路大神提 PR / Issue 一起抓蟲補完！🙏
+

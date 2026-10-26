@@ -1,0 +1,57 @@
+FSW-Branch-148F # get system status
+Version: FortiSwitch-148F v7.4.2,build0820,240118 (GA)
+Serial-Number: S148FPT19008892
+Hostname: FSW-Branch-148F
+Branch point: 0820
+System time: Mon Oct 26 18:00:12 2026
+
+FSW-Branch-148F # diagnose switch physical-ports summary
+Port      Status  Speed   Duplex  VLAN    Learning  PoE
+port1     up      1000M   full    1       enabled   --
+port2     up      1000M   full    1       enabled   --
+port3     up      1000M   full    10      enabled   --
+port4     up      1000M   full    10      enabled   --
+port12    up      1000M   full    100     enabled   --
+port24    down    auto    auto    1       enabled   --
+port47    up      1000M   full    4094    enabled   --
+port48    up      1000M   full    4094    enabled   --
+fortilink up      2000M   full    4094    enabled   --
+
+FSW-Branch-148F # diagnose switch physical-ports stats
+Port: port1
+  Rx packet: 948102, Tx packet: 1420194
+  Rx error: 0, Rx CRC error: 0
+  Rx discard / drop: 0, Tx discard / drop: 0
+
+Port: port12
+  Rx packet: 412049, Tx packet: 894021
+  Rx error: 421, Rx CRC error: 410
+  Rx discard / drop: 38, Tx discard / drop: 0
+
+Port: port47
+  Rx packet: 1820491, Tx packet: 2940192
+  Rx error: 0, Rx CRC error: 0
+  Rx discard / drop: 0, Tx discard / drop: 0
+
+Port: port48
+  Rx packet: 89012, Tx packet: 12049
+  Rx error: 0, Rx CRC error: 0
+  Rx discard / drop: 0, Tx discard / drop: 0
+
+FSW-Branch-148F # diagnose switch trunk summary
+Trunk-Name: fortilink
+  Members: port47, port48
+  Status: up
+  LACP-Mode: active
+  port47: bundled
+  port48: suspended
+
+FSW-Branch-148F # diagnose switch vlan list
+VLAN 1: default (member: port1-port2)
+VLAN 10: Corp_Staff (member: port3-port4)
+VLAN 100: Voice_VLAN (member: port12)
+VLAN 4094: FortiLink (member: port47, port48, fortilink)
+
+FSW-Branch-148F # diagnose switch lldp auto-discovery status
+port47: FortiGate-60F-Core (FGT60FTK21099KZF)
+port48: FortiGate-60F-Core (FGT60FTK21099KZF)

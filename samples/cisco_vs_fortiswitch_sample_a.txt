@@ -1,0 +1,23 @@
+Cisco-Core-DC# show version
+Cisco IOS Software, Catalyst L3 Switch Software (CAT9K_IOSXE), Version 17.06.03
+cisco C9300-48P (X86) processor with 1819580K/6147K bytes of memory.
+
+Cisco-Core-DC# show switch
+Switch#  Role      Mac Address     Priority Version  State
+------------------------------------------------------------
+*1       Active    0018.ba3e.c100     15     V01     Ready
+
+Cisco-Core-DC# show etherchannel summary
+Group  Port-channel  Protocol    Ports
+------+-------------+-----------+-----------------------------------------------
+10     Po10(SU)        LACP      Gi1/0/47(P)   Gi1/0/48(P)
+
+Cisco-Core-DC# show interfaces status
+Port      Name               Status       Vlan       Duplex  Speed Type
+Gi1/0/47  Uplink-FortiSwitch connected    trunk      a-full a-1000 10/100/1000BaseTX
+Gi1/0/48  Uplink-FortiSwitch connected    trunk      a-full a-1000 10/100/1000BaseTX
+
+Cisco-Core-DC# show lldp neighbors
+Local Interface    Parent Interface    Chassis Id           Port info          System Name
+Gi1/0/47           -                   S1:48:FP:T1:90:08    port47             FSW-Branch-148F
+Gi1/0/48           -                   S1:48:FP:T1:90:08    port48             FSW-Branch-148F

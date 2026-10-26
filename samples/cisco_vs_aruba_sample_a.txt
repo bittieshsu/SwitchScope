@@ -1,0 +1,29 @@
+Cisco-Core-Catalyst9300# show version
+Cisco IOS Software, Catalyst L3 Switch Software (CAT9K_IOSXE), Version 17.06.03
+cisco C9300-48P (X86) processor with 1819580K/6147K bytes of memory.
+Processor board ID FOC2412L01B
+
+Cisco-Core-Catalyst9300# show switch
+Switch#  Role      Mac Address     Priority Version  State
+------------------------------------------------------------
+*1       Active    0018.ba3e.a200     15     V01     Ready
+
+Cisco-Core-Catalyst9300# show etherchannel summary
+Group  Port-channel  Protocol    Ports
+------+-------------+-----------+-----------------------------------------------
+1      Po1(SU)         LACP      Gi1/0/24(P)
+
+Cisco-Core-Catalyst9300# show interfaces status
+Port      Name               Status       Vlan       Duplex  Speed Type
+Gi1/0/1   Server-Cluster     connected    10         a-full a-1000 10/100/1000BaseTX
+Gi1/0/24  Downlink-Aruba-6300 connected   trunk      a-full a-1000 10/100/1000BaseTX
+
+Cisco-Core-Catalyst9300# show interfaces
+GigabitEthernet1/0/24 is up, line protocol is up (connected)
+  5 minute input rate 4820000 bits/sec, 920 packets/sec
+  5 minute output rate 8920000 bits/sec, 1420 packets/sec
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+
+Cisco-Core-Catalyst9300# show lldp neighbors
+Local Interface    Parent Interface    Chassis Id           Port info          System Name
+Gi1/0/24           -                   TW:92:KM:Z0:01       1/1/24             Aruba-CX-6300M-Core

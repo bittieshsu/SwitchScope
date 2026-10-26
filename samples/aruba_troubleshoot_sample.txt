@@ -1,0 +1,57 @@
+Aruba-CX-6300# show system
+Hostname: Aruba-CX-6300M-Core
+Product Name: Aruba 6300M 48G 4SFP56 Switch (JL661A)
+Serial Number: TW92KMZ001
+Firmware Version: FL.10.12.0006
+Up Time: 28 weeks, 4 days, 11 hours, 22 minutes
+
+Aruba-CX-6300# show interface brief
+Port    Native  Type          Enabled Status  Mode    Speed(Mb/s) Reason
+-------------------------------------------------------------------------
+1/1/1   1       10/100/1000T  yes     up      trunk   1000        --
+1/1/2   1       10/100/1000T  yes     up      trunk   1000        --
+1/1/3   10      10/100/1000T  yes     up      access  1000        --
+1/1/4   10      10/100/1000T  yes     up      access  1000        --
+1/1/5   20      10/100/1000T  yes     up      access  100         --
+1/1/12  1       10/100/1000T  yes     up      access  1000        --
+1/1/24  100     10/100/1000T  yes     up      trunk   1000        --
+1/1/25  1       10G-SR        yes     down    access  auto        Link down
+lag1    1       --            yes     up      trunk   2000        --
+
+Aruba-CX-6300# show interface extended
+Interface 1/1/1 is up
+  Input total bytes: 142093810, packets: 849102, errors: 0, CRC/FCS: 0, drops: 0
+  Output total bytes: 294029104, packets: 1204910, errors: 0, drops: 0
+  5 minute input rate: 492000 bps
+  5 minute output rate: 1200000 bps
+
+Interface 1/1/2 is up
+  Input total bytes: 98402910, packets: 420910, errors: 0, CRC/FCS: 0, drops: 0
+  Output total bytes: 182049102, packets: 890120, errors: 0, drops: 0
+  5 minute input rate: 210000 bps
+  5 minute output rate: 890000 bps
+
+Interface 1/1/24 is up
+  Input total bytes: 84920401, packets: 412049, errors: 384, CRC/FCS: 384, drops: 48
+  Output total bytes: 194820194, packets: 981240, errors: 0, drops: 0
+  5 minute input rate: 1540000 bps
+  5 minute output rate: 3800000 bps
+
+Aruba-CX-6300# show lacp aggregates
+Aggregate  Port      Mode    Status
+-----------------------------------
+lag1       1/1/1     Active  Success
+lag1       1/1/2     Active  Blocked
+
+Aruba-CX-6300# show vlan summary
+VLAN  Name            Status   Ports
+-----------------------------------------------------------
+1     DEFAULT_VLAN    up       1/1/3-1/1/20,lag1
+10    DATA_VLAN       up       1/1/3,1/1/4,lag1
+20    VOICE_VLAN      up       1/1/5
+100   UPLINK_CORE     up       1/1/24,lag1
+
+Aruba-CX-6300# show lldp info remote-device
+LocalPort ChassisId           PortId  PortDescr SysName
+--------------------------------------------------------------------------
+1/1/24    00:18:ba:3e:a2:00   Gi1/0/1 Gi1/0/1   Cisco-Core-Catalyst9300

@@ -1,0 +1,631 @@
+
+==================== get system status ====================
+get system status
+Version: FortiGate-60F v7.6.7,build3704,260601 (GA.M)
+First GA patch build date: 240724
+Current Security Level: Low
+Firmware Signature: certified
+Virus-DB: 93.08151(2026-10-23 14:35)
+Extended DB: 93.08151(2026-10-23 14:35)
+AV AI/ML Model: 4.05187(2026-10-23 14:20)
+IPS-DB: 37.00319(2026-10-23 23:15)
+IPS-ETDB: 0.00000(2001-01-01 00:00)
+IPS-MLDB: 2609.00200(2026-09-16 00:55)
+APP-DB: 6.00741(2015-12-01 02:30)
+AIAP-DB: 0.00000(2001-01-01 00:00)
+FMWP-DB: 0.00000(2001-01-01 00:00)
+IPS Malicious URL Database: 5.00836(2026-10-23 03:02)
+IoT-Detect: 0.00000(2022-08-17 17:31)
+OT-Detect-DB: 0.00000(2001-01-01 00:00)
+OT-Patch-DB: 0.00000(2001-01-01 00:00)
+OT-Threat-DB: 6.00741(2015-12-01 02:30)
+IPS-Engine: 7.01196(2026-07-14 17:55)
+Timezone DB Version: 1.013
+Timezone DB IANA Version: 2026c
+Serial-Number: FGT60FTK21099KZF
+--More--          BIOS version: 05000009
+System Part-Number: P24286-03
+Log hard disk: Not available
+Hostname: FortiGate-60F
+Private Encryption: Disable
+Operation Mode: NAT
+Current virtual domain: root
+Max number of virtual domains: 10
+Virtual domains status: 1 in NAT mode, 0 in TP mode
+Virtual domain configuration: disable
+FIPS-CC mode: disable
+Current HA mode: standalone
+Branch point: 3704
+Release Version Information: GA
+System time: Sat Oct 24 19:06:38 2026
+Last reboot reason: warm reboot
+
+FortiGate-60F $ 
+==================== get system performance status ====================
+get system performance status
+CPU states: 5% user 0% system 0% nice 94% idle 0% iowait 0% irq 1% softirq
+CPU0 states: 44% user 0% system 0% nice 56% idle 0% iowait 0% irq 0% softirq
+CPU1 states: 0% user 0% system 0% nice 98% idle 2% iowait 0% irq 0% softirq
+CPU2 states: 0% user 0% system 0% nice 91% idle 0% iowait 0% irq 9% softirq
+CPU3 states: 0% user 0% system 0% nice 100% idle 0% iowait 0% irq 0% softirq
+CPU4 states: 0% user 0% system 0% nice 100% idle 0% iowait 0% irq 0% softirq
+CPU5 states: 0% user 0% system 0% nice 100% idle 0% iowait 0% irq 0% softirq
+CPU6 states: 0% user 0% system 0% nice 100% idle 0% iowait 0% irq 0% softirq
+CPU7 states: 0% user 0% system 0% nice 100% idle 0% iowait 0% irq 0% softirq
+Memory: 1979848k total, 1544692k used (78.0%), 252916k free (12.8%), 182240k freeable (9.2%)
+Average network usage: 31683 / 31640 kbps in 1 minute, 19923 / 19893 kbps in 10 minutes, 12161 / 12168 kbps in 30 minutes
+Maximal network usage: 233103 / 232058 kbps in 1 minute, 233103 / 232058 kbps in 10 minutes, 233103 / 232058 kbps in 30 minutes
+Average sessions: 422 sessions in 1 minute, 330 sessions in 10 minutes, 332 sessions in 30 minutes
+Maximal sessions: 449 sessions in 1 minute, 449 sessions in 10 minutes, 570 sessions in 30 minutes
+Average session setup rate: 3 sessions per second in last 1 minute, 2 sessions per second in last 10 minutes, 1 sessions per second in last 30 minutes
+Maximal session setup rate: 14 sessions per second in last 1 minute, 33 sessions per second in last 10 minutes, 58 sessions per second in last 30 minutes
+--More--          Average NPU sessions: 6 sessions in last 1 minute, 4 sessions in last 10 minutes, 3 sessions in last 30 minutes
+Maximal NPU sessions: 7 sessions in last 1 minute, 7 sessions in last 10 minutes, 8 sessions in last 30 minutes
+Average nTurbo sessions: 0 sessions in last 1 minute, 0 sessions in last 10 minutes, 0 sessions in last 30 minutes
+Maximal nTurbo sessions: 0 sessions in last 1 minute, 0 sessions in last 10 minutes, 0 sessions in last 30 minutes
+Virus caught: 0 total in 1 minute
+IPS attacks blocked: 0 total in 1 minute
+Uptime: 66 days,  6 hours,  36 minutes
+
+FortiGate-60F $ 
+==================== diagnose hardware sys conserve ====================
+diagnose hardware sys conserve
+Unknown action 0
+
+FortiGate-60F $ 
+==================== get system interface physical ====================
+get system interface physical
+== [onboard]
+	==[a]
+		mode: static
+		ip: 0.0.0.0 0.0.0.0
+		ipv6: ::/0
+		status: up
+		speed: 1000Mbps (Duplex: full)
+		FEC: none
+		FEC_cap: none
+	==[b]
+		mode: static
+		ip: 0.0.0.0 0.0.0.0
+		ipv6: ::/0
+		status: up
+		speed: 1000Mbps (Duplex: full)
+		FEC: none
+		FEC_cap: none
+	==[dmz]
+		mode: static
+		ip: 172.16.31.254 255.255.255.0
+		ipv6: ::/0
+		status: up
+--More--          		speed: 1000Mbps (Duplex: full)
+		FEC: none
+		FEC_cap: none
+	==[internal1]
+		mode: static
+		ip: 0.0.0.0 0.0.0.0
+		ipv6: ::/0
+		status: up
+		speed: 1000Mbps (Duplex: full)
+		FEC: none
+		FEC_cap: none
+	==[internal2]
+		mode: static
+		ip: 0.0.0.0 0.0.0.0
+		ipv6: ::/0
+		status: up
+		speed: 1000Mbps (Duplex: full)
+		FEC: none
+		FEC_cap: none
+	==[internal3]
+		mode: static
+		ip: 0.0.0.0 0.0.0.0
+--More--          		ipv6: ::/0
+		status: up
+		speed: 1000Mbps (Duplex: full)
+		FEC: none
+		FEC_cap: none
+	==[internal4]
+		mode: static
+		ip: 0.0.0.0 0.0.0.0
+		ipv6: ::/0
+		status: up
+		speed: 1000Mbps (Duplex: full)
+		FEC: none
+		FEC_cap: none
+	==[internal5]
+		mode: static
+		ip: 0.0.0.0 0.0.0.0
+		ipv6: ::/0
+		status: up
+		speed: 1000Mbps (Duplex: full)
+		FEC: none
+		FEC_cap: none
+	==[wan1]
+--More--          		mode: pppoe
+		ip: 220.132.33.202 255.255.255.255
+		ipv6: ::/0
+		status: up
+		speed: 1000Mbps (Duplex: full)
+		FEC: none
+		FEC_cap: none
+	==[wan2]
+		mode: pppoe
+		ip: 1.164.206.43 255.255.255.255
+		ipv6: ::/0
+		status: up
+		speed: 1000Mbps (Duplex: full)
+		FEC: none
+		FEC_cap: none
+	==[modem]
+		mode: pppoe
+		ip: 0.0.0.0 0.0.0.0
+		ipv6: ::/0
+		status: down
+		speed: n/a
+		FEC: none
+--More--          		FEC_cap: none
+
+FortiGate-60F $ 
+==================== get system ha status ====================
+get system ha status
+HA Health Status: OK
+Model: FortiGate-60F
+Mode: Standalone
+Group Name: 
+Group ID: 0
+Debug: 0
+Cluster Uptime: 0 days 0h:0m:0s
+Cluster state change time: N/A
+ses_pickup: disable
+override: disable
+System Usage stats:
+HBDEV stats:
+number of member: 0
+number of vcluster: 0
+
+FortiGate-60F $ 
+==================== get router info routing-table all ====================
+get router info routing-table all
+Codes: K - kernel, C - connected, S - static, R - RIP, B - BGP
+       O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+       V - BGP VPNv4
+       * - candidate default
+
+Routing table for VRF=0
+S*      0.0.0.0/0 [5/0] via 168.95.98.254, ppp2, [1/0]
+                  [5/0] via 168.95.98.254, ppp3, [1/0]
+C       1.164.206.43/32 is directly connected, ppp3
+C       168.95.98.254/32 is directly connected, ppp2
+                         is directly connected, ppp3
+B       172.16.0.0/24 [200/0] via 172.31.1.8 (recursive is directly connected, Advpn_3), 22:33:28, [1/0]
+B       172.16.1.0/24 [200/0] via 172.31.1.8 (recursive is directly connected, Advpn_3), 22:33:28, [1/0]
+C       172.16.31.0/24 is directly connected, dmz
+C       172.16.32.0/24 is directly connected, Kerr_Lan
+C       172.16.33.0/24 is directly connected, Kerr_Wifi_Lan
+--More--          B       172.16.88.0/24 [200/0] via 172.31.1.3 (recursive is directly connected, Advpn_2), 3d13h44m, [1/0]
+B       172.16.160.0/24 [200/0] via 172.31.1.2 (recursive is directly connected, Advpn_1), 3d13h39m, [1/0]
+B       172.16.161.0/24 [200/0] via 172.31.1.2 (recursive is directly connected, Advpn_1), 3d13h39m, [1/0]
+C       172.31.1.1/32 is directly connected, Advpn_3
+                      is directly connected, Advpn_2
+                      is directly connected, Advpn_1
+C       172.31.1.2/32 is directly connected, Advpn_1
+C       172.31.1.3/32 is directly connected, Advpn_2
+C       172.31.1.8/32 is directly connected, Advpn_3
+C       220.132.33.202/32 is directly connected, ppp2
+
+FortiGate-60F $ 
+==================== get vpn ipsec tunnel summary ====================
+get vpn ipsec tunnel summary
+'Advpn_1' 1.163.150.90:0  selectors(total,up): 1/1  rx(pkt,err): 68890/0  tx(pkt,err): 43959/2
+'Advpn_2' 36.238.139.141:0  selectors(total,up): 1/1  rx(pkt,err): 85754/0  tx(pkt,err): 41773/2
+'Advpn_3' 1.34.127.250:0  selectors(total,up): 1/1  rx(pkt,err): 14494/0  tx(pkt,err): 8630/0
+
+FortiGate-60F $ 
+==================== show system interface ====================
+show system interface
+config system interface
+    edit "wan1"
+        set vdom "root"
+        set mode pppoe
+        set allowaccess ping
+        set type physical
+        set netflow-sampler both
+        set sflow-sampler enable
+        set device-identification enable
+        set device-user-identification disable
+        set lldp-reception enable
+        set role wan
+        set snmp-index 1
+        set username "85165797@ip.hinet.net"
+        set password ENC E4WgOzVPXcFKlm0xLKFeTJJrzpnVCabUIM0QZ5/twW73Ux5crjY5G81pLFPzv5NlKGTVVp8TUvzdb6lAIGNZSaplKDN7ndRLnURIgyr11l7tRl7gbRgCAG4mvrugmcdJeUM+/lS6VKEHIEV92f44t9YjyULIX8dcUX4d6znaUSqqWc3CdAt2MRFDm2ikvXGgduom2llmMjY3dkVA
+        set dns-server-override disable
+    next
+    edit "wan2"
+        set vdom "root"
+        set mode pppoe
+--More--                  set allowaccess ping
+        set type physical
+        set netflow-sampler both
+        set sflow-sampler enable
+        set device-identification enable
+        set device-user-identification disable
+        set lldp-reception enable
+        set role wan
+        set snmp-index 2
+        set username "85165797@hinet.net"
+        set password ENC drg665tDYMkPeoHKfFg4W6szXNMhMzo54VEDyl+lRNHedum1H6XmQbptYHFvlXTZV7LtAw/XxvxC2OV9jpFt20r9LPCobbGnkKfFSnf9l2NF+hrTeSwufFaEmIzASJaMzWZMk8Duv5F2CQqx6Ktc3QQvbPgbKR0mtE2qrFJfL7aL/VzIyt0MeVI86v/n0EQ/8Q+TullmMjY3dkVA
+        set dns-server-override disable
+    next
+    edit "dmz"
+        set vdom "root"
+        set ip 172.16.31.254 255.255.255.0
+        set allowaccess ping fabric
+        set type physical
+        set alias "Stock_AI"
+        set role dmz
+--More--                  set snmp-index 3
+    next
+    edit "internal1"
+        set vdom "root"
+        set type physical
+        set snmp-index 4
+    next
+    edit "internal2"
+        set vdom "root"
+        set type physical
+        set snmp-index 5
+    next
+    edit "internal3"
+        set vdom "root"
+        set type physical
+        set snmp-index 6
+    next
+    edit "internal4"
+        set vdom "root"
+        set type physical
+        set snmp-index 7
+    next
+--More--              edit "internal5"
+        set vdom "root"
+        set type physical
+        set snmp-index 8
+    next
+    edit "a"
+        set vdom "root"
+        set type physical
+        set snmp-index 9
+    next
+    edit "b"
+        set vdom "root"
+        set type physical
+        set snmp-index 10
+    next
+    edit "modem"
+        set vdom "root"
+        set mode pppoe
+        set status down
+        set type physical
+        set snmp-index 11
+    next
+--More--              edit "naf.root"
+        set vdom "root"
+        set type tunnel
+        set src-check disable
+        set snmp-index 15
+    next
+    edit "l2t.root"
+        set vdom "root"
+        set type tunnel
+        set snmp-index 16
+    next
+    edit "ssl.root"
+        set vdom "root"
+        set type tunnel
+        set alias "SSL VPN interface"
+        set snmp-index 12
+    next
+    edit "fortilink"
+        set vdom "root"
+        set fortilink enable
+        set ip 169.254.1.1 255.255.255.0
+        set allowaccess ping fabric
+--More--                  set type aggregate
+        set lldp-reception enable
+        set lldp-transmission enable
+        set snmp-index 14
+        set fortilink-neighbor-detect fortilink
+    next
+    edit "Kerr_Lan"
+        set vdom "root"
+        set ip 172.16.32.254 255.255.255.0
+        set allowaccess ping https ssh snmp
+        set type hard-switch
+        set snmp-index 17
+    next
+    edit "Kerr_Wifi_Lan"
+        set vdom "root"
+        set ip 172.16.33.254 255.255.255.0
+        set type hard-switch
+        set snmp-index 18
+    next
+    edit "Advpn"
+        set vdom "root"
+        set ip 172.31.1.1 255.255.255.255
+--More--                  set type tunnel
+        set remote-ip 172.31.1.254 255.255.255.255
+        set snmp-index 19
+        set interface "wan1"
+    next
+    edit "IPSEC_VPN_IKE2"
+        set vdom "root"
+        set type tunnel
+        set snmp-index 20
+        set interface "wan1"
+    next
+    edit "IPSEC_VPN_IKE1"
+        set vdom "root"
+        set type tunnel
+        set snmp-index 13
+        set interface "wan1"
+    next
+end
+
+FortiGate-60F $ 
+==================== show firewall policy ====================
+show firewall policy
+config firewall policy
+    edit 1
+        set name "LAP_TAP_AUTO_BLOCK"
+        set uuid 73eda37c-841b-51f1-a77c-5d381509b141
+        set srcintf "any"
+        set dstintf "any"
+        set srcaddr "TAP-AUTO-BLOCK"
+        set dstaddr "all"
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+        set comments "LAP Auto-Remediation: Block malicious IPs automatically"
+    next
+    edit 2
+        set name "Kerr_Office_Lan_To_Wan"
+        set uuid 7403af28-841b-51f1-2851-f5c48daba602
+        set srcintf "Kerr_Lan"
+        set dstintf "virtual-wan-link"
+        set action accept
+        set srcaddr "Kerr_PC"
+        set dstaddr "all"
+        set schedule "always"
+--More--                  set service "ALL"
+        set utm-status enable
+        set ssl-ssh-profile "certificate-inspection"
+        set av-profile "default"
+        set dnsfilter-profile "default"
+        set ips-sensor "all_default"
+        set logtraffic all
+        set nat enable
+    next
+    edit 3
+        set name "LAP _TO_WAN"
+        set uuid 74134ac8-841b-51f1-c284-ff8f84348896
+        set srcintf "Kerr_Lan"
+        set dstintf "virtual-wan-link"
+        set action accept
+        set srcaddr "Kerr_LAP"
+        set dstaddr "all"
+        set schedule "always"
+        set service "ALL"
+        set utm-status enable
+        set ssl-ssh-profile "certificate-inspection"
+        set av-profile "default"
+--More--                  set dnsfilter-profile "default"
+        set ips-sensor "high_security"
+        set nat enable
+    next
+    edit 4
+        set name "Kerr_Wifi_To_Wan"
+        set uuid 74270d24-841b-51f1-925d-44d8fb5565cb
+        set srcintf "Kerr_Wifi_Lan"
+        set dstintf "virtual-wan-link"
+        set action accept
+        set srcaddr "Kerr_Wifi_Lan"
+        set dstaddr "all"
+        set schedule "always"
+        set service "ALL"
+        set utm-status enable
+        set ssl-ssh-profile "certificate-inspection"
+        set av-profile "default"
+        set webfilter-profile "default"
+        set dnsfilter-profile "default"
+        set ips-sensor "wifi-default"
+        set logtraffic all
+        set nat enable
+--More--              next
+    edit 5
+        set name "Kerr_Server_Lan_To_Wan_Internet"
+        set uuid 74369d7a-841b-51f1-5146-4215714abd76
+        set srcintf "Kerr_Lan"
+        set dstintf "virtual-wan-link"
+        set action accept
+        set srcaddr "Kerr_Lan_Server"
+        set internet-service enable
+        set internet-service-name "Google-Other" "GitHub-GitHub" "Cloudflare-CDN" "Cloudflare-Other" "Telegram-Telegram" "Cloudflare-DNS" "Cloudflare-FTP" "Cloudflare-ICMP" "Cloudflare-Inbound_Email" "Cloudflare-LDAP" "Cloudflare-NetBIOS.Name.Service" "Cloudflare-NetBIOS.Session.Service" "Cloudflare-NTP" "Cloudflare-Outbound_Email" "Cloudflare-RTMP" "Cloudflare-SSH" "Cloudflare-Web" "Google-DNS" "Google-Google.Cloud" "Elastic-Elastic.Cloud" "Google-NTP" "Fortinet-NTP" "Google-Web" "Google-SSH" "Google-NetBIOS.Session.Service" "Google-Gmail" "Google-ICMP" "Google-Outbound_Email" "Google-FTP" "Google-Inbound_Email" "Google-LDAP" "Google-RTMP" "Google-NetBIOS.Name.Service" "Amazon-AWS" "Amazon-AWS.CloudFront" "Amazon-AWS.Cloud9" "Amazon-AWS.Route53" "Amazon-AWS.S3" "Amazon-AWS.EC2" "Amazon-AWS.API.Gateway" "Amazon-AWS.AppFlow" "Amazon-AWS.WorkSpaces.Gateway" "Amazon-AWS.GovCloud.US" "Amazon-AWS.EBS" "Amazon-AWS.DynamoDB" "Amazon-AWS.Kinesis.Video.Streams" "Amazon-AWS.Global.Accelerator" "Amazon-AWS.Chime.Voice.Connector" "Amazon-AWS.Connect" "Amazon-AWS.CodeBuild" "Amazon-AWS.Chime.Meetings" "Microsoft-Azure" "Microsoft-Other" "Microsoft-Web" "Microsoft-ICMP" "Microsoft-DNS" "Microsoft-Microsoft.Update" "Microsoft-Dynamics" "Microsoft-Outbound_Email" "Microsoft-SSH" "Microsoft-FTP" "Microsoft-NTP" "Microsoft-Inbound_Email" "Microsoft-LDAP" "Microsoft-NetBIOS.Session.Service" "Microsoft-RTMP" "Microsoft-NetBIOS.Name.Service" "Microsoft-WNS"
+--More--                  set schedule "always"
+        set ssl-ssh-profile "certificate-inspection"
+        set logtraffic all
+        set nat enable
+        set internet-service-fortiguard "FQDN-Amazon-Amazon.SES" "FQDN-Amazon-AWS" "FQDN-Amazon-AWS.Bedrock" "FQDN-Amazon-AWS.SageMaker" "FQDN-Amazon-AWS.Transcribe" "FQDN-GitHub-GitHub" "FQDN-GitHub-GitHub.Copilot" "FQDN-GoDaddy-GoDaddy.Email" "FQDN-Google-Google.Gemini" "FQDN-Meta-Meta.AI" "FQDN-MEGA-MEGA.Cloud"
+    next
+    edit 6
+        set name "Kerr_Server_Lan_To_Wan_Allow"
+        set uuid 745a5a80-841b-51f1-052a-9c2713647e4b
+        set srcintf "Kerr_Lan"
+        set dstintf "virtual-wan-link"
+        set action accept
+        set srcaddr "Kerr_Lan_Server"
+        set dstaddr "FQDN_Allow_Group" "Allow_Group" "FQDN_openclaw.ai" "!TV" "FQDN_www.vso-corp.com" "!TS"
+        set schedule "always"
+        set service "ALL"
+        set ssl-ssh-profile "certificate-inspection"
+        set logtraffic all
+--More--                  set nat enable
+    next
+    edit 7
+        set name "Kerr_Stock_Ai_To_Wan"
+        set uuid 7474ad7c-841b-51f1-d761-398182e12852
+        set srcintf "dmz"
+        set dstintf "virtual-wan-link"
+        set action accept
+        set srcaddr "Kerr_DMZ_Lan"
+        set dstaddr "FQDN_Allow_Group"
+        set schedule "always"
+        set service "ALL"
+        set ssl-ssh-profile "certificate-inspection"
+        set logtraffic all
+        set nat enable
+    next
+    edit 8
+        set name "Kerr_Stock_Ai_To_Wan_Internet"
+        set uuid 748fd02a-841b-51f1-6687-2d7f9f465257
+        set srcintf "dmz"
+        set dstintf "virtual-wan-link"
+        set action accept
+--More--                  set srcaddr "Kerr_DMZ_Lan"
+        set internet-service enable
+        set internet-service-name "Google-Other" "Cloudflare-CDN" "Cloudflare-Other" "Telegram-Telegram" "Cloudflare-DNS" "Cloudflare-FTP" "Cloudflare-ICMP" "Cloudflare-Inbound_Email" "Cloudflare-LDAP" "Cloudflare-NetBIOS.Name.Service" "Cloudflare-NetBIOS.Session.Service" "Cloudflare-NTP" "Cloudflare-Outbound_Email" "Cloudflare-RTMP" "Cloudflare-SSH" "Cloudflare-Web" "Elastic-Elastic.Cloud" "Google-Web" "GitHub-GitHub" "Amanah-Amanah.Hosting.Service" "Amazon-Amazon.SES" "Amazon-AWS" "Amazon-AWS.API.Gateway" "Amazon-AWS.AppFlow" "Amazon-AWS.Chime.Meetings" "Amazon-AWS.Chime.Voice.Connector" "Amazon-AWS.Cloud9" "Amazon-AWS.CloudFront" "Amazon-AWS.CodeBuild" "Amazon-AWS.Connect" "Amazon-AWS.DynamoDB" "Amazon-AWS.EC2" "Amazon-AWS.EBS" "Amazon-AWS.Global.Accelerator" "Amazon-AWS.GovCloud.US" "Amazon-AWS.Kinesis.Video.Streams" "Amazon-AWS.Route53" "Amazon-AWS.S3" "Amazon-AWS.WorkSpaces.Gateway" "Apple-DNS" "Aruba.it-DNS" "Google-DNS" "Microsoft-Azure" "Microsoft-Azure.AD" "Microsoft-Azure.Arc.Infrastructure" "Microsoft-Azure.ATP" "Microsoft-Azure.Connectors" "Microsoft-Azure.Data.Factory" "Microsoft-Azure.Databricks" "Microsoft-Azure.Event.Hub" "Microsoft-Azure.Front.Door" "Microsoft-Azure.Front.Door.MicrosoftSecurity" "Microsoft-Azure.IoT.Hub" "Microsoft-Azure.KeyVault" "Microsoft-Azure.Microsoft.Defender" "Microsoft-Azure.Monitor" "Microsoft-Azure.OneDsCollector" "Microsoft-Azure.Power.BI" "Microsoft-Azure.Power.Platform" "Microsoft-Azure.Resource.Manager" "Microsoft-Azure.Sentinel" "Microsoft-Azure.Service.Bus" "Microsoft-Azure.SQL" "Microsoft-Azure.Storage" "Microsoft-Azure.Traffic.Manager" "Microsoft-Azure.Virtual.Desktop" "Microsoft-Azure.Windows.Admin.Center" "Microsoft-DNS" "Microsoft-Dynamics" "Microsoft-FTP" "Microsoft-ICMP" "Microsoft-Inbound_Email" "Microsoft-Intune" "Microsoft-LDAP" "Microsoft-Microsoft.Update" "Microsoft-NetBIOS.Name.Service" "Microsoft-NetBIOS.Session.Service" "Microsoft-NTP" "Microsoft-Other" "Microsoft-Outbound_Email" "Microsoft-Outlook" "Microsoft-RTMP" "Microsoft-Skype_Teams" "Microsoft-SSH" "Microsoft-Teams.Published.Worldwide.Allow" "Microsoft-Teams.Published.Worldwide.Optimize" "Microsoft-Web" "Microsoft-WNS"
+--More--                  set schedule "always"
+        set ssl-ssh-profile "certificate-inspection"
+        set logtraffic all
+        set nat enable
+        set internet-service-fortiguard "FQDN-Amazon-Amazon.SES" "FQDN-Amazon-AWS" "FQDN-Amazon-AWS.Bedrock" "FQDN-Amazon-AWS.SageMaker" "FQDN-Amazon-AWS.Transcribe" "FQDN-GitHub-GitHub" "FQDN-GitHub-GitHub.Copilot" "FQDN-Meta-Meta.AI" "FQDN-Microsoft-Azure" "FQDN-Microsoft-Intune" "FQDN-Microsoft-Microsoft.Update" "FQDN-Google-Google.Gemini" "FQDN-Google-Gmail" "FQDN-Meta-Whatsapp" "FQDN-Microsoft-WNS" "FQDN-Microsoft-Skype_Teams" "FQDN-Microsoft-Outlook" "FQDN-Microsoft-Office365"
+    next
+    edit 9
+        set name "Kerr_Wifi_To_Kerr_Server_Opencode"
+        set uuid 74b6afce-841b-51f1-646f-6b93d4580a1e
+        set srcintf "Kerr_Wifi_Lan"
+        set dstintf "Kerr_Lan"
+        set action accept
+        set srcaddr "Kerr_Wifi_Lan_Jessie_VSO_NB"
+        set dstaddr "Kerr_Opencode_mail"
+        set schedule "always"
+        set service "TCP_8765"
+--More--                  set ssl-ssh-profile "certificate-inspection"
+        set logtraffic all
+        set comments " (Reverse of Kerr_Office_Lan_To_Kerr_Wifi)"
+    next
+    edit 10
+        set name "Kerr_Office_Lan_To_Kerr_Wifi"
+        set uuid 74cc4960-841b-51f1-ae27-9a4e2a796bc1
+        set srcintf "Kerr_Lan"
+        set dstintf "Kerr_Wifi_Lan"
+        set action accept
+        set srcaddr "Kerr_Lan_Office"
+        set dstaddr "Kerr_Wifi_Lan"
+        set schedule "always"
+        set service "ALL"
+        set ssl-ssh-profile "certificate-inspection"
+    next
+    edit 11
+        set name "Kerr_Server_Lan_To_Kerr_Stock"
+        set uuid 74d95326-841b-51f1-c6b1-814bd75f73e2
+        set srcintf "Kerr_Lan"
+        set dstintf "dmz"
+        set action accept
+--More--                  set srcaddr "Kerr_Lan_Office"
+        set dstaddr "Kerr_DMZ_Lan"
+        set schedule "always"
+        set service "ALL"
+        set ssl-ssh-profile "certificate-inspection"
+    next
+    edit 12
+        set name "Stock_ai_To_Server_Outline"
+        set uuid 74ea686e-841b-51f1-feed-b77cfe3ff274
+        set srcintf "dmz"
+        set dstintf "Kerr_Lan"
+        set action accept
+        set srcaddr "Kerr_DMZ_Lan"
+        set dstaddr "Kerr_Lab_Nginx_Proxy"
+        set schedule "always"
+        set service "HTTPS"
+        set logtraffic all
+    next
+    edit 13
+        set name "Stock_ai_To_Server_Gitlab"
+        set uuid 74f8ddf4-841b-51f1-ba48-c5eaf4292315
+        set srcintf "dmz"
+--More--                  set dstintf "Kerr_Lan"
+        set action accept
+        set srcaddr "Kerr_DMZ_Lan"
+        set dstaddr "Kerr_Lab_Gitlab"
+        set schedule "always"
+        set service "SSH"
+        set logtraffic all
+    next
+    edit 14
+        set name "Stock_ai_To_Server_Stock_V3"
+        set uuid 75074eac-841b-51f1-7a8c-0191f55d97ae
+        set srcintf "dmz"
+        set dstintf "Kerr_Lan"
+        set action accept
+        set srcaddr "Kerr_DMZ_Lan"
+        set dstaddr "Kerr_PC"
+        set schedule "always"
+        set service "TCP_8000"
+        set logtraffic all
+    next
+    edit 15
+        set name "SSLVPN_To_Kerr_Server"
+--More--                  set uuid 93c80168-8f21-51f1-553e-472b3c549827
+        set srcintf "IPSEC_VPN_IKE2"
+        set dstintf "Kerr_Lan"
+        set action accept
+        set srcaddr "SSL_VPN2"
+        set dstaddr "Kerr_Lan_Office"
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+    next
+    edit 16
+        set name "ADVPN_To_ADVPN"
+        set uuid d62b706c-8fc6-51f1-98ad-1e1e1c7a4ab0
+        set srcintf "Advpn"
+        set dstintf "Advpn"
+        set action accept
+        set srcaddr "all"
+        set dstaddr "all"
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+    next
+--More--              edit 17
+        set name "Kerr_Lan_To_ADVPN"
+        set uuid 7c3ac5aa-8ffb-51f1-3856-d6f7d6093a64
+        set srcintf "Kerr_Lan"
+        set dstintf "Advpn"
+        set action accept
+        set srcaddr "Kerr_Lan_Office"
+        set dstaddr "ADVPN_GROUP"
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+    next
+    edit 18
+        set name "ADVPN_To_Kerr_Gitlab"
+        set uuid 34134166-b0a4-51f1-c3f3-134440f16b46
+        set srcintf "Advpn"
+        set dstintf "Kerr_Lan"
+        set action accept
+        set srcaddr "ADVPN_GROUP"
+        set dstaddr "Kerr_Lab_Gitlab"
+        set schedule "always"
+        set service "HTTPS"
+--More--                  set utm-status enable
+        set ssl-ssh-profile "certificate-inspection"
+        set ips-sensor "high_security"
+        set logtraffic all
+    next
+end
+
+FortiGate-60F $ 

@@ -1,0 +1,36 @@
+Aruba-CX-6300M-Core# show system
+Hostname: Aruba-CX-6300M-Core
+Product Name: Aruba 6300M 48G 4SFP56 Switch (JL661A)
+Serial Number: TW92KMZ001
+Firmware Version: FL.10.12.0006
+
+Aruba-CX-6300M-Core# show interface brief
+Port    Native  Type          Enabled Status  Mode    Speed(Mb/s) Reason
+-------------------------------------------------------------------------
+1/1/1   1       10/100/1000T  yes     up      access  1000        --
+1/1/24  100     10/100/1000T  yes     up      trunk   1000        --
+lag1    1       --            yes     up      trunk   2000        --
+
+Aruba-CX-6300M-Core# show interface extended
+Interface 1/1/24 is up
+  Input total bytes: 84920401, packets: 412049, errors: 384, CRC/FCS: 384, drops: 48
+  Output total bytes: 194820194, packets: 981240, errors: 0, drops: 0
+  5 minute input rate: 1540000 bps
+  5 minute output rate: 3800000 bps
+
+Aruba-CX-6300M-Core# show lacp aggregates
+Aggregate  Port      Mode    Status
+-----------------------------------
+lag1       1/1/24    Active  Blocked
+
+Aruba-CX-6300M-Core# show vlan summary
+VLAN  Name            Status   Ports
+-----------------------------------------------------------
+1     DEFAULT_VLAN    up       1/1/1-1/1/20
+10    DATA_VLAN       up       1/1/1
+100   UPLINK_CORE     up       1/1/24,lag1
+
+Aruba-CX-6300M-Core# show lldp info remote-device
+LocalPort ChassisId           PortId  PortDescr SysName
+--------------------------------------------------------------------------
+1/1/24    00:18:ba:3e:a2:00   Gi1/0/24 Gi1/0/24  Cisco-Core-Catalyst9300

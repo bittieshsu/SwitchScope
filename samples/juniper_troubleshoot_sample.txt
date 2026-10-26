@@ -1,0 +1,56 @@
+user@Juniper-EX3400> show version
+Hostname: Juniper-EX3400-Access
+Model: ex3400-48t
+Junos: 21.4R3-S5.4
+JUNOS Software Release [21.4R3-S5.4]
+System booted: 2026-06-12 04:18:22 UTC (19 weeks ago)
+
+user@Juniper-EX3400> show interfaces terse
+Interface               Admin Link Proto    Local                 Remote
+ge-0/0/0                up    up
+ge-0/0/0.0              up    up   eth-switch
+ge-0/0/1                up    up
+ge-0/0/1.0              up    up   eth-switch
+ge-0/0/2                up    up
+ge-0/0/2.0              up    up   eth-switch
+ge-0/0/12               up    up
+ge-0/0/12.0             up    up   eth-switch
+ge-0/0/24               up    down
+ge-0/0/24.0             up    down eth-switch
+ae0                     up    up
+ae0.0                   up    up   eth-switch
+
+user@Juniper-EX3400> show interfaces extensive
+Physical interface: ge-0/0/0, Enabled, Physical link is Up
+  Interface index: 641, SNMP ifIndex: 512
+  Input packet: 1420194, Output packet: 2940192
+  Input errors: Errors: 0, Drops: 0, Framing errors: 0
+  CRC errors: 0
+
+Physical interface: ge-0/0/1, Enabled, Physical link is Up
+  Interface index: 642, SNMP ifIndex: 513
+  Input packet: 840192, Output packet: 1204910
+  Input errors: Errors: 0, Drops: 0, Framing errors: 0
+  CRC errors: 0
+
+Physical interface: ge-0/0/12, Enabled, Physical link is Up
+  Interface index: 653, SNMP ifIndex: 524
+  Input packet: 984021, Output packet: 2104921
+  Input errors: Errors: 512, Drops: 64, Framing errors: 0
+  CRC errors: 489
+
+user@Juniper-EX3400> show lacp interfaces
+Aggregated interface: ae0
+LACP state:       Role   Exp   Def  Dist  Col  Syn  Aggr  Timeout  Activity
+  ge-0/0/0       Actor    No    No   Yes  Yes  Yes   Yes     Fast    Active
+  ge-0/0/1       Actor    No    No    No   No   No   Yes     Fast    Active
+
+user@Juniper-EX3400> show vlans
+VLAN name  Tag  Interfaces
+default    1    ge-0/0/2.0
+corp-data  20   ge-0/0/12.0*, ae0.0*
+mgmt       99   ae0.0*
+
+user@Juniper-EX3400> show lldp neighbors
+Local Interface    Parent Interface    Chassis Id           Port info          System Name
+ge-0/0/12          -                   00:18:ba:3e:a2:00    Gi1/0/24           Cisco-Core-C9300
