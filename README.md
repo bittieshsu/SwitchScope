@@ -378,7 +378,7 @@ SwitchScope 2.0 已擴充支援 **Cisco、ArubaOS-CX、Juniper Junos、FortiSwit
 
 * **Kerr** ([@kerr20801](https://github.com/kerr20801)) — 專案發起與核心架構設計
 * 🤖 **[Google Gemini](https://gemini.google.com)** — AI 結對編程夥伴 (Pair Programming Copilot)
-* 延續 `PacketScope` 與 `NetScope` 之維運工具矩陣，專注解決地端現場網管與 SI 核心痛點。歡迎提 PR 與 Issue 交流！
+* 延續 `PacketScope`、`NetScope`、`KubeScope` 與 `vlan-web-portal` 之維運工具矩陣，專注解決地端現場網管與 SI 核心痛點。歡迎提 PR 與 Issue 交流！
 
 ---
 
@@ -390,7 +390,7 @@ SwitchScope 2.0 已擴充支援 **Cisco、ArubaOS-CX、Juniper Junos、FortiSwit
 
 ## ⚠️ 免責與實機聲明 (Disclaimer)
 
-> 💡 **老實說聲明 (Honest Note)**：  
-> 本工具核心規則、決策樹與排障邏輯深度針對 **Cisco** 實機環境調校與驗證；其他廠牌（ArubaOS-CX、Juniper Junos、FortiSwitch）適配器與跨廠牌對接目前**其他廠牌沒測過，只用 AI 測過就好 XD**。  
-> 現場套用修復指令前請務必人工複核（或先備妥各家安全回滾腳本），歡迎有各廠牌實體設備環境的各路大神提 PR / Issue 一起抓蟲補完！🙏
+> 💡 **老實說聲明 (Honest Note / 社群測試版聲明)**：  
+> 本工具核心規則、決策樹與排障邏輯深度針對 **Cisco** 實機環境調校與驗證；其他廠牌（ArubaOS-CX、Juniper Junos、FortiSwitch）適配器與跨廠牌對接功能為應同事與社群需求擴充之**【社群公測測試版 (Beta Preview)】**。因手邊沒有全套各廠牌實體交換機，**其他廠牌沒測過，只用 AI 測過，算是測試版就好 XD**。  
+> 現場套用修復指令前請務必人工複核（或先備妥各家安全回滾腳本），非常歡迎有各廠牌實體設備環境的各路大神提 PR / Issue 一起實測抓蟲補完！🙏
 
